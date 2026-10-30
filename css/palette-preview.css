@@ -13,3 +13,9 @@ html.pal-a .music-pill,html.pal-b .music-pill{background:linear-gradient(180deg,
 html.pal-b .music-pill .gel{background:radial-gradient(120% 100% at 50% 120%,#fff,#BFF3FF 45%,#5FD3F3)!important}
 html.pal-b .sidebar-nav a.active,html.pal-b .sidebar-nav a[href="index.html"],html.pal-b .combo-drop-menu a.active{background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#BFF3FF 45%,#5FD3F3 100%) padding-box,linear-gradient(180deg,#fff 0%,#e4e4ec 25%,#9a9aab 50%,#fafafd 70%,#b4b4c4 100%) border-box!important;color:#FF5FA2!important}
 html.pal-b .theme-btn[aria-pressed="true"]{outline:2px dashed #5FD3F3!important;box-shadow:0 0 0 4px #BFF3FF,0 0 10px #5FD3F3!important}
+/* chrome jelly tray behind mood swatches */
+html:is(.pal-a,.pal-b) .theme-switcher-inline{position:relative;align-items:center;margin:4px 6px;padding:6px 10px;border-radius:999px;
+ background:linear-gradient(180deg,#fdfdff 0%,#e6e6ee 40%,#b8b8c8 55%,#e9e9f1 80%,#ffffff 100%);
+ box-shadow:inset 0 2px 3px rgba(120,120,140,.35),inset 0 -2px 3px rgba(255,255,255,.9),0 1px 0 #fff,0 0 0 1px #c4c4d0}
+html:is(.pal-a,.pal-b) .theme-switcher-inline::before{content:"";position:absolute;left:12px;right:12px;top:2px;height:40%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,0));pointer-events:none}
+html:is(.pal-a,.pal-b) .theme-switcher-inline>*{position:relative}

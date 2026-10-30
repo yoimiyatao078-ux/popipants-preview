@@ -47,3 +47,6 @@
   background:linear-gradient(180deg,#fff,#FFD6E8 55%,#fff);border:2px solid #fff;box-shadow:0 0 0 2px #FF5FA2,0 3px 10px rgba(255,95,162,.35)}
 .px-dockcart{width:22px;height:22px;image-rendering:pixelated}
 .mini-player{margin-top:34px}
+/* desktop: white sidebar background only (inner elements untouched) */
+@media (min-width:769px){.page-layout>.sidebar{background:#fff!important;box-shadow:inset -2px 0 0 #FFD6E8}}
+.sidebar-cd.has-px-cat{margin-top:46px}

@@ -620,3 +620,46 @@
   color: white;
 }
 
+
+/* ===== WELCOME POPUP: glossy gel title bar (Frutiger Aero / Y2K) ===== */
+.pc-popup[aria-label="Welcome to Popipants!"] .pc-popup-titlebar {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #FF5FA2 0%, #FFD6E8 100%);
+  border: 2px solid transparent;
+  border-image: linear-gradient(180deg, #fff 0%, #d9d9e3 35%, #a9a9b8 55%, #f4f4f8 80%, #c4c4d0 100%) 1;
+  box-shadow: inset 0 -4px 8px rgba(255,255,255,.55), inset 0 2px 4px rgba(255,95,162,.45);
+  color: #FFFFFF !important;
+  font-family: Inconsolata, monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-shadow: 0 1px 2px rgba(160,20,90,.8), 0 0 1px rgba(160,20,90,.9);
+  padding: 5px 8px;
+}
+.pc-popup[aria-label="Welcome to Popipants!"] .pc-popup-titlebar::before {
+  content: "";
+  position: absolute;
+  left: 6px; right: 6px; top: 2px;
+  height: 45%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,0));
+  pointer-events: none;
+}
+.pc-popup[aria-label="Welcome to Popipants!"] .pc-popup-titlebar > * { position: relative; }
+.pc-popup[aria-label="Welcome to Popipants!"] .pc-popup-titlebar .close-btn {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #c4c4d0;
+  background: radial-gradient(120% 100% at 50% 120%, #fff 0%, #FFD6E8 45%, #FF9EC7 100%);
+  box-shadow: 0 0 0 1px #fff, inset 0 -3px 5px #fff, inset 0 2px 3px rgba(255,95,162,.45), 0 2px 4px rgba(255,95,162,.35);
+  color: #FF5FA2;
+  font-family: Inconsolata, monospace;
+  font-weight: 700;
+  font-size: 12px;
+  text-shadow: none;
+}
+.pc-popup[aria-label="Welcome to Popipants!"] .pc-popup-titlebar .close-btn:active {
+  transform: scale(.94);
+  box-shadow: inset 0 3px 6px rgba(160,20,90,.45);
+}

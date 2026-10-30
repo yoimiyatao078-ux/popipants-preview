@@ -90,10 +90,10 @@ html .btn.btn-secondary,html .hero-actions .btn{background:radial-gradient(120% 
  .sidebar .sidebar-nav li{margin:0}
  .sidebar .sidebar-nav a{padding:11px 10px!important;font-size:15px;min-width:0}
  .sidebar .theme-dock{text-align:center}
- .sidebar .figurine-button{order:5;align-self:center}
- .sidebar .sidebar-cd{opacity:1!important;display:block!important;order:3;align-self:center;width:110px!important;height:110px!important;margin:6px auto!important;position:relative!important}
- .sidebar .made-in-japan-sticker{order:4;align-self:center;width:150px!important;max-width:60%;image-rendering:pixelated;position:static!important;transform:none!important;margin:0 auto!important;opacity:1!important}
- .sidebar .theme-dock{order:6}.sidebar .sidebar-location{order:7;text-align:center}
+ .sidebar .figurine-button{order:3;align-self:center}
+ .sidebar .sidebar-cd{opacity:1!important;display:block!important;order:7;align-self:center;width:110px!important;height:110px!important;margin:6px auto!important;position:relative!important}
+ .sidebar .made-in-japan-sticker{order:2;align-self:center;width:150px!important;max-width:60%;image-rendering:pixelated;position:static!important;transform:none!important;margin:0 auto!important;opacity:1!important}
+ .sidebar .theme-dock{order:4}.sidebar .sidebar-location{order:5;text-align:center}
  .sidebar .combo-dhead{order:0}.sidebar nav.sidebar-section{order:1}
 }
 @media(max-width:768px){
@@ -169,3 +169,19 @@ html .btn.btn-secondary,html .hero-actions .btn{background:radial-gradient(120% 
  .myspace{grid-template-columns:1fr}.ms-pic{max-width:140px}
 }
 html body .pg-h2,html body h2.pg-h2{font-family:'Archivo Black',sans-serif!important;font-weight:400!important}
+/* gel pill "click me" button (matches button-demo pill) */
+html .sidebar .figurine-button{position:relative;width:auto!important;margin:8px auto!important;padding:8px 22px 8px 10px!important;border:4px solid transparent!important;border-radius:999px!important;color:#FF5FA2!important;font:700 13px Inconsolata,monospace!important;letter-spacing:.08em;transform:none!important;
+ background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#FFD6E8 45%,#FF5FA2 140%) padding-box,linear-gradient(180deg,#fff 0%,#d9d9e3 35%,#a9a9b8 55%,#f4f4f8 80%,#c4c4d0 100%) border-box!important;
+ box-shadow:inset 0 -5px 10px rgba(255,255,255,.9),inset 0 3px 6px rgba(255,95,162,.35),0 6px 14px rgba(255,95,162,.25)!important}
+html .sidebar .figurine-button::before{content:"";position:absolute;left:12px;right:12px;top:2px;height:45%;border-radius:999px;background:linear-gradient(rgba(255,255,255,.95),rgba(255,255,255,.12));pointer-events:none}
+html .sidebar .figurine-button>*{position:relative}
+html .sidebar .figurine-button:active{transform:translateY(1px) scale(.98)!important}
+html .sidebar .figurine{background:radial-gradient(circle at 40% 30%,#fff,#FFD6E8 55%,#FF5FA2)!important;color:#fff!important;border-radius:50%!important;box-shadow:inset 0 -2px 4px rgba(255,255,255,.8),0 0 0 2px #fff}
+/* phone menu order v2: mood, click me, cat, cd */
+@media (max-width:768px){
+ html .sidebar .theme-dock{order:2!important;align-self:center!important;width:100%!important;max-width:300px!important;margin:4px auto 0!important}
+ html .sidebar .figurine-button{order:3!important;align-self:center!important;width:100%!important;max-width:300px!important;justify-content:center!important;margin:0 auto!important}
+ html .sidebar .made-in-japan-sticker{order:4!important;align-self:center!important;margin:34px auto 0!important}
+ html .sidebar .sidebar-cd{order:5!important;align-self:center!important;margin:30px auto 6px!important}
+ html .sidebar .sidebar-location{order:6!important;align-self:center!important;text-align:center}
+}

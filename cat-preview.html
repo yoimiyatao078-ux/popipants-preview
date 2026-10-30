@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>popipants · music cat preview</title><link rel="stylesheet" href="fonts/fonts.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;overflow-x:hidden;background:#fff;font-family:Inconsolata,monospace;color:#FF5FA2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px}
+h1{font-size:20px;letter-spacing:.2em;margin:0}
+p.note{font-size:13px;margin:0;opacity:.8;text-align:center;padding:0 16px}
+button{border:0;background:none;padding:0;cursor:pointer;font-family:inherit;color:#FF5FA2}
+.perch{position:relative;display:inline-block;padding-top:64px}
+/* cat */
+.cat{position:absolute;left:50%;top:0;width:88px;height:72px;transform:translateX(-50%);pointer-events:none;z-index:2}
+.cat canvas{position:absolute;left:0;image-rendering:pixelated;image-rendering:crisp-edges;width:88px}
+.cat .body{top:44px;height:28px}.cat .head{top:0;height:44px;transform-origin:50% 90%}
+.cat .lids{opacity:0}
+.perch:not(.on) .cat .lids{animation:blink 4s infinite steps(1)}
+@keyframes blink{0%,92%{opacity:0}93%,97%{opacity:1}98%{opacity:0}}
+.perch.on .cat .head{animation:bob 1.35s infinite ease-in-out}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(calc(var(--amp,1)*-3deg))}50%{transform:translateY(calc(var(--amp,1)*2px)) rotate(calc(var(--amp,1)*3deg))}}
+.perch.on .cat .tail{animation:wag 1s infinite steps(2)}
+@keyframes wag{50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.perch .cat *{animation:none!important}}
+/* gel pill (from button-demo) */
+.pill{position:relative;padding:5px;border-radius:999px;background:linear-gradient(180deg,#fff 0%,#d9d9e3 35%,#a9a9b8 55%,#f4f4f8 80%,#c4c4d0 100%);box-shadow:0 6px 14px rgba(255,95,162,.25),0 1px 0 #fff inset}
+.pill .gel{position:relative;display:flex;align-items:center;gap:12px;padding:14px 30px 14px 24px;border-radius:999px;background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#FFD6E8 45%,#FF9EC7 100%);box-shadow:inset 0 -6px 12px #fff,inset 0 3px 6px rgba(255,95,162,.45);color:#FF5FA2;font-weight:700;font-size:22px;letter-spacing:.1em;overflow:hidden;transition:transform .12s}
+.pill .gel::before{content:"";position:absolute;left:12px;right:12px;top:3px;height:45%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.15))}
+.pill .gel>*{position:relative}
+.tri{width:0;height:0;border-left:14px solid #FF5FA2;border-top:9px solid transparent;border-bottom:9px solid transparent}
+.bars{display:none;gap:3px;height:18px;align-items:flex-end}.bars i{width:4px;background:#FF5FA2;border-radius:2px;animation:eq .6s infinite alternate}.bars i:nth-child(2){animation-delay:.2s}.bars i:nth-child(3){animation-delay:.4s}
+@keyframes eq{from{height:4px}to{height:18px}}
+.on .pill .gel{transform:translateY(2px) scale(.97);box-shadow:inset 0 -3px 8px rgba(255,214,232,.7),inset 0 6px 12px rgba(160,20,90,.5)}
+.on .tri{display:none}.on .bars{display:flex}
+@media (prefers-reduced-motion:reduce){.bars i{animation:none;height:12px}}
+/* phone drawer mock */
+.drawer{display:none}
+@media (max-width:768px){
+ .drawer{display:flex;flex-direction:column;align-items:center;gap:18px;width:min(300px,85vw);padding:24px 16px 30px;border-radius:24px 0 0 24px;align-self:flex-end;background:linear-gradient(#fff,#FFD6E8);box-shadow:-6px 0 20px rgba(255,95,162,.25)}
+ .drawer ul{list-style:none;padding:0;margin:0;text-align:center;font-weight:700;letter-spacing:.15em;line-height:2}
+ .perch .cat{transform:translateX(-50%) scale(.85);transform-origin:50% 100%}
+}
+</style></head><body>
+<h1>♡ music cat preview ♡</h1>
+<div class="perch" id="p1"><div class="cat"></div><button class="pill" aria-pressed="false"><span class="gel"><span class="tri"></span><span class="bars"><i></i><i></i><i></i></span><span class="tx">play ♪</span></span></button></div>
+<p class="note">original pixel cat · bobs to the music · blinks when paused</p>
+<aside class="drawer" aria-label="phone menu mock"><b>popipants</b><ul><li>shop</li><li>lookbook</li><li>about</li><li>contact</li></ul>
+<div class="perch" id="p2"><div class="cat"></div><button class="pill" aria-pressed="false"><span class="gel"><span class="tri"></span><span class="bars"><i></i><i></i><i></i></span><span class="tx">play ♪</span></span></button></div></aside>
+<audio id="au" src="music/sweet%20cafe_spotdown.org%20(1).mp3" loop preload="none"></audio>
+<script>
+(function(){
+const P={k:'#FF5FA2',b:'#FFD6E8',w:'#ffffff',m:'#FF9EC7',r:'#E8344E',g:'#5CC98A',y:'#FFF1A8',a:'#A8A8B8',e:'#3B2433',h:'#ffffff'};
+const mir=a=>a.map(l=>l+l.split('').reverse().join(''));
+// original 22x18 cat, drawn for popipants (head 11 rows, body 7 rows)
+let HEAD=mir(['.kk.......','kbbk......','kbkbkkkkkk','kbbbbbbbbb','kbbkkkkkkk','kbkwwwwwww','kbkwwhewww','aaawweewww','kaaaweewww','kbkwmmwwwk','.kkkkkkkkk']).map(l=>'.'+l+'.');
+// strawberry clip on the hood
+const clip=[[1,14,'g'],[1,15,'g'],[1,16,'g'],[2,14,'r'],[2,15,'r'],[2,16,'r'],[3,14,'r'],[3,15,'y'],[3,16,'r'],[4,15,'r'],[0,15,'g']];
+HEAD=HEAD.map(s=>s.split(''));clip.forEach(([y,x,c])=>HEAD[y][x]=c);HEAD=HEAD.map(a=>a.join(''));
+const BODY=mir(['..kbbbbbbb','.kbbbwwwww','.kbbwwwwww','.kbbwwwwww','.kbbwwwwww','.kbbkwwwwk','.kkkkkkkkk']).map(l=>'.'+l+'.');
+const TAIL=['..kk','.kbk','kbk.','kbk.','.kk.'].map(l=>'..................'+l);
+const LIDS=['','','','','','','......ww......ww......','......ww......ww......','......kk......kk......'];
+function draw(rows,h){const c=document.createElement('canvas');c.width=22;c.height=h;const x=c.getContext('2d');
+ rows.forEach((r,j)=>[...r].forEach((ch,i)=>{if(P[ch]){x.fillStyle=P[ch];x.fillRect(i,j,1,1)}}));return c}
+const au=document.getElementById('au');let ctx,an,buf,raf;
+document.querySelectorAll('.perch').forEach(p=>{const cat=p.querySelector('.cat');
+ const body=draw(BODY,7);body.className='body';const tail=draw(TAIL.map((r,i)=>i<5?r:''),7);tail.className='body tail';
+ const head=document.createElement('div');head.className='head';head.style.cssText='position:absolute;left:0;top:0;width:88px;height:44px';
+ const hc=draw(HEAD,11),lc=draw(LIDS,11);hc.style.height=lc.style.height='44px';hc.style.top=lc.style.top='0';lc.className='lids';
+ head.append(hc,lc);cat.append(tail,body,head);
+ p.querySelector('.pill').addEventListener('click',toggle)});
+function setUI(on){document.querySelectorAll('.perch').forEach(p=>{p.classList.toggle('on',on);p.querySelector('.tx').textContent=on?'playing ♪':'play ♪';p.querySelector('.pill').setAttribute('aria-pressed',on)})}
+function meter(){if(!an)return;an.getByteTimeDomainData(buf);let s=0;for(const v of buf){const d=(v-128)/128;s+=d*d}
+ const amp=Math.min(1.4,.6+Math.sqrt(s/buf.length)*4);document.documentElement.style.setProperty('--amp',amp.toFixed(2));raf=requestAnimationFrame(meter)}
+function toggle(){if(!au.paused||document.body.dataset.fake){au.pause();delete document.body.dataset.fake;cancelAnimationFrame(raf);setUI(false);return}
+ try{if(!ctx){ctx=new AudioContext();an=ctx.createAnalyser();an.fftSize=256;buf=new Uint8Array(an.fftSize);ctx.createMediaElementSource(au).connect(an);an.connect(ctx.destination)}ctx.resume()}catch(e){}
+ setUI(true);au.play().then(meter).catch(()=>{document.body.dataset.fake=1})}
+if(location.search=='?on'){document.body.dataset.fake=1;setUI(true)}
+})();
+</script></body></html>

@@ -396,11 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem('popipants-welcomed')) return;
     sessionStorage.setItem('popipants-welcomed', 'true');
     setTimeout(() => {
-      showPcPopup(
-        'Welcome to Popipants!',
-        'You have entered the cutest corner of the internet. Enjoy your stay!',
-        'Enter Site'
-      );
+      if (window.ppWelcome) window.ppWelcome();
     }, 1200);
   }
   showWelcomePopup();

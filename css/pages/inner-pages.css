@@ -5,7 +5,7 @@
    ===================================================================== */
 
 /* ----- page background + soft white sparkles ----- */
-.secondary-page { position: relative; background: #f5f3f4 !important; }
+.secondary-page { position: relative; } /* background now shared with home (pages/home.css) */
 .secondary-page::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .8;
   background-image: radial-gradient(circle at 12% 20%, rgba(255,255,255,.9) 0 2px, transparent 3px), radial-gradient(circle at 86% 14%, rgba(255,255,255,.7) 0 2px, transparent 3px), radial-gradient(circle at 68% 76%, rgba(255,255,255,.82) 0 1px, transparent 3px);
@@ -17,12 +17,7 @@
 /* ----- the big framed "window" around everything ----- */
 .secondary-page .page-wrapper { position: relative; z-index: 1; max-width: 1120px; margin: 22px auto; background: #FFFFFF; border: 2px solid #FF9EC7; box-shadow: 0 10px 35px rgba(255,95,162,.22); }
 
-/* ----- left sidebar ----- */
-.secondary-page .sidebar { background: linear-gradient(180deg, #f3f0f1 0%, #fff 52%, #ece8ea 100%) !important; border-right-color: #FF9EC7; }
-.secondary-page .sidebar::before { content: '✿  ✧  ✿'; display: block; padding: 13px 8px 7px; color: #FF5FA2; font-size: 15px; letter-spacing: 9px; text-align: center; }
-.secondary-page .sidebar-title, .secondary-page .win-titlebar { background: linear-gradient(90deg,#FF5FA2,#FF9EC7); }
-.secondary-page .sidebar-nav a { background: rgba(255,255,255,.82); border-color: #FF9EC7; }
-.secondary-page .sidebar-nav a:hover, .secondary-page .sidebar-nav a.active { background: #FF9EC7; color: #fff; }
+/* ----- left sidebar: shared with home (pages/home.css) ----- */
 
 /* ----- main column + top menu ----- */
 .secondary-page .main-content { background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(255,255,255,.76)), url('../../images/art/pink-tile.png') center/auto 100% repeat-y; }

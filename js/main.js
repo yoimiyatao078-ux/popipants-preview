@@ -172,10 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
     ['snow angels', 'snow angels_spotdown.org (1).mp3'],
     ['sweet cafe', 'sweet cafe_spotdown.org (1).mp3']
   ];
-  const VOL = 0.28, SWITCH_MS = 60000, FADE_MS = 1500;
-  let cur = null, curIdx = -1, switchTimer = null, playing = false;
+  // Persistent shuffled playlist: state survives page changes via sessionStorage (track, time, queue, playing).
+  const VOL = 0.28, SWITCH_S = 60, FADE_MS = 1500, SKEY = 'popipants-music';
+  let cur = null, curIdx = -1, playing = false, wantResume = false;
+  let queue = [], pos = 0, seg = 0;
   const statusEl = () => document.getElementById('music-status');
-  const randomIdx = () => { let i; do { i = Math.floor(Math.random() * TRACKS.length); } while (TRACKS.length > 1 && i === curIdx); return i; };
+  const say = t => { const s = statusEl(); if (s) s.textContent = t; };
+  const shuffle = avoid => { const q = TRACKS.map((_, i) => i); for (let i = q.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [q[i], q[j]] = [q[j], q[i]]; } if (q.length > 1 && q[0] === avoid) q.push(q.shift()); return q; };
+  function save() {
+    try { sessionStorage.setItem(SKEY, JSON.stringify({ queue, pos, t: cur ? cur.currentTime : 0, seg, playing: playing || wantResume })); } catch (e) {}
+  }
   function fade(audio, from, to, ms, done) {
     const start = performance.now();
     (function tick(now) {
@@ -188,19 +194,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const a = new Audio('music/' + encodeURIComponent(TRACKS[i][1]));
     a.preload = 'auto';
     a.addEventListener('ended', () => { if (playing && a === cur) nextTrack(); });
+    a.addEventListener('timeupdate', () => { if (playing && a === cur && a.currentTime - seg >= SWITCH_S) nextTrack(); });
     return a;
   }
+  function load(i, t) { cur = makeTrack(i); curIdx = i; seg = 0; if (t) { const set = () => { try { cur.currentTime = t; } catch (e) {} }; if (cur.readyState >= 1) set(); else cur.addEventListener('loadedmetadata', set, { once: true }); } }
+  let switching = false;
   async function nextTrack() {
-    const i = randomIdx(), old = cur, a = makeTrack(i);
-    cur = a; curIdx = i; a.volume = 0;
-    try { await a.play(); } catch (e) { return false; }
+    if (switching) return true; switching = true;
+    pos++; if (pos >= queue.length) { queue = shuffle(curIdx); pos = 0; }
+    const old = cur, i = queue[pos], a = makeTrack(i);
+    cur = a; curIdx = i; seg = 0; a.volume = 0;
+    try { await a.play(); } catch (e) { switching = false; return false; }
     fade(a, 0, VOL, FADE_MS);
     if (old) fade(old, old.volume, 0, FADE_MS, () => { old.pause(); old.src = ''; });
-    const s = statusEl(); if (s) s.textContent = 'now playing: ' + TRACKS[i][0];
-    clearTimeout(switchTimer); switchTimer = setTimeout(() => { if (playing) nextTrack(); }, SWITCH_MS);
+    say('now playing: ' + TRACKS[i][0]); save(); switching = false;
     return true;
   }
-  // All play buttons (FM gel pill + sidebar CD) share one state
   const musicButtons = () => document.querySelectorAll('#music-toggle, .music-cd-toggle');
   function syncMusicUI() {
     musicButtons().forEach(btn => {
@@ -210,24 +219,46 @@ document.addEventListener('DOMContentLoaded', () => {
       const l = btn.querySelector('.mlabel'); if (l) l.textContent = playing ? 'playing ♪' : 'play ♪';
     });
   }
+  async function startCur() {
+    if (!cur) { queue = shuffle(-1); pos = 0; load(queue[0], 0); }
+    cur.volume = 0;
+    await cur.play();
+    fade(cur, 0, VOL, 400);
+    playing = true; wantResume = false; say('now playing: ' + TRACKS[curIdx][0]); syncMusicUI(); save();
+  }
   let busy = false;
   async function toggleMusic() {
     if (busy) return; busy = true;
-    const status = statusEl();
-    const say = t => { if (status) status.textContent = t; };
     if (!playing) {
-      playing = true; syncMusicUI();
-      let ok;
-      if (cur) { try { await cur.play(); fade(cur, 0, VOL, 400); ok = true; clearTimeout(switchTimer); switchTimer = setTimeout(() => { if (playing) nextTrack(); }, SWITCH_MS); say('now playing: ' + TRACKS[curIdx][0]); } catch (e) { ok = false; } }
-      else ok = await nextTrack();
-      if (!ok) { playing = false; say('press play again — your browser blocked the first try'); }
+      try { await startCur(); } catch (e) { playing = false; say('press play again — your browser blocked the first try'); }
     } else {
-      playing = false; clearTimeout(switchTimer);
+      playing = false; wantResume = false;
       if (cur) cur.pause();
-      say('paused — ' + TRACKS[curIdx][0]);
+      say('paused — ' + TRACKS[curIdx][0]); save();
     }
     syncMusicUI(); busy = false;
   }
+  // restore from previous page
+  (function restore() {
+    let st = null; try { st = JSON.parse(sessionStorage.getItem(SKEY)); } catch (e) {}
+    if (!st || !Array.isArray(st.queue) || !st.queue.length) return;
+    queue = st.queue; pos = Math.min(st.pos || 0, queue.length - 1);
+    load(queue[pos], st.t || 0); seg = st.seg || 0;
+    if (!st.playing) { say('paused — ' + TRACKS[curIdx][0]); return; }
+    wantResume = true;
+    startCur().catch(() => {
+      // autoplay blocked: resume at the saved time on the first click/keypress anywhere
+      say('tap anywhere to keep listening ♪ ' + TRACKS[curIdx][0]);
+      const go = e => {
+        removeEventListener('pointerdown', go, true); removeEventListener('keydown', go, true);
+        if (e && e.target && e.target.closest && e.target.closest('#music-toggle, .music-cd-toggle')) { e.stopPropagation(); e.preventDefault(); if (e.type === 'pointerdown') { const b = e.target.closest('button'); b.addEventListener('click', ev => ev.stopImmediatePropagation(), { once: true, capture: true }); } }
+        startCur().catch(() => { wantResume = false; syncMusicUI(); });
+      };
+      addEventListener('pointerdown', go, true); addEventListener('keydown', go, true);
+    });
+  })();
+  setInterval(() => { if (playing) save(); }, 1000);
+  addEventListener('pagehide', save);
   window.popipantsMusic = { toggle: toggleMusic, isPlaying: () => playing };
   musicButtons().forEach(btn => btn.addEventListener('click', toggleMusic));
   document.querySelectorAll('.popup-trigger, [data-popup="signup"]').forEach(trigger => {

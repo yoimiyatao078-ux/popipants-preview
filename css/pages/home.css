@@ -1,27 +1,27 @@
 /* ===== POPIPANTS HOMEPAGE: PINK Y2K WORLD ===== */
-.home-page {
+:is(.home-page, .secondary-page) {
   background: #FFD6E8 url('../../images/art/pink-tile.png') repeat;
   background-size: 260px auto;
 }
 
-.home-page .page-wrapper {
+:is(.home-page, .secondary-page) .page-wrapper {
   max-width: 1120px;
   margin: 22px auto;
   border: 2px solid #FF9EC7;
   box-shadow: 0 10px 35px rgba(255,95,162, .22);
 }
 
-.home-page .sidebar {
+:is(.home-page, .secondary-page) .sidebar {
   background: #FFD6E8 url('../../images/art/pink-tile.png') repeat;
   background-size: 190px auto;
   border-right-color: #FF9EC7;
 }
 
-.home-page .sidebar-title,
-.home-page .win-titlebar { background: linear-gradient(90deg, #FF5FA2, #FF9EC7); }
+:is(.home-page, .secondary-page) .sidebar-title,
+:is(.home-page, .secondary-page) .win-titlebar { background: linear-gradient(90deg, #FF5FA2, #FF9EC7); }
 
-.home-page .sidebar-nav a { background: rgba(255,255,255,.8); border-color: #FF9EC7; }
-.home-page .sidebar-nav a:hover, .home-page .sidebar-nav a.active { background: #FF9EC7; color: #fff; }
+:is(.home-page, .secondary-page) .sidebar-nav a { background: rgba(255,255,255,.8); border-color: #FF9EC7; }
+:is(.home-page, .secondary-page) .sidebar-nav a:hover, :is(.home-page, .secondary-page) .sidebar-nav a.active { background: #FF9EC7; color: #fff; }
 
 
 .home-page .main-content { background: #FFFFFF; }

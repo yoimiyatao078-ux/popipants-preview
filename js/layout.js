@@ -77,7 +77,7 @@
             '<small>4 colour worlds ✦ pick yours</small>' +
           '</div>' +
           '<button class="figurine-button" type="button" data-popup="signup" aria-label="Open secret club signup">' +
-            '<span class="figurine" aria-hidden="true">✿</span><span>click me<br>for secrets</span>' +
+            '<span>click me<br>for secrets</span>' +
           '</button>' +
           '<button type="button" class="sidebar-cd music-cd-toggle" aria-label="Play background music" aria-pressed="false">' +
             '<span class="cd" aria-hidden="true"></span><span class="badge" aria-hidden="true"><b><span class="bt"></span><span class="bp"><i></i><i></i></span></b></span>' +
@@ -93,7 +93,7 @@
         '<button type="button" class="combo-fcd music-cd-toggle" aria-label="Play background music" aria-pressed="false"><span class="cd" aria-hidden="true"></span><span class="badge" aria-hidden="true"><b><span class="bt"></span><span class="bp"><i></i><i></i></span></b></span></button>' +
         '<nav class="top-nav category-nav" aria-label="Shop categories">' +
         TOP_LINKS.map(function (l) {
-          return '<a href="' + l[2] + '"><span aria-hidden="true">' + l[0] + '</span> ' + l[1] + '</a>';
+          return '<a href="' + l[2] + '">' + l[1] + '</a>';
         }).join('') + '</nav>';
     },
 

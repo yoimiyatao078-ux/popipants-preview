@@ -64,3 +64,8 @@ html body .theme-switcher-inline .theme-btn{position:relative;z-index:1;flex:non
 html body .theme-switcher-inline .critter-buddy{z-index:1;flex:none;margin:0!important}
 html body .page-layout .theme-switcher-inline{gap:4px!important;padding:7px 6px!important}
 html body .theme-switcher-inline .critter-buddy{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important}
+/* made-in-norway sticker on the about_me.txt window */
+.has-norway-sticker{position:relative}
+.norway-sticker{position:absolute;bottom:-30px;right:-12px;width:120px;height:auto;transform:rotate(6deg);z-index:2;image-rendering:pixelated;
+ border:3px solid #fff;border-radius:6px;box-shadow:0 3px 8px rgba(255,95,162,.3);pointer-events:none}
+@media (max-width:768px){.norway-sticker{width:88px;top:-26px;bottom:auto;right:-4px;border-width:2px}}

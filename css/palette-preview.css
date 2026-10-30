@@ -47,3 +47,12 @@ html.pal-b .combo-tb i{background:radial-gradient(circle at 40% 30%,#fff,#BFF3FF
 html.pal-b .combo-tb i:first-child{background:radial-gradient(circle at 40% 30%,#fff,#FF9EC7 60%,#FF5FA2)!important}
 html.pal-b .sidebar-title::first-letter{color:#BFF3FF}
 html.pal-b .mspark{background:#5FD3F3!important}
+/* stronger "less pink": cream page, white panels, silver title bars with pink text, whiter gels */
+html:is(.pal-a,.pal-b) body{background:#FBF8F2!important}
+html:is(.pal-a,.pal-b) .content-section.drop-section,html:is(.pal-a,.pal-b) .content-section.cd-section,html:is(.pal-a,.pal-b) .content-section.lotus-section{background:#fff!important}
+html:is(.pal-a,.pal-b) .content-section:nth-of-type(even){background:#FFFDF8!important}
+html:is(.pal-a,.pal-b) .page-wrapper{box-shadow:0 0 0 1px #FFD6E8,0 10px 40px rgba(160,160,180,.25)!important}
+html:is(.pal-a,.pal-b) .sidebar-title,html:is(.pal-a,.pal-b) .combo-tb{background:linear-gradient(180deg,#fff 0%,#ececf2 40%,#c4c4d2 55%,#f2f2f6 100%)!important;color:#FF5FA2!important;border-bottom:1px solid #b4b4c4}
+html:is(.pal-a,.pal-b) .sidebar-title *,html:is(.pal-a,.pal-b) .combo-tb span{color:#FF5FA2!important}
+html:is(.pal-a,.pal-b) :is(.gelbtn,.btn:not(.btn-primary),.btn-aero,.top-nav a,.combo-drop-menu a){background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#fff 35%,#FFD6E8 100%) padding-box,linear-gradient(180deg,#fff 0%,#e4e4ec 25%,#9a9aab 50%,#fafafd 70%,#b4b4c4 100%) border-box!important}
+html.pal-a .sidebar-nav a:not(.active){background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#fff 35%,#FFD6E8 100%) padding-box,linear-gradient(180deg,#fff 0%,#e4e4ec 25%,#9a9aab 50%,#fafafd 70%,#b4b4c4 100%) border-box!important}

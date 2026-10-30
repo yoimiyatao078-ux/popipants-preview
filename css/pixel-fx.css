@@ -50,3 +50,5 @@
 /* desktop: white sidebar background only (inner elements untouched) */
 @media (min-width:769px){.page-layout>.sidebar{background:#fff!important;box-shadow:inset -2px 0 0 #FFD6E8}}
 .sidebar-cd.has-px-cat{margin-top:46px}
+/* slim made-in-norway footer badge, last item in sidebar */
+html .sidebar .made-in-norway-badge{display:block;width:92px!important;max-width:60%!important;height:auto!important;margin:4px auto 12px!important;transform:none!important;order:9!important;opacity:.9}

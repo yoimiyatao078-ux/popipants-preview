@@ -82,8 +82,8 @@
           '<button type="button" class="sidebar-cd music-cd-toggle" aria-label="Play background music" aria-pressed="false">' +
             '<span class="cd" aria-hidden="true"></span><span class="badge" aria-hidden="true"><b><span class="bt"></span><span class="bp"><i></i><i></i></span></b></span>' +
           '</button>' +
-          '<img class="made-in-japan-sticker" src="images/art/made-in-norway-jp.png" alt="Made in Norway">' +
           '<p class="sidebar-location">♥ handmade in Trondheim<br>since 2026</p>' +
+          '<img class="made-in-japan-sticker made-in-norway-badge" src="images/art/made-in-norway-badge.png" alt="Made in Norway">' +
         '</aside>';
     },
 

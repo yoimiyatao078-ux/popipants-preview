@@ -1,0 +1,26 @@
+/* =====================================================================
+   RULES SHARED BY EVERY NON-PINK THEME (blue, red, goth)
+   ---------------------------------------------------------------------
+   These say "use the theme's colour variables instead of the built-in
+   pinks". You normally DON'T edit this file — change the colours in
+   theme-blue.css / theme-red.css / theme-goth.css instead.
+   ===================================================================== */
+html body.home-page { background-color: var(--t-bg); transition: background-color .4s; }
+html[data-theme] .secondary-page::before { opacity: .25; }
+html[data-theme] .marquee-bar { background: var(--t-marquee); }
+html[data-theme] .sidebar { background: var(--t-side) !important; border-right-color: var(--t-line) !important; }
+html[data-theme] .sidebar-title, html[data-theme] .win-titlebar { background: var(--t-title) !important; }
+html[data-theme] .sidebar-nav a { background: var(--t-panel) !important; border-color: var(--t-line) !important; color: var(--t-ink) !important; }
+html[data-theme] .sidebar-nav a:hover, html[data-theme] .sidebar-nav a.active { background: var(--accent) !important; color: #fff !important; }
+html[data-theme] .sidebar p, html[data-theme] .sidebar small, html[data-theme] .sidebar-location { color: var(--t-ink-soft) !important; }
+html[data-theme] .main-content { background: var(--t-panel) !important; }
+html[data-theme] .category-nav, html[data-theme] .top-nav, html[data-theme] .filter-bar, html[data-theme] .footer { background: var(--t-panel-2) !important; border-color: var(--t-line) !important; }
+html[data-theme] .category-nav a, html[data-theme] .top-nav a, html[data-theme] .filter-btn { background: var(--t-panel) !important; color: var(--t-ink) !important; border-color: var(--t-line) !important; box-shadow: 1px 2px 0 var(--t-shadow) !important; }
+html[data-theme] .category-nav a:hover, html[data-theme] .filter-btn.active { background: var(--accent) !important; color: #fff !important; }
+html[data-theme] .banner, html[data-theme] .content-section { border-color: var(--t-line) !important; }
+html[data-theme] .banner-title, html[data-theme] .section-title, html[data-theme] h1, html[data-theme] h2 { color: var(--t-heading) !important; }
+html[data-theme] .banner-subtitle, html[data-theme] .hero-kicker, html[data-theme] .section-desc, html[data-theme] .product-category { color: var(--t-ink-soft) !important; }
+html[data-theme] .section-tag { background: var(--t-panel) !important; color: var(--t-ink-soft) !important; border-color: var(--t-line) !important; }
+html[data-theme] .quick-action, html[data-theme] .product-info, html[data-theme] .product-card, html[data-theme] .figurine-button { background: var(--t-panel) !important; border-color: var(--t-line) !important; color: var(--t-ink) !important; }
+html[data-theme] .product-image { background: linear-gradient(135deg,var(--baby-pink),var(--t-panel)) !important; }
+html[data-theme] .product-name, html[data-theme] .quick-action b { color: var(--t-ink) !important; }

@@ -1,0 +1,23 @@
+/* =====================================================================
+   PINK THEME (the default look)
+   ---------------------------------------------------------------------
+   Pink is the "normal" design, so most pink colours live in the css/
+   files. This file only holds the shared colour names (variables) that
+   the other themes swap out. Change a value here = changes pink.
+   ===================================================================== */
+:root {
+  --t-bg: #FFD6E8;                      /* page background behind the window */
+  --t-panel: #FFFFFF;                   /* boxes / panels */
+  --t-panel-2: #FFFFFF;                 /* menu bars, footer */
+  --t-side: rgba(255,214,232,.92);      /* sidebar */
+  --t-title: linear-gradient(90deg,#FF5FA2,#FF9EC7);  /* little window title bars */
+  --t-ink: #96285F;                     /* main text on panels */
+  --t-ink-soft: #96285F;                /* softer text */
+  --t-line: #FF9EC7;                    /* borders */
+  --t-shadow: #FF9EC7;                  /* button shadows */
+  --t-heading: #FF5FA2;                 /* headings */
+  --t-btn: linear-gradient(#FFD6E8 0%,#FF9EC7 50%,#FF5FA2 51%,#FF9EC7 100%); /* glossy buttons */
+  --t-btn-ink: #fff;
+  --t-glow: rgba(255,95,162,.45);
+  --t-marquee: #FF5FA2;                 /* scrolling top bar */
+}

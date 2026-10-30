@@ -1,0 +1,30 @@
+/* =====================================================================
+   GOTH THEME — black + purple emo   (active when <html data-theme="goth">)
+   ===================================================================== */
+html[data-theme="goth"] {
+  --pink: #9b4dff; --hot-pink: #7a2be0; --soft-pink: #b98cff; --baby-pink: #1b1028;
+  --accent: #9b4dff; --accent-soft: #b98cff; --accent-deep: #7a2be0; --accent-glow: rgba(155,77,255,.4);
+  --text: #e5dcf5; --text-light: #a99bc4; --text-dark: #fff; --off-white: #0b0810; --cream: #0b0810;
+  --t-bg: #07050b;
+  --t-panel: #120d1a; --t-panel-2: #1a1226; --t-side: rgba(20,13,30,.95);
+  --t-title: linear-gradient(90deg,#000,#3b1466 55%,#9b4dff);
+  --t-ink: #e3d2ff; --t-ink-soft: #b98cff; --t-line: #3a2a52; --t-shadow: #000;
+  --t-heading: #c9a6ff; --t-btn: linear-gradient(#6b3fb0 0%,#3b1466 50%,#22093f 51%,#5b2aa0 100%);
+  --t-glow: rgba(155,77,255,.5); --t-marquee: #1a0b2e;
+}
+html[data-theme="goth"] body.home-page {
+  background-image: radial-gradient(circle at 15% 20%,rgba(255,255,255,.8) 0 1px,transparent 2px), radial-gradient(circle at 70% 60%,rgba(185,140,255,.8) 0 1px,transparent 2px), radial-gradient(ellipse at 50% -10%,rgba(91,42,160,.5),transparent 60%);
+  background-size: 180px 200px, 240px 220px, 100% 100%; }
+html[data-theme="goth"] .banner { background: radial-gradient(circle at 85% 30%,rgba(155,77,255,.35),transparent 50%), linear-gradient(120deg,#120d1a,#000) !important; }
+html[data-theme="goth"] .content-section { background: var(--t-panel) !important; }
+html[data-theme="goth"] p, html[data-theme="goth"] label, html[data-theme="goth"] li { color: var(--text); }
+html[data-theme="goth"] input, html[data-theme="goth"] textarea, html[data-theme="goth"] select { background: #0d0609; color: var(--text); border-color: var(--t-line); }
+html[data-theme="goth"] .btn-secondary { background: #1a1226 !important; color: #c9a6ff !important; border-color: #9b4dff !important; }
+/* stickers with white backgrounds: soft fade instead of a white box */
+html[data-theme="goth"] .made-in-japan-sticker, html[data-theme="goth"] .hero-phone-sticker {
+  mix-blend-mode: normal; filter: grayscale(.4) contrast(1.1);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at center,#000 55%,transparent 75%); mask-image: radial-gradient(ellipse 60% 60% at center,#000 55%,transparent 75%); }
+html[data-theme="goth"] .hero-phone-sticker { filter: grayscale(1) contrast(1.2) drop-shadow(0 0 10px #9b4dff); }
+html[data-theme="goth"] .inspo-shelf img { filter: grayscale(1) contrast(1.15) brightness(.9); border-color: #3a2a52; }
+/* white inner boxes (e.g. contact info) were unreadable on dark: give them the dark panel colour */
+html[data-theme="goth"] .win-panel-inset { background: var(--t-panel); }

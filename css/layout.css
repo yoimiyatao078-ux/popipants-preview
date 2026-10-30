@@ -1,0 +1,133 @@
+/* ===== MARQUEE BAR ===== */
+.marquee-bar {
+  background: var(--hot-pink);
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  padding: 0.3rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.marquee-text {
+  display: inline-block;
+  animation: marquee 25s linear infinite;
+}
+
+/* ===== PAGE LAYOUT (table-like, 2-column) ===== */
+.page-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  background: white;
+  border-left: 2px ridge var(--win-gray);
+  border-right: 2px ridge var(--win-gray);
+  border-bottom: 2px ridge var(--win-gray);
+}
+
+.page-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ===== LEFT SIDEBAR ===== */
+.sidebar {
+  width: 180px;
+  min-width: 180px;
+  background: var(--win-gray);
+  border-right: 2px outset var(--win-light);
+  padding: 0;
+}
+
+.sidebar-section {
+  border-bottom: 2px outset var(--win-light);
+}
+
+.sidebar-title {
+  background: var(--win-titlebar);
+  color: white;
+  font-family: var(--font-system);
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  letter-spacing: 1px;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 4px;
+}
+
+.sidebar-nav li {
+  margin-bottom: 2px;
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: 6px 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-dark);
+  text-decoration: none;
+  background: var(--win-gray);
+  border: 2px outset var(--win-light);
+  text-align: center;
+  transition: all 0.1s;
+}
+
+.sidebar-nav a:hover {
+  background: var(--baby-pink);
+  border-color: var(--pink);
+}
+
+.sidebar-nav a.active {
+  background: var(--pink);
+  color: white;
+  border-style: inset;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1;
+  background: white;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ===== NAVIGATION (top colored buttons) ===== */
+.top-nav {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px;
+  background: var(--win-gray);
+  border-bottom: 2px outset var(--win-light);
+  flex-wrap: wrap;
+}
+
+.top-nav a {
+  display: inline-block;
+  padding: 6px 16px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+  border: 2px outset rgba(255, 255, 255, 0.3);
+  transition: all 0.1s;
+}
+
+
+.top-nav a:hover {
+  filter: brightness(1.15);
+  border-style: inset;
+}
+
+.top-nav a.active {
+  border-style: inset;
+  filter: brightness(0.9);
+}
+
+.footer-copy { margin-top: 0.5rem; }

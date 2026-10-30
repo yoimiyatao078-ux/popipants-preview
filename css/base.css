@@ -1,0 +1,134 @@
+/* ===== DEFAULT COLOURS, FONTS, SIZES (pink theme values) ===== */
+:root {
+  /* Y2K Bright Colors */
+  --pink: #FF5FA2;
+  --hot-pink: #FF5FA2;
+  --soft-pink: #FF9EC7;
+  --baby-pink: #FFD6E8;
+  --cyan: #00CED1;
+  --light-cyan: #E0FFFF;
+  --baby-blue: #BAE6FD;
+  --mint: #A7F3D0;
+  --yellow: #FDE68A;
+  --white: #FFFFFF;
+  --off-white: #F8F8FF;
+  --cream: #FFFBF0;
+
+  /* Win95/98 System Colors */
+  --win-gray: #C0C0C0;
+  --win-dark-gray: #808080;
+  --win-light: #DFDFDF;
+  --win-blue: #000080;
+  --win-blue-light: #1084D0;
+  --win-titlebar: linear-gradient(90deg, #000080, #1084D0);
+
+  /* Text */
+  --text: #333333;
+  --text-dark: #000000;
+  --text-light: #666666;
+  --text-link: #0000FF;
+  --text-visited: #FF5FA2;
+
+  /* Theme accent */
+  --accent: var(--pink);
+  --accent-soft: var(--soft-pink);
+  --accent-deep: var(--hot-pink);
+  --accent-glow: rgba(255,95,162, 0.3);
+
+  /* Retro tokens */
+  --border-retro: 2px ridge var(--win-gray);
+  --border-pixel: 3px outset var(--win-gray);
+  --shadow-retro: 3px 3px 0 rgba(0, 0, 0, 0.2);
+  --shadow-inset: inset 2px 2px 0 rgba(0, 0, 0, 0.15), inset -2px -2px 0 rgba(255, 255, 255, 0.6);
+
+  /* Fonts */
+  --font-heading: 'VT323', 'Courier New', monospace;
+  --font-display: 'Monoton', cursive;
+  --font-body: 'Comic Neue', 'Comic Sans MS', cursive;
+  --font-system: 'Tahoma', 'Segoe UI', sans-serif;
+  --font-serif: 'Times New Roman', Georgia, serif;
+}
+
+/* Blue theme (future) */
+
+/* ===== RESET ===== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--off-white);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--text-visited);
+}
+
+a:hover {
+  color: var(--hot-pink);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes marquee {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes blink-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes popup-appear {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+

@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>play music buttons</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;font-family:Inconsolata,monospace;color:#FF5FA2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+h1{font-weight:700;font-size:22px;letter-spacing:.2em;margin:0 0 50px}
+.row{display:flex;gap:110px;align-items:flex-end}
+.opt{display:flex;flex-direction:column;align-items:center;gap:26px}
+.cap{font-size:14px;letter-spacing:.15em;font-weight:700}
+button{border:0;background:none;padding:0;cursor:pointer;font-family:inherit;color:#FF5FA2}
+/* A pill */
+.pill{position:relative;padding:5px;border-radius:999px;background:linear-gradient(180deg,#fff 0%,#d9d9e3 35%,#a9a9b8 55%,#f4f4f8 80%,#c4c4d0 100%);box-shadow:0 6px 14px rgba(255,95,162,.25),0 1px 0 #fff inset}
+.pill .gel{position:relative;display:flex;align-items:center;gap:12px;padding:14px 30px 14px 24px;border-radius:999px;background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#FFD6E8 45%,#FF9EC7 100%);box-shadow:inset 0 -6px 12px #fff,inset 0 3px 6px rgba(255,95,162,.45);color:#FF5FA2;font-weight:700;font-size:22px;letter-spacing:.1em;overflow:hidden;transition:transform .12s}
+.pill .gel::before{content:"";position:absolute;left:12px;right:12px;top:3px;height:45%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.15))}
+.pill .gel>*{position:relative}
+.tri{width:0;height:0;border-left:14px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;filter:drop-shadow(0 1px 1px rgba(200,40,110,.5))}
+.bars{display:none;gap:3px;height:18px;align-items:flex-end}.bars i{width:4px;background:#fff;border-radius:2px;animation:eq .6s infinite alternate}.bars i:nth-child(2){animation-delay:.2s}.bars i:nth-child(3){animation-delay:.4s}
+@keyframes eq{from{height:4px}to{height:18px}}
+.pill.on .gel{transform:translateY(2px) scale(.97);box-shadow:inset 0 -3px 8px rgba(255,214,232,.7),inset 0 6px 12px rgba(160,20,90,.5)}
+.pill .tri{border-left-color:#FF5FA2;filter:none}.pill .bars i{background:#FF5FA2}.pill.on .tri{display:none}.pill.on .bars{display:flex}
+.spark{position:absolute;width:12px;height:12px;opacity:0;transition:.25s;background:
+linear-gradient(#FF5FA2,#FF5FA2) 4px 0/4px 12px no-repeat,linear-gradient(#FF5FA2,#FF5FA2) 0 4px/12px 4px no-repeat}
+.s1{top:-14px;left:8px}.s2{top:-8px;right:-12px;transform:scale(.7)}.s3{bottom:-12px;right:24px;transform:scale(.6)}
+.pill:hover .spark,.pill.on .spark{opacity:1;animation:tw 1s infinite steps(2)}
+@keyframes tw{50%{opacity:.3}}
+/* B ipod */
+.pod{display:flex;flex-direction:column;align-items:center;gap:12px}
+.screen{width:150px;height:30px;border-radius:6px;background:linear-gradient(#fff,#FFD6E8);border:2px solid #FF9EC7;box-shadow:inset 0 2px 4px rgba(255,95,162,.3);overflow:hidden;font-size:13px;font-weight:700;display:flex;align-items:center;white-space:nowrap;visibility:hidden}
+.screen span{padding-left:100%;animation:mq 5s linear infinite}
+@keyframes mq{to{transform:translateX(-100%)}}
+.pod.on .screen{visibility:visible}
+.wheel{position:relative;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 25%,#fff 0%,#FFD6E8 45%,#FF9EC7 100%);box-shadow:0 8px 18px rgba(255,95,162,.35),inset 0 -6px 12px rgba(255,95,162,.5),inset 0 4px 8px #fff}
+.wheel::before{content:"";position:absolute;left:22px;right:22px;top:6px;height:50px;border-radius:50%;background:linear-gradient(rgba(255,255,255,.85),rgba(255,255,255,0))}
+.lbl{position:absolute;font-size:12px;font-weight:700;color:#FF5FA2}
+.l1{top:12px;left:50%;transform:translateX(-50%)}.l2{bottom:10px;left:50%;transform:translateX(-50%);font-size:13px}.l3{left:12px;top:50%;transform:translateY(-50%)}.l4{right:12px;top:50%;transform:translateY(-50%)}
+.center{position:absolute;inset:44px;border-radius:50%;background:radial-gradient(circle at 50% 30%,#fff,#FFD6E8 70%,#FF9EC7);box-shadow:inset 0 -3px 6px rgba(255,95,162,.4),0 2px 4px rgba(255,95,162,.4);display:flex;align-items:center;justify-content:center;transition:.12s}
+.center .tri{border-left-color:#FF5FA2;filter:none;margin-left:4px}
+.pz{display:none;gap:5px}.pz i{width:6px;height:18px;background:#FF5FA2;border-radius:2px}
+.pod.on .center{box-shadow:inset 0 3px 6px rgba(255,95,162,.5);transform:scale(.96)}
+.pod.on .center .tri{display:none}.pod.on .pz{display:flex}
+/* C cd */
+.cdwrap{position:relative;width:170px;height:170px}
+.cd{position:absolute;inset:0;border-radius:50%;background:
+radial-gradient(circle,#fff 0 12%,#e8e8ef 12% 14%,transparent 14.5%),
+radial-gradient(circle,transparent 30%,rgba(255,255,255,.5) 31%,transparent 33%),
+conic-gradient(from 20deg,#FFD6E8,#FF9EC7,#d8f2ff,#fff,#FF9EC7,#FF5FA2,#e9d6ff,#FFD6E8,#fff6c8,#FF9EC7,#FFD6E8);
+box-shadow:0 8px 20px rgba(255,95,162,.35),inset 0 0 0 2px rgba(255,255,255,.8),inset 0 0 20px rgba(255,95,162,.3)}
+.cd::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.7) 0%,transparent 40%,transparent 60%,rgba(255,255,255,.4) 100%)}
+.cdwrap.on .cd{animation:spin 2.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.badge{position:absolute;right:-6px;bottom:-6px;width:60px;height:60px;border-radius:50%;padding:3px;background:linear-gradient(180deg,#fff,#b9b9c6 50%,#f2f2f6);box-shadow:0 4px 10px rgba(255,95,162,.4)}
+.badge b{position:relative;display:flex;width:100%;height:100%;border-radius:50%;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at 50% 110%,#FFD6E8,#FF9EC7 45%,#FF5FA2 90%);box-shadow:inset 0 -4px 6px rgba(255,214,232,.8)}
+.badge b::before{content:"";position:absolute;left:8px;right:8px;top:2px;height:45%;border-radius:50%;background:linear-gradient(rgba(255,255,255,.95),rgba(255,255,255,.1))}
+.badge .tri{margin-left:4px;position:relative}.badge .pz{position:relative}.badge .pz i{background:#fff;height:16px;width:5px}
+.cdwrap.on .tri{display:none}.cdwrap.on .pz{display:flex}
+.cdwrap.on .badge b{box-shadow:inset 0 4px 8px rgba(160,20,90,.45)}
+</style></head><body>
+<h1>♡ play music ♡</h1>
+<div class="row">
+<div class="opt"><button class="pill t"><span class="gel"><span class="tri"></span><span class="bars"><i></i><i></i><i></i></span><span class="tx">play ♪</span></span><i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i></button><div class="cap">A · gel pill</div></div>
+<div class="opt"><div class="pod t"><div class="screen"><span>♪ now playing... popipants radio ♡</span></div><div class="wheel"><span class="lbl l1">MENU</span><span class="lbl l3">◂◂</span><span class="lbl l4">▸▸</span><span class="lbl l2">♪</span><button class="center"><span class="tri"></span><span class="pz"><i></i><i></i></span></button></div></div><div class="cap">B · click wheel</div></div>
+<div class="opt"><button class="cdwrap t"><span class="cd"></span><span class="badge"><b><span class="tri"></span><span class="pz"><i></i><i></i></span></b></span></button><div class="cap">C · pink cd</div></div>
+</div>
+<script>
+document.querySelectorAll('.t').forEach(el=>el.addEventListener('click',()=>{el.classList.toggle('on');const t=el.querySelector('.tx');if(t)t.textContent=el.classList.contains('on')?'playing ♪':'play ♪'}));
+if(location.search=='?on')document.querySelectorAll('.t').forEach(e=>e.click());
+</script></body></html>

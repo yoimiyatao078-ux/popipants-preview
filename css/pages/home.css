@@ -1,0 +1,75 @@
+/* ===== POPIPANTS HOMEPAGE: PINK Y2K WORLD ===== */
+.home-page {
+  background: #FFD6E8 url('../../images/art/pink-tile.png') repeat;
+  background-size: 260px auto;
+}
+
+.home-page .page-wrapper {
+  max-width: 1120px;
+  margin: 22px auto;
+  border: 2px solid #FF9EC7;
+  box-shadow: 0 10px 35px rgba(255,95,162, .22);
+}
+
+.home-page .sidebar {
+  background: #FFD6E8 url('../../images/art/pink-tile.png') repeat;
+  background-size: 190px auto;
+  border-right-color: #FF9EC7;
+}
+
+.home-page .sidebar-title,
+.home-page .win-titlebar { background: linear-gradient(90deg, #FF5FA2, #FF9EC7); }
+
+.home-page .sidebar-nav a { background: rgba(255,255,255,.8); border-color: #FF9EC7; }
+.home-page .sidebar-nav a:hover, .home-page .sidebar-nav a.active { background: #FF9EC7; color: #fff; }
+
+
+.home-page .main-content { background: #FFFFFF; }
+
+.pink-hero { min-height: 390px; padding: 60px 185px 55px 38px; text-align: left; background: linear-gradient(90deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.9) 58%, rgba(255,255,255,.2)), url('../../images/hero-background.jpg') center/cover; border-bottom: 0; }
+.hero-kicker { position: relative; z-index: 2; color: #FF5FA2; font: 500 12px var(--font-system); letter-spacing: 2.3px; text-transform: uppercase; }
+.home-page .banner-title { position: relative; z-index: 2; margin: 5px 0 0; color: #FF5FA2; font-family: 'Yeseva One', Georgia, serif; font-size: clamp(3.4rem, 9vw, 6.6rem); font-weight: 400; line-height: .98; letter-spacing: -4px; text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(255,95,162,.16); }
+.home-page .banner-subtitle { position: relative; z-index: 2; max-width: 300px; margin: 14px 0 0; color: #96285F; font-family: var(--font-body); font-size: 1.1rem; letter-spacing: .5px; }
+.hero-actions { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.home-page .btn { border-radius: 5px; font-family: var(--font-system); letter-spacing: .2px; }
+.hero-phone-sticker { position: absolute; right: -32px; bottom: -38px; z-index: 3; width: 270px; mix-blend-mode: multiply; transform: rotate(-8deg); filter: saturate(1.12); }
+.home-page .banner-star { width: 7px; height: 7px; background: white; box-shadow: 0 0 8px 3px white; }
+
+.home-page .content-section { position: relative; overflow: hidden; padding: 42px 35px; border-bottom: 1px solid #FF9EC7; }
+.monster-bg { background: linear-gradient(90deg, rgba(255,255,255,.94), rgba(255,255,255,.62)), url('../../images/monster-background.jpg') center/cover; }
+.section-header-left { max-width: 610px; text-align: left; padding: 0 0 20px; }
+.home-page .section-tag { color: #96285F; background: rgba(255,255,255,.78); border-color: #FF9EC7; }
+.home-page .section-title { color: #96285F; font-family: 'Yeseva One', Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.7rem); letter-spacing: -.7px; }
+.home-page .section-desc { color: #7b4a61; }
+.section-header-left .section-desc { margin-left: 0; }
+.quick-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+.quick-action { min-height: 138px; padding: 15px; color: #96285F; text-decoration: none; background: rgba(255,255,255,.88); border: 1px solid #FF9EC7; box-shadow: 3px 3px 0 rgba(255,95,162,.24); transition: transform .15s; }
+.quick-action:hover { color: #96285F; transform: translate(-2px,-2px); }
+.quick-action span { display: block; margin-bottom: 6px; font-size: 29px; }
+.quick-action b { display: block; font-family: 'Yeseva One', Georgia, serif; font-size: 17px; font-weight: 400; }
+.quick-action small { display: block; margin-top: 5px; font: 11px var(--font-system); color: #FF5FA2; }
+
+.cd-section { min-height: 280px; padding-right: 320px !important; background: linear-gradient(90deg, #FFFFFF, rgba(255,255,255,.92)), url('../../images/cd-section-background.jpg') center/cover; }
+.cd-sticker { position: absolute; right: 13px; top: -22px; width: 296px; mix-blend-mode: multiply; animation: spin 17s linear infinite; filter: contrast(1.06); }
+.lotus-section { background: linear-gradient(rgba(255,255,255,.56), rgba(255,255,255,.78)), url('../../images/cd-section-background.jpg') center/cover; }
+.home-page .footer { background: #FFFFFF; border-top: 1px solid #FF9EC7; }
+.home-page .social-link { background: white; border-color: #FF9EC7; color: #FF5FA2; }
+
+@media (max-width: 768px) {
+  .home-page .page-wrapper { margin: 0; }
+  .pink-hero { min-height: 360px; padding: 45px 145px 40px 24px; }
+  .hero-phone-sticker { width: 210px; right: -48px; }
+  .quick-actions { grid-template-columns: 1fr; }
+  .cd-section { padding-right: 190px !important; }
+  .cd-sticker { width: 205px; right: -45px; top: 25px; }
+}
+
+/* music-notes doodle behind the "listen while you browse" box */
+.music-notes-sticker { position: absolute; left: 4%; bottom: -17px; z-index: 1; width: 330px; max-width: 55%; mix-blend-mode: multiply; opacity: .25; pointer-events: none; }
+.cd-section .section-header { position: relative; z-index: 2; }
+@media (max-width: 768px) { .music-notes-sticker { width: 230px; } }
+
+/* round 3: pixel-art remakes — keep the pixel grid crisp */
+.hero-phone-sticker, .cd-sticker, .music-notes-sticker, .made-in-japan-sticker { image-rendering: pixelated; }
+.home-page, .hero, .secondary-page .main-content, .contact-page .banner::after { image-rendering: pixelated; }
+

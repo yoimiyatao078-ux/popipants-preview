@@ -1,0 +1,40 @@
+/* ---------- Sidebar theme boxes: four little colour boxes ---------- */
+.theme-switcher-inline{ display:flex; gap:8px; padding:6px 10px; }
+.theme-switcher-inline .theme-btn{ width:26px!important; height:26px!important; border-radius:5px!important; border:2px solid #fff!important;
+  box-shadow:inset 0 9px 6px rgba(255,255,255,.55), 0 2px 4px rgba(0,0,0,.25)!important; transition:transform .15s; }
+.theme-switcher-inline .theme-btn:hover{ transform:translateY(-2px) scale(1.08); }
+.theme-switcher-inline .theme-btn.active{ outline:2px dashed var(--accent)!important; outline-offset:2px; }
+.theme-btn[data-theme="pink"]{ background:linear-gradient(135deg,#FFD6E8,#FF5FA2)!important; }
+.theme-btn[data-theme="blue"]{ background:linear-gradient(135deg,#9ff3ff,#13a5dd 60%,#ffd76a)!important; }
+.theme-btn[data-theme="red"]{ background:linear-gradient(135deg,#96285F,#96285F)!important; }
+.theme-btn[data-theme="goth"]{ background:linear-gradient(135deg,#9b4dff,#0b0810 70%)!important; }
+.theme-btn .tooltip{ left:50%; right:auto!important; top:auto!important; bottom:calc(100% + 6px); transform:translateX(-50%)!important; white-space:nowrap; z-index:5; }
+
+/* ---------- Aero glossy buttons (pins 29 "start" + 19 glass tile) ---------- */
+.btn-aero{ display:inline-flex; align-items:center; gap:6px; padding:7px 18px; border-radius:999px; border:1px solid rgba(0,0,0,.18);
+  background:var(--t-btn); color:var(--t-btn-ink)!important; font:700 13px var(--font-system); text-decoration:none; cursor:pointer;
+  text-shadow:0 1px 1px rgba(0,0,0,.3); box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 2px 6px var(--t-glow); transition:filter .15s,transform .15s; }
+.btn-aero:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+.btn-aero:active{ transform:translateY(1px); }
+
+/* ---------- Inspo sticker shelf (pins, Frutiger-Aero desktop icons) ---------- */
+.inspo-shelf{ position:relative; padding:22px 30px 26px; border-top:1px solid var(--t-line); background:linear-gradient(180deg,var(--t-panel-2),var(--t-panel)); }
+.inspo-shelf h3{ font:22px var(--font-heading); color:var(--t-heading); letter-spacing:1px; margin-bottom:10px; }
+.inspo-shelf .shelf{ display:flex; gap:14px; flex-wrap:wrap; }
+.inspo-shelf figure{ width:92px; text-align:center; font:11px var(--font-system); color:var(--t-ink); }
+.inspo-shelf img{ width:84px; height:84px; object-fit:cover; border-radius:16px; border:2px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.18),inset 0 0 0 1px rgba(0,0,0,.05); transition:transform .2s; }
+.inspo-shelf figure:hover img{ transform:translateY(-4px) rotate(-3deg); }
+
+
+/* ---------- Shop: bag + add buttons ---------- */
+.product-card .btn-aero{ margin-top:8px; font-size:12px; padding:5px 12px; }
+.product-card.is-hidden{ display:none!important; }
+.bag-window{ position:fixed; right:18px; bottom:18px; z-index:900; width:230px; background:var(--t-panel); border:2px outset var(--t-line);
+  box-shadow:4px 4px 0 rgba(0,0,0,.18); font:12px var(--font-system); color:var(--t-ink); }
+.bag-window .win-titlebar{ display:flex; justify-content:space-between; padding:3px 6px; color:#fff; font-weight:700; }
+.bag-window ul{ list-style:none; max-height:140px; overflow:auto; padding:6px 8px; margin:0; }
+.bag-window li{ display:flex; justify-content:space-between; gap:6px; padding:2px 0; border-bottom:1px dotted var(--t-line); }
+.bag-window li button{ border:0; background:none; color:var(--accent); cursor:pointer; }
+.bag-window .bag-foot{ display:flex; justify-content:space-between; align-items:center; padding:6px 8px; }
+.bag-window.is-collapsed ul, .bag-window.is-collapsed .bag-foot{ display:none; }
+.bag-count{ display:inline-block; min-width:18px; padding:0 5px; border-radius:9px; background:#fff; color:var(--accent-deep); text-align:center; }

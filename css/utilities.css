@@ -1,0 +1,43 @@
+/* =====================================================================
+   SMALL HELPER CLASSES (used directly in the .html files)
+   e.g. <span class="u-emoji-lg">👕</span>
+   ===================================================================== */
+.u-emoji-md { font-size: 2rem; }
+.u-emoji-lg { font-size: 3rem; }
+.u-text-sm { font-size: 0.9rem; }
+.u-pad { padding: 1rem; }
+.u-pad-sm { padding: 0.8rem; }
+.u-mb { margin-bottom: 1rem; }
+.u-mt-0 { margin-top: 0; }
+.u-mt-lg { margin-top: 1.5rem; }
+.u-left { text-align: left; }
+.u-center { text-align: center; }
+.u-accent { color: var(--accent); }
+.btn-block { width: 100%; justify-content: center; }
+
+/* contact page: form on the left, info boxes on the right (stacks on phones) */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem; }
+.info-text { font-family: var(--font-body); font-size: 14px; color: var(--text-dark); margin: 0; }
+
+/* lookbook placeholder photos (swap for real <img> later) */
+.look-photo { height: 200px; display: flex; align-items: center; justify-content: center; }
+.look-photo--pink { background: linear-gradient(135deg, #FF9EC7, #FF5FA2); }
+.look-photo--blue { background: linear-gradient(135deg, #BAE6FD, #00BFFF); }
+.look-photo--mint { background: linear-gradient(135deg, #A7F3D0, #10B981); }
+
+/* ----- accessibility helpers ----- */
+.skip-link { position: absolute; left: 8px; top: -60px; z-index: 10001; padding: 8px 14px; background: #fff; color: #96285F; border: 2px solid #FF5FA2; font: 700 13px var(--font-system); }
+.skip-link:focus { top: 8px; }
+:focus-visible { outline: 2px dashed var(--accent); outline-offset: 2px; }
+
+/* ----- phones ----- */
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* people who turn off animations in their device settings */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .animate-in { opacity: 1; transform: none; }
+  #sparkle-canvas { display: none; }
+}

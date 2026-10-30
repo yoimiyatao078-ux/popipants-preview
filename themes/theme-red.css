@@ -1,0 +1,28 @@
+/* =====================================================================
+   RED THEME — moody downtown: burgundy, black, gold
+   (active when <html data-theme="red">)
+   ===================================================================== */
+html[data-theme="red"] {
+  --pink: #a3123a; --hot-pink: #7a0c2a; --soft-pink: #c7546f; --baby-pink: #2a0d14;
+  --accent: #a3123a; --accent-soft: #c7546f; --accent-deep: #7a0c2a; --accent-glow: rgba(163,18,58,.4);
+  --text: #f1dcd6; --text-light: #cfa9a6; --text-dark: #fff; --off-white: #1a0a0e; --cream: #1a0a0e;
+  --t-bg: #14070a;
+  --t-panel: #1f0b10; --t-panel-2: #2a0f16; --t-side: rgba(36,10,16,.95);
+  --t-title: linear-gradient(90deg,#4a0718,#a3123a 70%,#c9a24a);
+  --t-ink: #f3d6c9; --t-ink-soft: #c9a24a; --t-line: #5a1a28; --t-shadow: #000;
+  --t-heading: #e8c27a; --t-btn: linear-gradient(#c23a5c 0%,#8a1030 50%,#6a0a24 51%,#a3123a 100%);
+  --t-glow: rgba(201,162,74,.35); --t-marquee: #4a0718;
+}
+html[data-theme="red"] body.home-page { background-image: radial-gradient(ellipse at 20% 0%,rgba(163,18,58,.35),transparent 60%), repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0 1px,transparent 1px 3px); background-size: 420px auto; }
+html[data-theme="red"] .banner { background: linear-gradient(120deg,var(--t-panel-2),var(--t-panel)) !important; }
+html[data-theme="red"] .content-section { background: var(--t-panel) !important; }
+html[data-theme="red"] p, html[data-theme="red"] label, html[data-theme="red"] li { color: var(--text); }
+html[data-theme="red"] input, html[data-theme="red"] textarea, html[data-theme="red"] select { background: #0d0609; color: var(--text); border-color: var(--t-line); }
+html[data-theme="red"] .btn-secondary { background: #2a0f16 !important; color: #e8c27a !important; border-color: #c9a24a !important; }
+/* stickers with white backgrounds: soft fade instead of a white box */
+html[data-theme="red"] .made-in-japan-sticker, html[data-theme="red"] .hero-phone-sticker {
+  mix-blend-mode: normal; filter: grayscale(.4) contrast(1.1);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at center,#000 55%,transparent 75%); mask-image: radial-gradient(ellipse 60% 60% at center,#000 55%,transparent 75%); }
+html[data-theme="red"] .inspo-shelf img { filter: sepia(.5) hue-rotate(-20deg) saturate(1.3) brightness(.85); border-color: #5a1a28; }
+/* white inner boxes (e.g. contact info) were unreadable on dark: give them the dark panel colour */
+html[data-theme="red"] .win-panel-inset { background: var(--t-panel); }

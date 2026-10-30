@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popipants — Handmade streetwear from Trondheim</title>
+  <meta name="description" content="Handmade character streetwear from Trondheim, Norway.">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body class="home-page">
+  <canvas id="sparkle-canvas"></canvas>
+
+  <div class="page-wrapper">
+    <div class="page-layout">
+      <script src="js/layout.js" data-part="sidebar"></script>
+
+      <main class="main-content" id="main">
+        <script src="js/layout.js" data-part="topnav"></script>
+
+        <section class="banner pink-hero">
+          <div class="banner-stars" aria-hidden="true">
+            <span class="banner-star" style="top:12%;left:8%;--dur:2.5s;--del:0s;"></span><span class="banner-star" style="top:30%;left:18%;--dur:3s;--del:.5s;"></span><span class="banner-star" style="top:10%;left:38%;--dur:2.8s;--del:1s;"></span><span class="banner-star" style="top:22%;left:68%;--dur:3.2s;--del:.3s;"></span><span class="banner-star" style="top:13%;left:90%;--dur:2.6s;--del:1.2s;"></span>
+          </div>
+          <p class="hero-kicker">♥ handmade character streetwear ♥</p>
+          <h1 class="banner-title brand-logo">popipants</h1>
+          <p class="banner-subtitle">cute clothes for the internet generation</p>
+          <div class="hero-actions">
+            <a href="collection.html" class="btn btn-primary">shop the drop ♡</a>
+            <a href="contact.html" class="btn btn-secondary">size + order help ☏</a>
+          </div>
+          <img class="hero-phone-sticker" src="images/art/music-player.png" alt="">
+        </section>
+
+        <section class="content-section drop-section monster-bg">
+          <div class="section-header section-header-left">
+            <span class="section-tag">01 / NEW NOW</span>
+            <h2 class="section-title">fresh from the studio</h2>
+            <p class="section-desc">Small batches of hand-drawn pieces made in Trondheim. Find the thing that feels like you.</p>
+          </div>
+          <div class="combo-win"><div class="combo-tb"><i></i><i></i><i></i><span>new_drop.exe</span></div><div class="combo-wb"><div class="pp-grid" data-n="8"></div>
+            <p class="combo-more"><a class="btn btn-primary" href="collection.html">see the whole shop ♡</a></p></div></div>
+        </section>
+
+        <section class="content-section cd-section">
+          <img class="cd-sticker" src="images/art/cd.png" alt="">
+          <img class="music-notes-sticker" src="images/art/music-notes.png" alt="" aria-hidden="true">
+          <div class="section-header section-header-left">
+            <span class="section-tag">02 / POPIPANTS FM</span>
+            <h2 class="section-title">listen while you browse</h2>
+            <p class="section-desc">A little bit of cute noise from the Popipants bedroom universe.</p>
+            <div class="mini-player" aria-label="Background music controls">
+              <button type="button" class="music-pill" id="music-toggle" aria-pressed="false" aria-label="Play background music"><span class="gel"><span class="mtri" aria-hidden="true"></span><span class="mbars" aria-hidden="true"><i></i><i></i><i></i></span><span class="mlabel">play ♪</span></span><i class="mspark s1"></i><i class="mspark s2"></i><i class="mspark s3"></i></button>
+              <span id="music-status">playlist: 6 cute tracks, shuffled</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section lotus-section">
+          <div class="section-header">
+            <span class="section-tag">03 / KEEP IN TOUCH</span>
+            <h2 class="section-title">get the next drop first</h2>
+            <p class="section-desc">Join the little email list for restocks, secret links and new drawings.</p>
+            <button type="button" class="btn btn-primary popup-trigger" data-popup="signup">enter the secret club ✦</button>
+          </div>
+        </section>
+
+        <script src="js/layout.js" data-part="footer" data-footer="home"></script>
+      </main>
+    </div>
+  </div>
+  <script src="js/main.js"></script>
+  <script src="js/critter-shapes.js"></script>
+  <script src="js/critters.js"></script>
+  <script src="js/shop-and-extras.js"></script>
+  <script src="js/combo.js"></script>
+</body>
+</html>

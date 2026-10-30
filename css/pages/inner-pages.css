@@ -1,0 +1,87 @@
+/* =====================================================================
+   INNER PAGES (Shop, Lookbook, My Story, Contact)
+   Every inner page has  <body class="secondary-page ...">.
+   Page-specific body classes: collection-page, lookbook-page, story-page, contact-page
+   ===================================================================== */
+
+/* ----- page background + soft white sparkles ----- */
+.secondary-page { position: relative; background: #f5f3f4 !important; }
+.secondary-page::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .8;
+  background-image: radial-gradient(circle at 12% 20%, rgba(255,255,255,.9) 0 2px, transparent 3px), radial-gradient(circle at 86% 14%, rgba(255,255,255,.7) 0 2px, transparent 3px), radial-gradient(circle at 68% 76%, rgba(255,255,255,.82) 0 1px, transparent 3px);
+  background-size: 210px 240px, 270px 280px, 190px 230px;
+  animation: background-sparkles 7s ease-in-out infinite alternate;
+}
+@keyframes background-sparkles { from { transform: translate3d(0,0,0); opacity: .34; } to { transform: translate3d(0,-12px,0); opacity: .82; } }
+
+/* ----- the big framed "window" around everything ----- */
+.secondary-page .page-wrapper { position: relative; z-index: 1; max-width: 1120px; margin: 22px auto; background: #FFFFFF; border: 2px solid #FF9EC7; box-shadow: 0 10px 35px rgba(255,95,162,.22); }
+
+/* ----- left sidebar ----- */
+.secondary-page .sidebar { background: linear-gradient(180deg, #f3f0f1 0%, #fff 52%, #ece8ea 100%) !important; border-right-color: #FF9EC7; }
+.secondary-page .sidebar::before { content: '✿  ✧  ✿'; display: block; padding: 13px 8px 7px; color: #FF5FA2; font-size: 15px; letter-spacing: 9px; text-align: center; }
+.secondary-page .sidebar-title, .secondary-page .win-titlebar { background: linear-gradient(90deg,#FF5FA2,#FF9EC7); }
+.secondary-page .sidebar-nav a { background: rgba(255,255,255,.82); border-color: #FF9EC7; }
+.secondary-page .sidebar-nav a:hover, .secondary-page .sidebar-nav a.active { background: #FF9EC7; color: #fff; }
+
+/* ----- main column + top menu ----- */
+.secondary-page .main-content { background: linear-gradient(90deg, rgba(255,255,255,.98), rgba(255,255,255,.76)), url('../../images/art/pink-tile.png') center/auto 100% repeat-y; }
+.secondary-page .top-nav { padding: 7px 10px; gap: 7px; background: #FFFFFF; border-bottom: 1px solid #FF9EC7; }
+.secondary-page .top-nav a { flex: 1; min-width: 95px; padding: 8px 6px; color: #96285F; text-align: center; text-shadow: none; background: #fff; border: 1px solid #FF9EC7; border-radius: 999px; box-shadow: 1px 2px 0 #FF9EC7; }
+.secondary-page .top-nav a:hover, .secondary-page .top-nav a.active { color: #96285F; background: #FFD6E8; border-style: solid; transform: translateY(1px); }
+
+/* ----- big page title banner (sticker in the corner changes per page) ----- */
+.secondary-page .banner { position: relative; overflow: hidden; min-height: 295px; padding: 58px 185px 52px 36px; text-align: left; border-bottom: 1px solid #FF9EC7;
+  background: linear-gradient(90deg, rgba(255,255,255,.97), rgba(255,255,255,.82) 56%, rgba(255,255,255,.2)), url('../../images/hero-background.jpg') center/cover !important; }
+.secondary-page .banner::after { content: ''; position: absolute; right: -22px; bottom: -35px; width: 190px; height: 190px; background: url('../../images/pink/film-folder.jpg') center/contain no-repeat; mix-blend-mode: multiply; transform: rotate(-8deg); opacity: .82; }
+.collection-page .banner::after { background-image: url('../../images/pink/lily.jpg'); }
+.story-page .banner::after { background-image: url('../../images/pink/round-icons.jpg'); }
+.contact-page .banner::after { background-image: url('../../images/art/music-notes.png'); }
+.secondary-page .banner-title { position: relative; z-index: 1; color: #FF5FA2; font-family: 'Yeseva One',Georgia,serif; font-size: clamp(3rem,8vw,5.7rem); font-weight: 400; letter-spacing: -3px; text-shadow: 2px 2px #fff,4px 4px rgba(255,95,162,.15); }
+.secondary-page .banner-subtitle { position: relative; z-index: 1; color: #96285F; font-size: 1.1rem; letter-spacing: 1px; }
+
+/* ----- content sections ----- */
+.secondary-page .content-section { padding: 34px 30px; border-bottom: 1px solid #FF9EC7; background: transparent !important; }
+.secondary-page .content-section + .content-section { border-top: 1px dashed #FF9EC7; }
+.secondary-page .section-header { padding: 18px; margin-bottom: 15px; background: rgba(255,255,255,.72); border: 1px solid rgba(255,158,199,.7); box-shadow: 3px 3px 0 rgba(255,95,162,.14); }
+.secondary-page .section-title { color: #96285F; font-family: 'Yeseva One',Georgia,serif; font-size: clamp(1.9rem,4vw,2.7rem); letter-spacing: -.7px; }
+.secondary-page .section-tag { color: #96285F; background: rgba(255,255,255,.78); border-color: #FF9EC7; }
+.secondary-page .section-desc { color: #7b4a61; }
+.secondary-page .win-panel { position: relative; border-color: #FF9EC7; box-shadow: 4px 4px 0 rgba(255,95,162,.14); }
+.secondary-page .card { border-color: #FF9EC7; box-shadow: 3px 3px 0 rgba(255,95,162,.2); }
+
+/* ----- product + lookbook cards ("item_window.exe" windows) ----- */
+.secondary-page .products-grid { grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 15px; }
+.secondary-page .product-card, .secondary-page .masonry-item { position: relative; overflow: hidden; background: rgba(255,255,255,.94); border: 2px solid #FF9EC7; box-shadow: 4px 4px 0 rgba(255,95,162,.17); }
+.secondary-page .product-card::before, .secondary-page .masonry-item::before { content: 'item_window.exe'; display: block; height: 23px; padding: 3px 26px 3px 7px; background: linear-gradient(90deg,#FF5FA2,#FF9EC7); color: white; font: 700 10px var(--font-system); letter-spacing: .7px; }
+.secondary-page .product-image { height: 150px; background: linear-gradient(135deg,#FFD6E8,#fff); border-bottom: 1px solid #FF9EC7; }
+.secondary-page .product-info { margin: 0; background: #FFFFFF; border: 0; border-top: 1px solid #FF9EC7; }
+.secondary-page .masonry-grid { columns: 3; column-gap: 15px; }
+.secondary-page .masonry-item { margin-bottom: 15px; }
+.secondary-page .masonry-item > div:first-child { background: linear-gradient(135deg,#FFD6E8,#FF9EC7) !important; }
+.secondary-page .filter-bar { padding: 12px 18px; background: #FFFFFF; border-bottom: 1px solid #FF9EC7; }
+.secondary-page .filter-btn { background: white; color: #96285F; border: 1px solid #FF9EC7; border-radius: 999px; box-shadow: 1px 2px 0 #FF9EC7; }
+.secondary-page .filter-btn.active, .secondary-page .filter-btn:hover { background: #FF9EC7; color: white; }
+
+/* the little "X" on every card that refuses to close (easter egg) */
+.window-easter-x { position: absolute; z-index: 3; top: 4px; right: 4px; width: 17px; height: 17px; padding: 0; border: 1px solid #fff; color: #96285F; background: #FFFFFF; font: 700 12px/1 var(--font-system); cursor: pointer; }
+.window-easter-x:hover { background: #FFD6E8; transform: rotate(8deg); }
+.window-wiggle { animation: window-wiggle .55s ease-in-out; }
+@keyframes window-wiggle { 0%,100% { transform: translateX(0) rotate(0); } 20% { transform: translateX(-5px) rotate(-1deg); } 45% { transform: translateX(6px) rotate(1deg); } 70% { transform: translateX(-3px) rotate(-.5deg); } }
+
+/* ----- floating lotus flowers (My Story page) ----- */
+.lotus-float { position: absolute; z-index: 4; color: #FF5FA2; font-size: 45px; text-shadow: 0 3px 6px rgba(96,177,194,.25); animation: lotus-drift 5s ease-in-out infinite; pointer-events: none; }
+.lotus-one { top: 210px; right: 8%; }
+.lotus-two { top: 480px; left: 5%; animation-delay: 1.6s; font-size: 30px; }
+@keyframes lotus-drift { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-17px) rotate(7deg); } }
+
+/* ----- footer ----- */
+.secondary-page .footer { background: #FFFFFF; border-top: 1px solid #FF9EC7; }
+.secondary-page .footer-logo { color: #FF5FA2; font-family: 'Yeseva One',Georgia,serif; }
+
+/* ----- phones / small screens ----- */
+@media (max-width: 768px) {
+  .secondary-page .page-wrapper { margin: 0; }
+  .secondary-page .banner { min-height: 240px; padding: 45px 110px 35px 22px; }
+  .secondary-page .masonry-grid { columns: 2; }
+}

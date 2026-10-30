@@ -1,0 +1,54 @@
+/* ===== ABOUT PAGE ===== */
+.about-content {
+  padding: 1.5rem;
+}
+
+.about-text {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.about-text strong {
+  color: var(--hot-pink);
+}
+
+.about-quote {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--hot-pink);
+  text-align: center;
+  padding: 1rem;
+  background: var(--baby-pink);
+  border: 1px dashed var(--pink);
+  margin: 1.5rem 0;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 1rem;
+}
+
+.value-card {
+  text-align: center;
+  padding: 1rem;
+}
+
+.value-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.value-title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--hot-pink);
+  margin-bottom: 0.3rem;
+}
+

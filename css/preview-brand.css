@@ -1,0 +1,65 @@
+/* PREVIEW: Inconsolata body/UI + Archivo Black brand (pink mood mostly) */
+:root { --font-body:'Inconsolata',monospace; --font-system:'Inconsolata',monospace; --font-heading:'Inconsolata',monospace; }
+html:not([data-theme]) { --text:#96285F; --t-ink:#96285F; --t-ink-soft:#96285F; }
+body, button, input, select, textarea { font-family:'Inconsolata',monospace; }
+.home-page .banner-title, .secondary-page .banner-title, .banner-title.brand-logo {
+  font-family:'Archivo Black',sans-serif !important; color:#111111 !important; letter-spacing:-0.08em !important;
+  text-transform:lowercase; text-shadow:none !important; font-weight:400; }
+.marquee-bar { display:none !important; }
+
+/* ===== v2: pink on white, one text colour (pink mood only) ===== */
+html:not([data-theme]) { --text:#FF5FA2; --text-dark:#FF5FA2; --text-light:#FF5FA2; --t-ink:#FF5FA2; --t-ink-soft:#FF5FA2; --t-heading:#FF5FA2; --t-line:#FF9EC7; }
+html:not([data-theme]) .page-wrapper, html:not([data-theme]) .main-content, html:not([data-theme]) .sidebar { border-color:#FF9EC7 !important; }
+html:not([data-theme]) body *:not(img):not(canvas) { color:#FF5FA2 !important; text-shadow:none !important; }
+html:not([data-theme]) .quick-action, html:not([data-theme]) .product-card { border-color:#FF9EC7 !important; }
+html:not([data-theme]) .quick-action:hover, html:not([data-theme]) .sidebar-nav a:hover, html:not([data-theme]) .category-nav a:hover { background:#FFD6E8 !important; }
+html:not([data-theme]) .sidebar-nav a.active, html:not([data-theme]) .btn-primary, html:not([data-theme]) .win-titlebar,
+html:not([data-theme]) .popup-btn, html:not([data-theme]) .figurine { background:#FF5FA2 !important; }
+html:not([data-theme]) .sidebar-nav a.active, html:not([data-theme]) .btn-primary, html:not([data-theme]) .btn-primary *,
+html:not([data-theme]) .win-titlebar, html:not([data-theme]) .win-titlebar *, html:not([data-theme]) .popup-btn, html:not([data-theme]) .figurine { color:#FFFFFF !important; }
+html:not([data-theme]) .banner-title.brand-logo, html:not([data-theme]) .banner-title { color:#FF5FA2 !important; }
+html:not([data-theme]) h2, html:not([data-theme]) h3, html:not([data-theme]) .section-title, html:not([data-theme]) .quick-action b {
+  font-family:'Inconsolata',monospace !important; font-weight:700 !important; }
+html:not([data-theme]) .sidebar-title { background:#FF5FA2 !important; }
+html:not([data-theme]) .sidebar-title, html:not([data-theme]) .sidebar-title * { color:#FFFFFF !important; }
+html:not([data-theme]) .btn-secondary, html:not([data-theme]) .btn-retro { background:#FFFFFF !important; border-color:#FF9EC7 !important; }
+html:not([data-theme]) .btn-secondary:hover, html:not([data-theme]) .btn-retro:hover { background:#FFD6E8 !important; }
+
+/* ===== v3: baby pink backgrounds back (theme-pink originals), music buttons ===== */
+.music-pill{position:relative;display:inline-block;padding:5px;border:0;border-radius:999px;cursor:pointer;font-family:'Inconsolata',monospace;
+ background:linear-gradient(180deg,#fff 0%,#d9d9e3 35%,#a9a9b8 55%,#f4f4f8 80%,#c4c4d0 100%) !important;box-shadow:0 6px 14px rgba(255,95,162,.25),inset 0 1px 0 #fff}
+.music-pill .gel{position:relative;display:flex;align-items:center;justify-content:center;gap:12px;min-width:170px;padding:13px 28px 13px 22px;border-radius:999px;overflow:hidden;
+ background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#FFD6E8 45%,#FF9EC7 100%);box-shadow:inset 0 -6px 12px #fff,inset 0 3px 6px rgba(255,95,162,.45);
+ color:#FF5FA2 !important;font-weight:700;font-size:20px;letter-spacing:.1em;transition:transform .12s}
+.music-pill .gel::before{content:"";position:absolute;left:12px;right:12px;top:3px;height:45%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.15))}
+.music-pill .gel>*{position:relative}
+.mtri{width:0;height:0;border-left:14px solid #FF5FA2;border-top:9px solid transparent;border-bottom:9px solid transparent}
+.mbars{display:none;gap:3px;height:18px;align-items:flex-end}.mbars i{width:4px;background:#FF5FA2;border-radius:2px;animation:meq .6s infinite alternate}
+.mbars i:nth-child(2){animation-delay:.2s}.mbars i:nth-child(3){animation-delay:.4s}
+@keyframes meq{from{height:4px}to{height:18px}}
+.music-pill.is-playing .gel{transform:translateY(2px) scale(.97);box-shadow:inset 0 -3px 8px rgba(255,214,232,.7),inset 0 6px 12px rgba(255,95,162,.55)}
+.music-pill.is-playing .mtri{display:none}.music-pill.is-playing .mbars{display:flex}
+.mspark{position:absolute;width:12px;height:12px;opacity:0;transition:.25s;pointer-events:none;
+ background:linear-gradient(#FF5FA2,#FF5FA2) 4px 0/4px 12px no-repeat,linear-gradient(#FF5FA2,#FF5FA2) 0 4px/12px 4px no-repeat}
+.mspark.s1{top:-14px;left:8px}.mspark.s2{top:-8px;right:-12px;transform:scale(.7)}.mspark.s3{bottom:-12px;right:24px;transform:scale(.6)}
+.music-pill:hover .mspark,.music-pill:focus-visible .mspark,.music-pill.is-playing .mspark{opacity:1;animation:mtw 1s infinite steps(2)}
+@keyframes mtw{50%{opacity:.3}}
+#music-status{font-family:'Inconsolata',monospace;color:#FF5FA2 !important}
+.mini-player{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+/* sidebar CD */
+.sidebar-cd{position:relative;display:block;width:80px;height:80px;margin:14px auto;padding:0;border:0;background:none !important;cursor:pointer;opacity:.45;transition:opacity .2s}
+.sidebar-cd:hover,.sidebar-cd:focus-visible{opacity:.85}
+.sidebar-cd .cd{position:absolute;inset:0;border-radius:50%;background:
+ radial-gradient(circle,#fff 0 12%,#e8e8ef 12% 14%,transparent 14.5%),radial-gradient(circle,transparent 30%,rgba(255,255,255,.5) 31%,transparent 33%),
+ conic-gradient(from 20deg,#FFD6E8,#FF9EC7,#d8f2ff,#fff,#FF9EC7,#FF5FA2,#e9d6ff,#FFD6E8,#fff6c8,#FF9EC7,#FFD6E8);
+ box-shadow:0 4px 10px rgba(255,95,162,.35),inset 0 0 0 2px rgba(255,255,255,.8)}
+.sidebar-cd .cd::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.7),transparent 40%,transparent 60%,rgba(255,255,255,.4))}
+.sidebar-cd.is-playing .cd{animation:mspin 2.2s linear infinite}
+@keyframes mspin{to{transform:rotate(360deg)}}
+.sidebar-cd .badge{position:absolute;right:-4px;bottom:-4px;width:32px;height:32px;border-radius:50%;padding:2px;background:linear-gradient(180deg,#fff,#b9b9c6 50%,#f2f2f6)}
+.sidebar-cd .badge b{position:relative;display:flex;width:100%;height:100%;border-radius:50%;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at 50% 110%,#FFD6E8,#FF9EC7 45%,#FF5FA2 90%)}
+.sidebar-cd .badge b::before{content:"";position:absolute;left:4px;right:4px;top:1px;height:45%;border-radius:50%;background:linear-gradient(rgba(255,255,255,.95),rgba(255,255,255,.1))}
+.sidebar-cd .bt{position:relative;margin-left:2px;width:0;height:0;border-left:8px solid #fff;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.sidebar-cd .bp{position:relative;display:none;gap:3px}.sidebar-cd .bp i{width:3px;height:9px;background:#fff}
+.sidebar-cd.is-playing .bt{display:none}.sidebar-cd.is-playing .bp{display:flex}
+@media (prefers-reduced-motion:reduce){.sidebar-cd.is-playing .cd,.mbars i,.mspark{animation:none !important}}

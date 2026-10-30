@@ -1,0 +1,29 @@
+/* =====================================================================
+   BLUE THEME — tropical Y2K   (active when <html data-theme="blue">)
+   ===================================================================== */
+html[data-theme="blue"] {
+  --pink: #19b5e6; --hot-pink: #0a8fc4; --soft-pink: #8fe3f5; --baby-pink: #e2f8ff;
+  --accent: #19b5e6; --accent-soft: #8fe3f5; --accent-deep: #0a8fc4; --accent-glow: rgba(25,181,230,.35);
+  --t-bg: #dff6ff;
+  --t-panel: #f6fdff; --t-panel-2: #e9f9ff; --t-side: rgba(205,240,252,.93);
+  --t-title: linear-gradient(90deg,#0a8fc4,#46d3c6 60%,#ffd76a);
+  --t-ink: #08607f; --t-ink-soft: #0f7d8f; --t-line: #9edcf0; --t-shadow: #5cc3e3;
+  --t-heading: #0896c8; --t-btn: linear-gradient(#c9f3ff 0%,#3fc6f2 50%,#13a5dd 51%,#6fdcff 100%);
+  --t-glow: rgba(25,181,230,.45); --t-marquee: #0a8fc4;
+}
+/* page background */
+[data-theme="blue"] .home-page, [data-theme="blue"] .secondary-page { background: #dffcff !important; }
+[data-theme="blue"] .page-wrapper, [data-theme="blue"] .main-content { border-color: #66d4e7; }
+[data-theme="blue"] .secondary-page .sidebar { background: linear-gradient(180deg,#eafcff,#f7ffff 55%,#d7f6fa) !important; }
+[data-theme="blue"] .sidebar::before { color: #31b6d3; }
+[data-theme="blue"] .product-card::before, [data-theme="blue"] .masonry-item::before { background: linear-gradient(90deg,#19b9d5,#87e4ef); }
+/* big title banners: lotus water on the front page, blossom tree + jellyfish on inner pages */
+html[data-theme="blue"] .banner { background: linear-gradient(90deg,rgba(246,253,255,.92),rgba(226,248,255,.55)), url('../images/inspo/pin-49.jpg') center/cover !important; }
+[data-theme="blue"] .secondary-page .banner { background: linear-gradient(90deg,rgba(247,255,255,.95),rgba(225,250,255,.72)), url('../images/blue/blossom-tree.jpg') center/cover !important; }
+[data-theme="blue"] .secondary-page .banner::after { background-image: url('../images/blue/jellyfish.jpg'); opacity: .42; }
+[data-theme="blue"] .secondary-page .top-nav a { color: #167d98 !important; }
+html[data-theme="blue"] .content-section { background: linear-gradient(rgba(246,253,255,.86),rgba(246,253,255,.92)), url('../images/blue/fractal-flowers.jpg') center/cover !important; }
+/* turn pink pictures blue-ish */
+[data-theme="blue"] img { filter: hue-rotate(135deg) saturate(.85); }
+[data-theme="blue"] .music-notes-sticker { opacity: .2; }
+[data-theme="blue"] .lotus-float { color: #4cc9db; opacity: .62; }

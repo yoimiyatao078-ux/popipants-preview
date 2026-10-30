@@ -19,3 +19,17 @@ html:is(.pal-a,.pal-b) .theme-switcher-inline{position:relative;align-items:cent
  box-shadow:inset 0 2px 3px rgba(120,120,140,.35),inset 0 -2px 3px rgba(255,255,255,.9),0 1px 0 #fff,0 0 0 1px #c4c4d0}
 html:is(.pal-a,.pal-b) .theme-switcher-inline::before{content:"";position:absolute;left:12px;right:12px;top:2px;height:40%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,0));pointer-events:none}
 html:is(.pal-a,.pal-b) .theme-switcher-inline>*{position:relative}
+/* newsletter popup bits */
+.nl-overlay .signup-form input{outline:2px dashed #FF5FA2;outline-offset:2px;color:#FF5FA2}
+.nl-nothanks{display:block;margin:10px auto 0;background:none;border:0;padding:4px 8px;cursor:pointer;color:#FF5FA2;font:400 12px Inconsolata,monospace;text-decoration:underline dotted;opacity:.85}
+.nl-overlay .pc-popup{animation:nlIn .35s ease-out}
+@keyframes nlIn{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.nl-overlay .pc-popup{animation:none}}
+html body .nl-overlay.nl-overlay .pc-popup{background:#fff!important;border-color:#FF5FA2!important;box-shadow:0 0 0 2px #FFD6E8,0 10px 30px rgba(255,95,162,.3)!important}
+html body .nl-overlay.nl-overlay .pc-popup-titlebar{background:#FF5FA2!important;color:#fff!important}
+html body .nl-overlay.nl-overlay .pc-popup-titlebar span{color:#fff!important}
+html body .nl-overlay.nl-overlay .pc-popup-body p{background:#fff!important;border:1.5px dashed #FF5FA2!important;color:#FF5FA2!important}
+html body .nl-overlay.nl-overlay label,html body .nl-overlay.nl-overlay input::placeholder{color:#FF5FA2!important;opacity:.8}
+html body .nl-overlay.nl-overlay .popup-btn{border-radius:999px!important;color:#FF5FA2!important;border:3px solid transparent!important;
+ background:radial-gradient(120% 100% at 50% 120%,#fff,#FFD6E8 50%) padding-box,linear-gradient(180deg,#fff,#e4e4ec 25%,#9a9aab 50%,#fafafd 70%,#b4b4c4) border-box!important;box-shadow:inset 0 -4px 8px rgba(255,255,255,.9),0 3px 8px rgba(255,95,162,.25)!important}
+html body .nl-overlay.nl-overlay .pc-popup-body{background:#fff!important}

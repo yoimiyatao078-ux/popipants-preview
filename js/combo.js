@@ -54,7 +54,7 @@ document.querySelectorAll('.pp-grid').forEach(g=>{ITEMS.slice(0,+g.dataset.n||8)
 const chips=document.querySelector('.pp-chips');
 if(chips){chips.innerHTML=['all','tops','bottoms','bags'].map(c=>`<button type="button" class="gelbtn${c=='all'?' on':''}" data-c="${c}"><span>${c}</span></button>`).join('');
  chips.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;chips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
-  document.querySelectorAll('.pp-card').forEach(cd=>cd.style.display=(b.dataset.c=='all'||cd.dataset.cat==b.dataset.c)?'':'none')})}
+  document.querySelectorAll('.pp-card').forEach(cd=>(cd.closest('.pp-cell')||cd).style.display=(b.dataset.c=='all'||cd.dataset.cat==b.dataset.c)?'':'none')})}
 const mb=document.querySelector('.combo-menu'),side=document.querySelector('.sidebar');
 if(mb&&side){
  const mq=matchMedia('(max-width:768px)');

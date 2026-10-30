@@ -1,0 +1,49 @@
+/* pixel cat on music buttons */
+.has-px-cat{position:relative;overflow:visible!important}
+.px-cat{position:absolute;left:50%;bottom:calc(100% - 4px);width:56px;height:46px;margin-left:-28px;pointer-events:none;z-index:3;transform-origin:50% 100%;animation:pxSway 1.35s ease-in-out infinite;filter:drop-shadow(0 1px 0 #fff)}
+.px-cat canvas{position:absolute;left:0;width:56px;image-rendering:pixelated}
+.px-cat .px-head{top:0;height:28px;transform-origin:50% 100%}
+.px-cat .px-body,.px-cat .px-tail{top:28px;height:18px}
+.px-cat .px-tail{transform-origin:85% 0}
+.px-cat-on .px-cat{animation:pxHop2 .4s steps(1,end) infinite}
+.px-cat-on .px-cat .px-head{animation:pxBob 1.1s steps(11,end) infinite}
+.px-cat-on .px-cat .px-tail{animation:pxTail .88s steps(2,jump-none) infinite}
+.sidebar-cd .px-cat,.combo-fcd .px-cat{transform:scale(.8)}
+.combo-fcd .px-cat{bottom:calc(100% - 8px)}
+@keyframes pxSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+/* rhythm studied from the reference gif (100ms frames): 2-frame up/down body bob = .4s, head sway+tilt loop = 1.1s */
+@keyframes pxHop2{0%{transform:translateY(0)}50%{transform:translateY(2px) scaleY(.96)}}
+@keyframes pxBob{0%,100%{transform:translateX(0) rotate(0)}27%{transform:translateX(3px) rotate(6deg)}45%{transform:translateX(1px) rotate(2deg)}73%{transform:translateX(-3px) rotate(-6deg)}91%{transform:translateX(-1px) rotate(-2deg)}}
+@keyframes pxTail{0%{transform:rotate(-8deg)}100%{transform:rotate(10deg)}}
+/* pixel add-to-bag */
+.px-cartfx{position:absolute;width:0;height:0;z-index:9999;pointer-events:none}
+.px-cartfx canvas{position:absolute;image-rendering:pixelated}
+.px-cart{width:30px;height:30px;left:14px;top:-34px;animation:pxCart .9s ease-out both}
+.px-item{width:21px;height:21px;left:-36px;top:-24px;animation:pxHop .5s cubic-bezier(.3,0,.6,1) both}
+.px-sp{width:15px;height:15px;opacity:0;animation:pxSpark .45s steps(3) .42s both}
+.px-sp.s1{left:8px;top:-46px}.px-sp.s2{left:36px;top:-50px;animation-delay:.48s}.px-sp.s3{left:44px;top:-26px;animation-delay:.52s}
+.px-plus{position:fixed;z-index:9999;pointer-events:none;display:flex;align-items:center;gap:2px;transform:translate(-50%,-100%);color:#FF5FA2;font:900 12px Inconsolata,monospace;text-shadow:0 0 2px #fff,0 0 2px #fff;animation:pxPlus .75s ease-out both}
+.px-plus canvas{width:14px;height:12px;image-rendering:pixelated}
+.bag-count.px-pop{display:inline-block;animation:pxPop .35s steps(3)}
+@keyframes pxCart{0%{opacity:0;transform:translateY(4px)}12%{opacity:1;transform:none}55%{transform:none}62%{transform:translateY(3px) scaleY(.9)}70%{transform:none}85%{opacity:1}100%{opacity:0}}
+@keyframes pxHop{0%{opacity:0;transform:translate(0,0)}10%{opacity:1}50%{transform:translate(25px,-26px)}90%{opacity:1;transform:translate(52px,-2px) scale(.8)}100%{opacity:0;transform:translate(54px,2px) scale(.6)}}
+@keyframes pxSpark{0%{opacity:0;transform:scale(.4)}40%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
+@keyframes pxPlus{0%{opacity:0;margin-top:4px}25%{opacity:1}100%{opacity:0;margin-top:-18px}}
+@keyframes pxPop{50%{transform:scale(1.5)}}
+@media (prefers-reduced-motion:reduce){
+  .px-cat,.px-cat-on .px-cat .px-head,.px-cat-on .px-cat .px-tail{animation:none!important}
+  .px-cartfx.rm canvas{animation:none!important}.px-cartfx.rm .px-item,.px-cartfx.rm .px-sp{display:none}
+  .px-plus.rm{animation:none}.bag-count.px-pop{animation:none}
+}
+/* add-to-bag gel button (chrome bezel + white shine) */
+.pp-cell{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.px-addbtn{position:relative;padding:3px;border:0;border-radius:999px;cursor:pointer;background:linear-gradient(180deg,#fff,#FFD6E8 45%,#FF5FA2 50%,#fff);box-shadow:0 2px 6px rgba(255,95,162,.35);outline:1.5px dashed #FF5FA2;outline-offset:3px}
+.px-addbtn span{position:relative;display:block;padding:6px 14px;border-radius:999px;overflow:hidden;font:700 13px Inconsolata,monospace;letter-spacing:.04em;color:#FF5FA2;background:linear-gradient(180deg,#FFD6E8,#fff 60%,#FFD6E8);box-shadow:inset 0 -2px 4px rgba(255,95,162,.35)}
+.px-addbtn span::before{content:"";position:absolute;left:8px;right:8px;top:1px;height:45%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.1))}
+.px-addbtn:hover span{background:linear-gradient(180deg,#fff,#FFD6E8)}
+.px-addbtn:active{transform:translateY(1px)}
+.px-addbtn:focus-visible{outline-style:solid}
+.px-bagdock{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;align-items:center;gap:6px;padding:7px 12px 7px 9px;border-radius:999px;text-decoration:none;color:#FF5FA2;font:900 14px Inconsolata,monospace;
+  background:linear-gradient(180deg,#fff,#FFD6E8 55%,#fff);border:2px solid #fff;box-shadow:0 0 0 2px #FF5FA2,0 3px 10px rgba(255,95,162,.35)}
+.px-dockcart{width:22px;height:22px;image-rendering:pixelated}
+.mini-player{margin-top:34px}

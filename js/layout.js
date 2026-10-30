@@ -67,11 +67,11 @@
       return '' +
         '<aside class="sidebar">' +
           '<nav class="sidebar-section" aria-label="Pages">' +
-            '<div class="sidebar-title"><span>✦ navigate.exe</span></div>' +
+            '<div class="sidebar-title"><span>navigate.exe</span></div>' +
             '<ul class="sidebar-nav">' + links + '</ul>' +
           '</nav>' +
           '<div class="sidebar-section theme-dock">' +
-            '<div class="sidebar-title"><span>✦ mood selector</span></div>' +
+            '<div class="sidebar-title"><span>mood selector</span></div>' +
             '<p>Choose your universe</p>' +
             '<div class="theme-switcher theme-switcher-inline" role="group" aria-label="Colour theme">' + boxes + '</div>' +
             '<small>4 colour worlds ✦ pick yours</small>' +

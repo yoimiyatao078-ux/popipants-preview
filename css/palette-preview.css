@@ -1,0 +1,15 @@
+/* palette previews (palette-a/b.html only): white/cream panels + more chrome; B adds a few aqua gel accents. Text stays #FF5FA2. */
+html.pal-a body,html.pal-b body{background:#FFFDF9!important}
+html.pal-a .page-wrapper,html.pal-b .page-wrapper,html.pal-a .main-content,html.pal-b .main-content{background:#fff!important}
+html.pal-a .content-section,html.pal-b .content-section{background-color:#FFFDF9}
+html.pal-a .combo-wb,html.pal-b .combo-wb{background:#fff}
+html.pal-a .page-layout>.sidebar,html.pal-b .page-layout>.sidebar{background:#fff!important}
+/* heavier chrome bezels */
+html.pal-a :is(.gelbtn,.btn:not(.btn-primary),.btn-aero,.top-nav a,.sidebar-nav a,.combo-drop-menu a),html.pal-b :is(.gelbtn,.btn:not(.btn-primary),.btn-aero,.top-nav a,.sidebar-nav a,.combo-drop-menu a){border-width:4px!important;
+ background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#FFD6E8 50%,#FFD6E8 100%) padding-box,linear-gradient(180deg,#fff 0%,#e4e4ec 25%,#9a9aab 50%,#fafafd 70%,#b4b4c4 100%) border-box!important}
+html.pal-a .combo-win,html.pal-b .combo-win{background:linear-gradient(180deg,#fff,#d8d8e2 35%,#9a9aab 55%,#f4f4f8)}
+html.pal-a .music-pill,html.pal-b .music-pill{background:linear-gradient(180deg,#fff,#c9c9d6 45%,#9a9aab 55%,#f4f4f8)!important}
+/* B: aqua accents on play button, active nav, active mood swatch */
+html.pal-b .music-pill .gel{background:radial-gradient(120% 100% at 50% 120%,#fff,#BFF3FF 45%,#5FD3F3)!important}
+html.pal-b .sidebar-nav a.active,html.pal-b .sidebar-nav a[href="index.html"],html.pal-b .combo-drop-menu a.active{background:radial-gradient(120% 100% at 50% 120%,#fff 0%,#BFF3FF 45%,#5FD3F3 100%) padding-box,linear-gradient(180deg,#fff 0%,#e4e4ec 25%,#9a9aab 50%,#fafafd 70%,#b4b4c4 100%) border-box!important;color:#FF5FA2!important}
+html.pal-b .theme-btn[aria-pressed="true"]{outline:2px dashed #5FD3F3!important;box-shadow:0 0 0 4px #BFF3FF,0 0 10px #5FD3F3!important}

@@ -70,3 +70,11 @@ html body .theme-switcher-inline .critter-buddy{position:relative!important;left
  border:3px solid #fff;border-radius:6px;box-shadow:0 3px 8px rgba(255,95,162,.3);pointer-events:none}
 @media (max-width:768px){.norway-sticker{width:88px;top:-26px;bottom:auto;right:-4px;border-width:2px}}
 html body .sidebar .figurine-button{padding:8px 22px!important;justify-content:center!important;text-align:center}
+/* phone: POPIPANTS FM directly under the hero (same single player) */
+@media (max-width:768px){
+ .home-page .main-content{display:flex;flex-direction:column}
+ .home-page .main-content>*{order:2}
+ .home-page .main-content>:is(.combo-mbar,.combo-fcd,.top-nav,.banner,script){order:0}
+ .home-page .main-content>.cd-section{order:1}
+ .home-page .main-content>.content-section .section-tag{display:none}
+}

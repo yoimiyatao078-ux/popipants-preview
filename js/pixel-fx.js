@@ -72,7 +72,7 @@
     [[4,8,4],[30,22,3],[62,4,4],[86,26,3]].forEach(function(c){var e=cv(CLOUD,'pxc');e.style.cssText='left:'+c[0]+'%;top:'+c[1]+'px;width:'+(20*c[2])+'px;height:'+(7*c[2])+'px';d.appendChild(e);});
     [[22,10],[52,40],[78,6],[95,52],[12,54]].forEach(function(s){var e=cv(SPK,'pxs2');e.style.cssText='left:'+s[0]+'%;top:'+s[1]+'px';d.appendChild(e);});return d;}
   function initPhoneHome(){var main=document.querySelector('.home-page .main-content'),drop=main&&main.querySelector('.drop-section'),cd=main&&main.querySelector('.cd-section'),grid=drop&&drop.querySelector('.pp-grid');if(!grid||!cd)return;
-    var teaser=document.createElement('section');teaser.className='content-section px-teaser';teaser.innerHTML='<div class="pp-grid px-teaser-grid"></div><a class="px-teaser-link" href="collection.html">see the whole shop ♡</a>';
+    var teaser=document.createElement('section');teaser.className='content-section px-teaser';teaser.innerHTML='<h2 class="px-teaser-title">sneak peek ♡</h2><div class="pp-grid px-teaser-grid"></div><a class="px-teaser-link" href="collection.html">see the whole shop ♡</a>';
     var cloud=cloudDivider();main.insertBefore(teaser,drop);main.insertBefore(cloud,cd);
     var tg=teaser.querySelector('.pp-grid'),mq=matchMedia('(max-width:768px)'),moved=[];
     function apply(){if(mq.matches&&!moved.length){moved=[].slice.call(grid.children,0,2);moved.forEach(function(c){tg.appendChild(c);});}

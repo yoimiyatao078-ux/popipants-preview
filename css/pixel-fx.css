@@ -75,7 +75,9 @@ html body .sidebar .figurine-button{padding:8px 22px!important;justify-content:c
  .home-page .main-content{display:flex;flex-direction:column}
  .home-page .main-content>*{order:2}
  .home-page .main-content>:is(.combo-mbar,.combo-fcd,.top-nav,.banner,script){order:0}
- .home-page .main-content>.cd-section{order:1}
+ .home-page .main-content>.px-teaser{order:1}
+ .home-page .main-content>.px-cloud-divider{order:1;display:block}
+ .home-page .main-content>.cd-section{order:1;padding-top:44px!important;padding-bottom:56px!important}
  .home-page .main-content>.content-section .section-tag{display:none}
 }
 /* bag button (top-right of header) */
@@ -106,3 +108,16 @@ html body .bag-overlay .pc-popup-body{background:#fff!important;color:#FF5FA2}
 html body .bag-overlay .pc-popup-titlebar span{color:#fff!important;font-weight:700}
 html body .bag-overlay .pc-popup-body p.bag-note{background:#fff!important;border:1.5px dashed #FF5FA2!important;border-radius:10px;padding:8px;color:#FF5FA2!important}
 .px-bagbtn .bag-count[hidden]{display:none}
+/* phone teaser row + pixel cloud divider (hidden on desktop) */
+.px-teaser,.px-cloud-divider{display:none}
+@media (max-width:768px){
+ .home-page .px-teaser{display:block;padding:18px 14px 6px!important;border-bottom:0!important}
+ .px-teaser-grid{grid-template-columns:repeat(2,1fr)!important}
+ .px-teaser-link{display:block;margin:12px 0 0;text-align:right;color:#FF5FA2;font:700 13px Inconsolata,monospace;text-decoration:underline dotted}
+ .px-cloud-divider{position:relative;height:76px;overflow:hidden;background:linear-gradient(180deg,#fff,#FFD6E8)}
+ .px-cloud-divider .pxc,.px-cloud-divider .pxs2{position:absolute;image-rendering:pixelated}
+ .px-cloud-divider .pxs2{width:12px;height:12px}
+ .px-cloud-divider .pxc{animation:pxDrift 6s ease-in-out infinite alternate}
+}
+@keyframes pxDrift{to{transform:translateX(6px)}}
+@media (prefers-reduced-motion:reduce){.px-cloud-divider .pxc{animation:none}}

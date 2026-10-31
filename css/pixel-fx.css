@@ -122,3 +122,5 @@ html body .bag-overlay .pc-popup-body p.bag-note{background:#fff!important;borde
 @keyframes pxDrift{to{transform:translateX(6px)}}
 @media (prefers-reduced-motion:reduce){.px-cloud-divider .pxc{animation:none}}
 .px-teaser-title{margin:4px 0 14px;font-family:'Archivo Black',sans-serif!important;font-weight:400;font-size:28px;letter-spacing:-.5px;line-height:1.1;color:#FF5FA2}
+/* phone drawer: don't trap the sidebar under the blurred backdrop (page-wrapper z-index made a stacking context) */
+@media (max-width:768px){html body .page-wrapper{z-index:auto!important;filter:none!important;transform:none!important}}

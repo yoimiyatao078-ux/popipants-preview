@@ -30,21 +30,41 @@
     fx.style.left=(r.left+r.width/2+scrollX)+'px';fx.style.top=(r.top+scrollY)+'px';
     fx.append(cv(CART,'px-cart'),cv(ITEM,'px-item'),cv(SPARK,'px-sp s1'),cv(SPARK,'px-sp s2'),cv(SPARK,'px-sp s3'));
     document.body.appendChild(fx);setTimeout(function(){fx.remove();},RM?600:950);
-    setTimeout(function(){var bc=document.querySelector('.bag-count');if(!bc)return;var br=bc.getBoundingClientRect();
+    setTimeout(function(){var bc=[].slice.call(document.querySelectorAll('.px-bagbtn .bag-count')).filter(function(n){return n.offsetParent;})[0];if(!bc)return;var br=bc.getBoundingClientRect();
       var p=document.createElement('span');p.className='px-plus'+(RM?' rm':'');p.setAttribute('aria-hidden','true');p.append(cv(HEART,'px-heart'));
       var t=document.createElement('b');t.textContent='+1';p.append(t);p.style.left=(br.left+br.width/2)+'px';p.style.top=br.top+'px';
       document.body.appendChild(p);bc.classList.remove('px-pop');void bc.offsetWidth;bc.classList.add('px-pop');setTimeout(function(){p.remove();},800);},RM?0:420);}
 
   /* shop cards: add-to-bag gel button + floating pixel bag counter (shares popipants-bag with contact prefill) */
   var KEY='popipants-bag';function getBag(){try{return JSON.parse(localStorage.getItem(KEY))||[];}catch(e){return [];}}
-  function initShop(){var cards=document.querySelectorAll('.pp-grid .pp-card');if(!cards.length)return;
-    var dock=document.querySelector('.px-bagdock');if(!dock){dock=document.createElement('a');dock.className='px-bagdock';dock.href='contact.html?order=1';dock.setAttribute('aria-label','My bag');
-      dock.append(cv(CART,'px-dockcart'));var n=document.createElement('b');n.className='bag-count';dock.append(n);document.body.appendChild(dock);}
-    var cnt=function(){var c=getBag().length;dock.querySelector('.bag-count').textContent=c;dock.classList.toggle('has-items',c>0);};cnt();
-    cards.forEach(function(cd){if(cd.parentNode.classList.contains('pp-cell'))return;var cell=document.createElement('div');cell.className='pp-cell';cd.parentNode.insertBefore(cell,cd);cell.appendChild(cd);
+  /* bag: visual-only design for now (no checkout). Items kept in localStorage 'popipants-bag'. */
+  var KEY='popipants-bag';function getBag(){try{return JSON.parse(localStorage.getItem(KEY))||[];}catch(e){return [];}}
+  function setBag(b){try{localStorage.setItem(KEY,JSON.stringify(b));}catch(e){}cnt();}
+  function cnt(){var c=getBag().length;document.querySelectorAll('.px-bagbtn .bag-count').forEach(function(n){n.textContent=c||'';n.hidden=!c;});}
+  function openBag(){var old=document.querySelector('.bag-overlay');if(old)old.remove();
+    var ret=document.activeElement,ov=document.createElement('div');ov.className='pc-popup-overlay bag-overlay'+(RM?' rm':'');
+    var bag=getBag();
+    var list=bag.length?bag.map(function(it,i){return '<li><span class="bag-thumb">'+(it.thumb?'<img src="'+it.thumb+'" alt="">':'')+'</span><span class="bag-info"><b>'+it.name+'</b><small>size · price coming soon</small></span><button type="button" class="bag-rm" data-i="'+i+'" aria-label="Remove '+it.name+'">✕</button></li>';}).join(''):'<li class="bag-empty">your bag is empty ♡</li>';
+    ov.innerHTML='<div class="pc-popup bag-popup" role="dialog" aria-modal="true" aria-label="Your bag"><div class="pc-popup-titlebar"><span>popi-bag.exe</span><button type="button" class="close-btn" aria-label="Close">X</button></div>'+
+      '<div class="pc-popup-body"><ul class="bag-list">'+list+'</ul><p class="bag-note">✿ the shop is still being sewn — checkout opens soon</p><button type="button" class="bag-checkout" disabled>checkout coming soon ♡</button></div></div>';
+    document.body.appendChild(ov);
+    function close(){ov.remove();removeEventListener('keydown',key);if(ret&&ret.focus)ret.focus();}
+    function key(e){if(e.key==='Escape')close();}addEventListener('keydown',key);
+    ov.addEventListener('click',function(e){if(e.target===ov||e.target.closest('.close-btn')){close();return;}var r=e.target.closest('.bag-rm');if(r){var b=getBag();b.splice(+r.dataset.i,1);setBag(b);openBag();}});
+    ov.querySelector('.close-btn').focus();}
+  function bagButton(){var b=document.createElement('button');b.type='button';b.className='px-bagbtn';b.setAttribute('aria-label','Open bag');
+    b.append(cv(CART,'px-dockcart'));var n=document.createElement('b');n.className='bag-count';b.append(n);b.addEventListener('click',openBag);return b;}
+  function initShop(){
+    var nav=document.querySelector('.main-content>.top-nav'),mbar=document.querySelector('.combo-mbar');
+    if(nav&&!nav.querySelector('.px-bagbtn'))nav.appendChild(bagButton());
+    if(mbar&&!mbar.querySelector('.px-bagbtn')){var m=mbar.querySelector('.combo-menu');mbar.insertBefore(bagButton(),m);}
+    cnt();
+    document.querySelectorAll('.pp-grid .pp-card').forEach(function(cd){if(cd.parentNode.classList.contains('pp-cell'))return;var cell=document.createElement('div');cell.className='pp-cell';cd.parentNode.insertBefore(cell,cd);cell.appendChild(cd);
       var b=document.createElement('button');b.type='button';b.className='px-addbtn';b.innerHTML='<span>add to bag ♡</span>';cell.appendChild(b);
-      b.addEventListener('click',function(){var bag=getBag();bag.push({name:(cd.querySelector('h3')||{}).textContent||'item',price:''});try{localStorage.setItem(KEY,JSON.stringify(bag));}catch(e){}
-        cartFx(b);setTimeout(cnt,RM?0:420);var sp=b.querySelector('span');sp.textContent='added ✓';setTimeout(function(){sp.textContent='add to bag ♡';},1200);});});}
+      b.addEventListener('click',function(){var c=cd.querySelector('canvas'),th='';try{th=c?c.toDataURL():'';}catch(e){}
+        var bag=getBag();bag.push({name:(cd.querySelector('h3')||{}).textContent||'item',thumb:th});setBag(bag);
+        cartFx(b);var sp=b.querySelector('span');sp.textContent='added ✓';setTimeout(function(){sp.textContent='add to bag ♡';},1200);
+        setTimeout(openBag,RM?100:950);});});}
   function init(){initCat();initShop();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
   window.popipantsPixelFx={cartFx:cartFx};

@@ -124,3 +124,17 @@ html body .bag-overlay .pc-popup-body p.bag-note{background:#fff!important;borde
 .px-teaser-title{margin:4px 0 14px;font-family:'Archivo Black',sans-serif!important;font-weight:400;font-size:28px;letter-spacing:-.5px;line-height:1.1;color:#FF5FA2}
 /* phone drawer: don't trap the sidebar under the blurred backdrop (page-wrapper z-index made a stacking context) */
 @media (max-width:768px){html body .page-wrapper{z-index:auto!important;filter:none!important;transform:none!important}}
+/* inner pages: cloud divider (all widths) + hero sparkles */
+.secondary-page .px-cloud-divider.px-cloud-inner{display:block;position:relative;height:76px;overflow:hidden;background:linear-gradient(180deg,#fff,#FFD6E8)}
+.px-cloud-inner .pxc,.px-cloud-inner .pxs2{position:absolute;image-rendering:pixelated}
+.px-cloud-inner .pxs2{width:12px;height:12px}
+.pg-hero{position:relative}
+.px-hero-spk{position:absolute;width:15px;height:15px;image-rendering:pixelated;pointer-events:none;animation:pxTwinkle 2.4s steps(3) infinite}
+.px-hero-spk.s1{animation-delay:.8s}.px-hero-spk.s2{animation-delay:1.6s}
+@keyframes pxTwinkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.px-hero-spk{animation:none;opacity:.8}}
+/* phone polish */
+@media (max-width:400px){
+ .pp-card p{font-size:12px!important;letter-spacing:0}
+ .ms-links .btn{font-size:12px!important;letter-spacing:.03em!important;padding-left:8px!important;padding-right:8px!important}
+}

@@ -4,7 +4,7 @@
    Edit the menus / sidebar / footer HERE once, and every page updates.
 
    How a page uses it (already set up in every .html file):
-     <script src="js/layout.js" data-part="marquee" data-text="★彡 HELLO ★彡"></script>
+     <script src="js/layout.js" data-part="marquee" data-text="HELLO"></script>
      <script src="js/layout.js" data-part="sidebar"></script>
      <script src="js/layout.js" data-part="topnav"></script>
      <script src="js/layout.js" data-part="footer" data-footer="home|social|counter"></script>
@@ -114,7 +114,7 @@
             '<a href="#" class="social-link" title="Twitter" aria-label="Twitter">🐦</a>' +
           '</div>';
       return '<footer class="footer">' +
-        '<div class="footer-logo">POPIPANTS ★彡</div>' +
+        '<div class="footer-logo">POPIPANTS ★</div>' +
         '<p class="footer-text">Handmade character streetwear from Trondheim, Norway ♥</p>' +
         '<p class="footer-text footer-copy">© 2026 Popipants. All rights reserved.</p>' +
         extra +

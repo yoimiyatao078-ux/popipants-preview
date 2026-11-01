@@ -50,7 +50,7 @@ html[data-theme="blue"] .combo-backdrop{background:rgba(11,94,92,.25)!important}
 /* clouds, stickers, sparkles */
 html[data-theme="blue"] .px-cloud-divider{background:#FEFEF6!important}
 html[data-theme="blue"] .px-cloud-divider .pxc{filter:hue-rotate(-30deg) saturate(.55) brightness(1.08)}
-html[data-theme="blue"] .hero-phone-sticker,html[data-theme="blue"] .inspo-shelf img,html[data-theme="blue"] .norway-sticker{filter:saturate(1.15) hue-rotate(-12deg)!important}
+html[data-theme="blue"] .hero-phone-sticker,html[data-theme="blue"] .norway-sticker{filter:saturate(1.15) hue-rotate(-12deg)!important}
 html[data-theme="blue"] .px-spark-pink,html[data-theme="blue"] .px-heart,html[data-theme="blue"] .px-cartfx canvas,html[data-theme="blue"] .px-dockcart,html[data-theme="blue"] .px-cart,html[data-theme="blue"] .px-item{filter:hue-rotate(-12deg) saturate(1.2)!important}
 html[data-theme="blue"] #sparkle-canvas{opacity:.5}
 /* kitty CD + badge */

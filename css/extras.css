@@ -18,12 +18,6 @@
 .btn-aero:active{ transform:translateY(1px); }
 
 /* ---------- Inspo sticker shelf (pins, Frutiger-Aero desktop icons) ---------- */
-.inspo-shelf{ position:relative; padding:22px 30px 26px; border-top:1px solid var(--t-line); background:linear-gradient(180deg,var(--t-panel-2),var(--t-panel)); }
-.inspo-shelf h3{ font:22px var(--font-heading); color:var(--t-heading); letter-spacing:1px; margin-bottom:10px; }
-.inspo-shelf .shelf{ display:flex; gap:14px; flex-wrap:wrap; }
-.inspo-shelf figure{ width:92px; text-align:center; font:11px var(--font-system); color:var(--t-ink); }
-.inspo-shelf img{ width:84px; height:84px; object-fit:cover; border-radius:16px; border:2px solid #fff; box-shadow:0 3px 8px rgba(0,0,0,.18),inset 0 0 0 1px rgba(0,0,0,.05); transition:transform .2s; }
-.inspo-shelf figure:hover img{ transform:translateY(-4px) rotate(-3deg); }
 
 
 /* ---------- Shop: bag + add buttons ---------- */

@@ -60,7 +60,7 @@ def build(theme,P):
 /* clouds, stickers, sparkles */
 {G} .px-cloud-divider{{background:{P['bg']}!important}}
 {G} .px-cloud-divider .pxc{{filter:{P['cloudfx']}}}
-{G} .hero-phone-sticker,{G} .inspo-shelf img,{G} .norway-sticker{{filter:{P['stickerfx']}!important}}
+{G} .hero-phone-sticker,{G} .norway-sticker{{filter:{P['stickerfx']}!important}}
 {G} .px-spark-pink,{G} .px-heart,{G} .px-cartfx canvas,{G} .px-dockcart,{G} .px-cart,{G} .px-item{{filter:{P['spritefx']}!important}}
 {G} #sparkle-canvas{{opacity:{P['twinkle']}}}
 /* kitty CD + badge */

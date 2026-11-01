@@ -25,6 +25,5 @@ html[data-theme="goth"] .made-in-japan-sticker, html[data-theme="goth"] .hero-ph
   mix-blend-mode: normal; filter: grayscale(.4) contrast(1.1);
   -webkit-mask-image: radial-gradient(ellipse 60% 60% at center,#000 55%,transparent 75%); mask-image: radial-gradient(ellipse 60% 60% at center,#000 55%,transparent 75%); }
 html[data-theme="goth"] .hero-phone-sticker { filter: grayscale(1) contrast(1.2) drop-shadow(0 0 10px #9b4dff); }
-html[data-theme="goth"] .inspo-shelf img { filter: grayscale(1) contrast(1.15) brightness(.9); border-color: #3a2a52; }
 /* white inner boxes (e.g. contact info) were unreadable on dark: give them the dark panel colour */
 html[data-theme="goth"] .win-panel-inset { background: var(--t-panel); }

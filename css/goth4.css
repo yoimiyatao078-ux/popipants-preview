@@ -69,7 +69,6 @@ html[data-theme="goth4"] .px-cloud-divider{background:linear-gradient(180deg,#0b
 html[data-theme="goth4"] .px-cloud-divider .pxc{filter:brightness(.18) sepia(1) hue-rotate(290deg) saturate(3);opacity:.7}
 /* stickers on dark */
 html[data-theme="goth4"] .hero-phone-sticker{filter:grayscale(1) contrast(1.1) drop-shadow(0 0 10px #FF4A5E)}
-html[data-theme="goth4"] .inspo-shelf img{filter:grayscale(1) contrast(1.1)}
 html[data-theme="goth4"] .norway-sticker{filter:grayscale(1);border-color:#FF4A5E!important}
 html[data-theme="goth4"] .bag-overlay .pc-popup,html[data-theme="goth4"] .nl-overlay .pc-popup{background:#0b090a!important}
 html[data-theme="goth4"] .bag-list li,html[data-theme="goth4"] .bag-note{background:#000!important}

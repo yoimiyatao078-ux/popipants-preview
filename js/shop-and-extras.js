@@ -1,4 +1,4 @@
-/* Popipants extras: shop filters + bag, contact prefill, "my_desktop" pin shelf.
+/* Popipants extras: shop filters + bag, contact prefill.
    Pin pictures live in images/inspo/. */
 (function(){
   const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
@@ -41,18 +41,4 @@
     try{ const bag=JSON.parse(localStorage.getItem('popipants-bag'))||[]; if(bag.length) msg.value='Hi! I would like to order:\n'+bag.map(i=>'- '+i.name+' ('+i.price+')').join('\n')+'\n\nSize: \nShipping to: '; }catch(e){}
   }
 
-  /* inspo sticker shelf before footer */
-  const foot=$('.main-content .footer');
-  if(foot){
-    const sets={
-      index:[['04','camera.exe'],['11','lotus.app'],['30','mini disc'],['37','hibiscus']],
-      collection:[['07','trash.bin'],['19','aqua.tile'],['33','glitter.bg'],['37','hibiscus'],['04','camera.exe']],
-      about:[['18','lotus pond'],['44','best friends'],['48','angel ♡'],['30','mini disc']],
-      contact:[['29','start'],['10','frame.png'],['49','lotus water'],['04','camera.exe']],
-      lookbook:[['45','bokeh'],['47','star'],['20','swirl'],['18','lotus pond'],['48','angel ♡']]};
-    const items=sets[page]||sets.index;
-    const s=document.createElement('section'); s.className='inspo-shelf';
-    s.innerHTML='<h3>✦ my_desktop</h3><div class="shelf">'+items.map(([n,l])=>`<figure><img src="images/inspo/pin-${n}.webp" alt="" loading="lazy"><figcaption>${l}</figcaption></figure>`).join('')+'</div>';
-    foot.parentNode.insertBefore(s,foot);
-  }
 })();

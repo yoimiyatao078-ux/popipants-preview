@@ -62,7 +62,7 @@ html[data-theme="goth3"] .bag-list li,html[data-theme="goth3"] .bag-note{backgro
 /* clouds go dark, stickers grey */
 html[data-theme="goth3"] .px-cloud-divider{background:#050505!important}
 html[data-theme="goth3"] .px-cloud-divider .pxc{filter:brightness(.12);opacity:.6}
-html[data-theme="goth3"] .hero-phone-sticker,html[data-theme="goth3"] .inspo-shelf img,html[data-theme="goth3"] .norway-sticker{filter:grayscale(1) contrast(1.1)!important}
+html[data-theme="goth3"] .hero-phone-sticker,html[data-theme="goth3"] .norway-sticker{filter:grayscale(1) contrast(1.1)!important}
 /* sparkles: sparse pixel hearts and crosses (absolute canvases, no layout) */
 html[data-theme="goth3"] .px-goth-skull,html[data-theme="goth3"] .px-spark-pink{display:none!important}
 html[data-theme="goth3"] .px-g2-spark{display:block!important;opacity:.8}

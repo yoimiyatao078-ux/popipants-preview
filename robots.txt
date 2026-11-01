@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /palette-a.html
+Disallow: /palette-b.html
+Disallow: /button-demo.html
+Disallow: /cat-preview.html
+Disallow: /popup-preview.html
+Disallow: /cart.html
+Disallow: /wishlist.html
+
+Sitemap: https://popipants.com/sitemap.xml

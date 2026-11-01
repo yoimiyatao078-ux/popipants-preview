@@ -1,3 +1,4 @@
+/* NOTE: pages now load css/bundle.css (flattened copy of this file). After editing any file imported here, run: python3 tools/bundle_css.py */
 @import url('../fonts/fonts.css');
 @import url('base.css');
 @import url('layout.css');

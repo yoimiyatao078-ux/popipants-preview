@@ -40,17 +40,18 @@ const SPR={
  lotus:mir(['......k','.....km','.....kb','..k..kb','.kmk.kb','.kbmkmb','kbbmkmb','kbbbmkm','.kbbbmk','..kkmmm','.aaakkk','aataaaa','.aaaaaa']),
  star:mir(['...k','...w','..kwk'.slice(0,4),'kwwww','..kwk'.slice(0,4),'...w','...k']),
  bag:mir(['...kkkk','..k....','..k....','kkkkkkk','kbbbbbb','kbmbbbb','kbbbkpk','kbbbkwp','kbbbbkk','kbbbbbb','kkkkkkk'])};
+window.popiCard=function(pr){
+ const a=document.createElement('a');a.className='pp-card'+(pr.soldOut?' is-sold':'');a.href='product.html?id='+encodeURIComponent(pr.id);a.dataset.cat=pr.cat;a.dataset.id=pr.id;a.dataset.price=pr.price;
+ a.dataset.sizes=Object.keys(pr.sizes).filter(k=>pr.sizes[k]>0).join('|');
+ a.innerHTML=`<div class="pp-ph pat-${pr.pat}"><span class="pp-tag">${pr.soldOut?'sold out':'sample item'}</span></div><h3>${pr.name}</h3><p>example · NOK ${pr.price}</p>`;
+ a.firstChild.appendChild(sprite(pr.spr,8));const c=a.querySelector('canvas');c.setAttribute('role','img');c.setAttribute('aria-label',pr.name+' (pixel illustration)');return a};
 function sprite(n,sc){const r=SPR[n],c=document.createElement('canvas');c.width=r[0].length*sc;c.height=r.length*sc;const x=c.getContext('2d');
  r.forEach((row,j)=>[...row].forEach((ch,i)=>{if(PAL[ch]){x.fillStyle=PAL[ch];x.fillRect(i*sc,j*sc,sc,sc)}}));return c}
 document.querySelectorAll('i[data-spr]').forEach(el=>{const c=sprite(el.dataset.spr,+el.dataset.scale||5);c.className='pxs '+el.className;if(el.getAttribute('style'))c.setAttribute('style',el.getAttribute('style'));el.replaceWith(c)});
-document.querySelectorAll('.demo-form').forEach(f=>f.addEventListener('submit',e=>{e.preventDefault();const b=f.querySelector('.demo-send span');b.textContent='demo only — nothing sent ♡'}));
-const ITEMS=[['tee','baby tee','dot','tops'],['skirt','pleated mini','plaid','bottoms'],['cami','lace cami','leo','tops'],['pants','flare jeans','zeb','bottoms'],
- ['bag','shoulder bag','aq','bags'],['tee','butterfly tee','leo','tops'],['skirt','ruffle skirt','dot','bottoms'],['cami','halter top','plaid','tops'],
- ['pants','low-rise cargos','dot','bottoms'],['bag','mini purse','zeb','bags'],['tee','hibiscus tee','aq','tops'],['cami','tube top','dot','tops']];
-document.querySelectorAll('.pp-grid').forEach(g=>{ITEMS.slice(0,+g.dataset.n||8).forEach(([s,t,p,cat])=>{
- const a=document.createElement('a');a.className='pp-card';a.href=TISE;a.target='_blank';a.rel='noopener';a.dataset.cat=cat;
- a.innerHTML=`<div class="pp-ph pat-${p}"><span class="pp-tag">sample item</span></div><h3>${t}</h3><p>example · see on tise ↗</p>`;
- a.firstChild.appendChild(sprite(s,8));g.appendChild(a)})});
+document.querySelectorAll('.demo-form:not(.sx-contact)').forEach(f=>f.addEventListener('submit',e=>{e.preventDefault();const b=f.querySelector('.demo-send span');b.textContent='demo only — nothing sent ♡'}));
+const PRODUCTS=window.POPI_PRODUCTS||[];
+window.popiSprite=sprite;
+document.querySelectorAll('.pp-grid').forEach(g=>{if(g.dataset.manual!=null)return;PRODUCTS.slice(0,+g.dataset.n||8).forEach(pr=>g.appendChild(window.popiCard(pr)))});
 const chips=document.querySelector('.pp-chips');
 if(chips){chips.innerHTML=['all','tops','bottoms','bags'].map(c=>`<button type="button" class="gelbtn${c=='all'?' on':''}" data-c="${c}"><span>${c}</span></button>`).join('');
  chips.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;chips.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));

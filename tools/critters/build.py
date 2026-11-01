@@ -10,7 +10,7 @@ from designs import items, CSS
 # theme -> list of (critter key, how it moves: fly | drift | hop)
 MOODS = {
   'pink': [('pbutterfly-1', 'fly'), ('pbutterfly-2', 'fly')],
-  'blue': [('hibiscus-1', 'drift'), ('hibiscus-2', 'drift'), ('hibiscus-3', 'drift'), ('hibiscus-4', 'drift'), ('hibiscus-5', 'drift')],
+  'blue': [('hibiscus-2', 'drift'), ('hibiscus-3', 'drift')],
   'red':  [('ladybug-3', 'hop')],
   'goth': [('goth-1', 'fly'), ('goth-5', 'fly')],
 }

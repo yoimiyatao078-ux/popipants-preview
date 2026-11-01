@@ -38,3 +38,5 @@
 .bag-window .bag-foot{ display:flex; justify-content:space-between; align-items:center; padding:6px 8px; }
 .bag-window.is-collapsed ul, .bag-window.is-collapsed .bag-foot{ display:none; }
 .bag-count{ display:inline-block; min-width:18px; padding:0 5px; border-radius:9px; background:#fff; color:var(--accent-deep); text-align:center; }
+/* blue swatch = Tropical: hibiscus pink sunset over lagoon aqua, lime frond */
+html .theme-btn[data-theme="blue"]{background:radial-gradient(circle at 72% 28%,#FFE08A 0 12%,rgba(255,224,138,0) 26%),linear-gradient(165deg,#FFC1DA 0%,#FE5FA0 44%,#55DECA 46%,#01BAB5 78%,#A3CA7B 100%)!important}

@@ -18,11 +18,11 @@ html[data-theme="blue"] {
 [data-theme="blue"] .sidebar::before { color: #31b6d3; }
 [data-theme="blue"] .product-card::before, [data-theme="blue"] .masonry-item::before { background: linear-gradient(90deg,#19b9d5,#87e4ef); }
 /* big title banners: lotus water on the front page, blossom tree + jellyfish on inner pages */
-html[data-theme="blue"] .banner { background: linear-gradient(90deg,rgba(246,253,255,.92),rgba(226,248,255,.55)), url('../images/inspo/pin-49.jpg') center/cover !important; }
-[data-theme="blue"] .secondary-page .banner { background: linear-gradient(90deg,rgba(247,255,255,.95),rgba(225,250,255,.72)), url('../images/blue/blossom-tree.jpg') center/cover !important; }
-[data-theme="blue"] .secondary-page .banner::after { background-image: url('../images/blue/jellyfish.jpg'); opacity: .42; }
+html[data-theme="blue"] .banner { background: linear-gradient(90deg,rgba(246,253,255,.92),rgba(226,248,255,.55)), url('../images/inspo/pin-49.webp') center/cover !important; }
+[data-theme="blue"] .secondary-page .banner { background: linear-gradient(90deg,rgba(247,255,255,.95),rgba(225,250,255,.72)), url('../images/blue/blossom-tree.webp') center/cover !important; }
+[data-theme="blue"] .secondary-page .banner::after { background-image: url('../images/blue/jellyfish.webp'); opacity: .42; }
 [data-theme="blue"] .secondary-page .top-nav a { color: #167d98 !important; }
-html[data-theme="blue"] .content-section { background: linear-gradient(rgba(246,253,255,.86),rgba(246,253,255,.92)), url('../images/blue/fractal-flowers.jpg') center/cover !important; }
+html[data-theme="blue"] .content-section { background: linear-gradient(rgba(246,253,255,.86),rgba(246,253,255,.92)), url('../images/blue/fractal-flowers.webp') center/cover !important; }
 /* turn pink pictures blue-ish */
 [data-theme="blue"] img { filter: hue-rotate(135deg) saturate(.85); }
 [data-theme="blue"] .music-notes-sticker { opacity: .2; }

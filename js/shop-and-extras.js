@@ -52,7 +52,7 @@
       lookbook:[['45','bokeh'],['47','star'],['20','swirl'],['18','lotus pond'],['48','angel ♡']]};
     const items=sets[page]||sets.index;
     const s=document.createElement('section'); s.className='inspo-shelf';
-    s.innerHTML='<h3>✦ my_desktop</h3><div class="shelf">'+items.map(([n,l])=>`<figure><img src="images/inspo/pin-${n}.jpg" alt="" loading="lazy"><figcaption>${l}</figcaption></figure>`).join('')+'</div>';
+    s.innerHTML='<h3>✦ my_desktop</h3><div class="shelf">'+items.map(([n,l])=>`<figure><img src="images/inspo/pin-${n}.webp" alt="" loading="lazy"><figcaption>${l}</figcaption></figure>`).join('')+'</div>';
     foot.parentNode.insertBefore(s,foot);
   }
 })();

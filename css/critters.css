@@ -74,7 +74,7 @@
 }
 
 /* goth critters are dark: give them a soft lilac glow so they show on black */
-html[data-theme="goth"] .critter-float, html[data-theme="goth"] .critter-buddy { filter: drop-shadow(0 0 1.5px #f0e0ff) drop-shadow(0 0 5px rgba(185,140,255,.7)); }
+html[data-theme="goth"] .critter-float, html[data-theme="goth"] .critter-buddy, html[data-theme="goth2"] .critter-float, html[data-theme="goth2"] .critter-buddy, html[data-theme="goth4"] .critter-float, html[data-theme="goth4"] .critter-buddy { filter: drop-shadow(0 0 1.5px #f0e0ff) drop-shadow(0 0 5px rgba(185,140,255,.7)); }
 
 /* tab hidden or "reduce motion": freeze */
 .critters-paused .critter .cr * { animation-play-state: paused !important; }
@@ -88,10 +88,25 @@ html[data-theme="goth"] .critter-float, html[data-theme="goth"] .critter-buddy {
 .critter-idle .cr .pxb .wl, .critter-idle .cr .pxb .wr { animation: cr-pflapL 1.6s cubic-bezier(.45,0,.35,1) infinite; }
 .critter-idle .cr .pxb .wr { animation-name: cr-pflapR; }
 .critter-wander:not(.is-flying) .cr .pxb .wl, .critter-wander:not(.is-flying) .cr .pxb .wr { animation: critter-rest 2.6s ease-in-out infinite; }
-.critter-float.critter-wander, .critter-float.critter-idle { filter: drop-shadow(0 0 3px rgba(255,158,199,.6)); }
+.critter-float.critter-wander, .critter-float.critter-idle { filter: drop-shadow(0 0 3px rgba(255,170,215,.6)); }
 /* faint pixel sparkle trail */
 .critter-trail { position: absolute; left: 0; top: 0; z-index: 949; pointer-events: none; width: 0; height: 0; }
 .critter-trail::before { content: ""; position: absolute; width: 3px; height: 3px; background: #fff;
-  box-shadow: 3px 0 #FF9EC7, -3px 0 #FF9EC7, 0 3px #FF9EC7, 0 -3px #FF9EC7; animation: critter-trail 1.4s ease-out forwards; }
+  box-shadow: 3px 0 #ffb6da, -3px 0 #ffb6da, 0 3px #ffb6da, 0 -3px #ffb6da; animation: critter-trail 1.4s ease-out forwards; }
 @keyframes critter-trail { 0% { opacity: .85; transform: scale(1); } 100% { opacity: 0; transform: translateY(10px) scale(.4); } }
 @media (prefers-reduced-motion: reduce) { .critter-trail { display: none; } }
+
+/* goth3 (calm): no glow */
+html[data-theme="goth3"] .critter-float, html[data-theme="goth3"] .critter-buddy { filter: drop-shadow(0 0 0.8px #e6e6ee) drop-shadow(0 0 0.8px #e6e6ee); }
+
+/* goth moods use the same idle + wander + trail as pink: flight wingbeats, aura and sparkle trail */
+.critter-wander.is-flying .cr .wl, .critter-wander.is-flying .cr .wr { animation-duration: .42s; }
+.critter-wander.is-gliding .cr .wl, .critter-wander.is-gliding .cr .wr, .critter-wander.is-gliding .cr .bl, .critter-wander.is-gliding .cr .br { animation-play-state: paused; }
+.critter-wander.is-flying .cr .bl, .critter-wander.is-flying .cr .br { animation-duration: .3s; animation-timing-function: cubic-bezier(.7,0,.3,1); }
+.critter-idle .cr .wl { animation: cr-pflapL 1.6s cubic-bezier(.45,0,.35,1) infinite; }
+.critter-idle .cr .wr { animation: cr-pflapR 1.6s cubic-bezier(.45,0,.35,1) infinite; }
+.critter-idle .cr .bl, .critter-idle .cr .br { animation-duration: 1.2s; }
+html[data-theme^="goth"] .critter-float.critter-wander, html[data-theme^="goth"] .critter-float.critter-idle { filter: drop-shadow(0 0 1px #ffe6f0) drop-shadow(0 0 4px rgba(255,95,162,.75)) drop-shadow(0 0 9px rgba(194,64,120,.6)); animation: cr-gaura 3.2s ease-in-out infinite; }
+@keyframes cr-gaura { 0%,100% { filter: drop-shadow(0 0 1px #ffe6f0) drop-shadow(0 0 3px rgba(255,95,162,.6)) drop-shadow(0 0 7px rgba(194,64,120,.45)); } 50% { filter: drop-shadow(0 0 1px #ffe6f0) drop-shadow(0 0 5px rgba(255,95,162,.9)) drop-shadow(0 0 11px rgba(194,64,120,.7)); } }
+html[data-theme^="goth"] .critter-trail::before { background: #ffffff; box-shadow: 3px 0 #FF5FA2, -3px 0 #C24078, 0 3px #d9d9e3, 0 -3px #FF5FA2; }
+@media (prefers-reduced-motion: reduce) { html[data-theme^="goth"] .critter-float { animation: none; } }

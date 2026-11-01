@@ -63,3 +63,4 @@ html:not([data-theme]) .btn-secondary:hover, html:not([data-theme]) .btn-retro:h
 .sidebar-cd .bp{position:relative;display:none;gap:3px}.sidebar-cd .bp i{width:3px;height:9px;background:#fff}
 .sidebar-cd.is-playing .bt{display:none}.sidebar-cd.is-playing .bp{display:flex}
 @media (prefers-reduced-motion:reduce){.sidebar-cd.is-playing .cd,.mbars i,.mspark{animation:none !important}}
+.music-pill.is-loading .gel,.music-cd-toggle.is-loading .cd{opacity:.8}

@@ -32,7 +32,7 @@
 
   /* ---------- which critter plays which role in the current theme ---------- */
   function cast() {
-    var t = document.documentElement.getAttribute('data-theme') || 'pink';
+    var t = (document.documentElement.getAttribute('data-theme') || 'pink').replace(/^goth\d$/, 'goth');
     var set = DATA.moods[t] || DATA.moods.pink;
     var shuffled = set.slice().sort(function () { return Math.random() - 0.5; });
     // different designs in different roles when the mood has several
@@ -293,11 +293,11 @@
     // surprise critters still sitting on cards fly away with the old theme
     actors.slice().forEach(function (a) { if (a.el.classList.contains('critter-pop')) removeActor(a); });
     document.querySelectorAll('.product-card').forEach(function (c) { c._critter = null; });
-    var theme = document.documentElement.getAttribute('data-theme') || 'pink';
+    var theme = (document.documentElement.getAttribute('data-theme') || 'pink').replace(/^goth\d$/, 'goth');
     stopPink();
-    if (theme === 'pink' && !reduce.matches) {
+    if ((theme === 'pink' || theme === 'goth') && !reduce.matches) {
       perchers.forEach(function (p) { clearTimeout(p.timer); removeActor(p.a); }); perchers = [];
-      startPink(DATA.moods.pink);
+      startPink(DATA.moods[theme]);   // goth: bat idles on the shop button, moth wanders with the same flight + trail
     } else startPerchers(roles.perch);
     setBuddy(roles.buddy, sayHello);
     surpriseCritter = roles.surprise;

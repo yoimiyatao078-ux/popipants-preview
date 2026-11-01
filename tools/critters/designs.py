@@ -103,7 +103,7 @@ items['goth-1']=('Goth A','classic black bat holding a tiny hot-pink heart',bat(
 items['goth-2']=('Goth B','purple bat with violet sparkles',bat('#6a2fa0',sparkle=star(30,50,9,'#d9b3ff',0)+star(170,150,8,'#d9b3ff',.7)))
 items['goth-3']=('Goth C','black moth with purple eye-ring wing marks',butterfly(ROUND_UP,ROUND_LO,'#1e1424','#2e1d3a','<circle cx="54" cy="76" r="11" fill="#9b4dff" stroke="#e0c4ff" stroke-width="3"/><circle cx="66" cy="136" r="6" fill="#9b4dff"/>'+gl(40,62,8,4,-30,.3),b='#0e0812',bf='#3a2348'))
 items['goth-4']=('Goth D','round chibi bat, black with lilac heart',bat('#16101c',heart='#c79bff',wing2='M100 94 C80 64 40 64 28 86 C40 90 40 104 36 112 C50 104 60 110 64 120 C74 108 90 104 100 106Z'))
-items['goth-5']=('Goth E','heart-winged black moth with violet gradient + sparkle',butterfly(HEART_UP,HEART_LO,'url(#m5)','#2a1838',gl(46,58,10,5,-30,.3),b='#0e0812',defs='<linearGradient id="m5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a3cc4"/><stop offset="1" stop-color="#140c1c"/></linearGradient>',sparkle=star(164,40,8,'#e8d4ff',.3)))
+items['goth-5']=('Goth E','heart-winged shy-pink moth (lace pink #C24078 shading) + sparkle',butterfly(HEART_UP,HEART_LO,'url(#m5)','#C24078',gl(46,58,10,5,-30,.3),b='#7A1748',defs='<linearGradient id="m5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBD3E3"/><stop offset=".45" stop-color="#F2A6C4"/><stop offset="1" stop-color="#C24078"/></linearGradient>',sparkle=star(164,40,8,'#ffe6f0',.3)))
 
 # PINK pixel butterflies (round 3)
 import pixel_butterfly as _pb

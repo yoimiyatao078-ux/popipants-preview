@@ -24,7 +24,8 @@
     ['Shop the drop', 'collection.html'],
     ['Lookbook', 'lookbook.html'],
     ['My Story', 'about.html'],
-    ['Contact', 'contact.html']
+    ['Contact', 'contact.html'],
+    ['Wishlist', 'wishlist.html']
   ];
 
   /* ---- Round pill buttons along the top (icon, label, link) ---- */
@@ -40,8 +41,7 @@
   var THEMES = [
     ['pink', 'Pink', 'angel girly'],
     ['blue', 'Blue', 'tropical'],
-    ['red', 'Red', 'downtown'],
-    ['goth', 'Goth', 'after dark']
+    ['goth3', 'Goth', 'after dark']
   ];
 
   /* Which page are we on? Works with "about.html", "/about" (Vercel) and "/" */
@@ -74,7 +74,7 @@
             '<div class="sidebar-title"><span>mood selector</span></div>' +
             '<p>Choose your universe</p>' +
             '<div class="theme-switcher theme-switcher-inline" role="group" aria-label="Colour theme">' + boxes + '</div>' +
-            '<small>4 colour worlds ✦ pick yours</small>' +
+            '<small>3 colour worlds ✦ pick yours</small>' +
           '</div>' +
           '<button class="figurine-button" type="button" data-popup="signup" aria-label="Open secret club signup">' +
             '<span>click me<br>for secrets</span>' +

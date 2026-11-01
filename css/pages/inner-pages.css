@@ -27,10 +27,10 @@
 
 /* ----- big page title banner (sticker in the corner changes per page) ----- */
 .secondary-page .banner { position: relative; overflow: hidden; min-height: 295px; padding: 58px 185px 52px 36px; text-align: left; border-bottom: 1px solid #FF9EC7;
-  background: linear-gradient(90deg, rgba(255,255,255,.97), rgba(255,255,255,.82) 56%, rgba(255,255,255,.2)), url('../../images/hero-background.jpg') center/cover !important; }
-.secondary-page .banner::after { content: ''; position: absolute; right: -22px; bottom: -35px; width: 190px; height: 190px; background: url('../../images/pink/film-folder.jpg') center/contain no-repeat; mix-blend-mode: multiply; transform: rotate(-8deg); opacity: .82; }
-.collection-page .banner::after { background-image: url('../../images/pink/lily.jpg'); }
-.story-page .banner::after { background-image: url('../../images/pink/round-icons.jpg'); }
+  background: linear-gradient(90deg, rgba(255,255,255,.97), rgba(255,255,255,.82) 56%, rgba(255,255,255,.2)), url('../../images/hero-background.webp') center/cover !important; }
+.secondary-page .banner::after { content: ''; position: absolute; right: -22px; bottom: -35px; width: 190px; height: 190px; background: url('../../images/pink/film-folder.webp') center/contain no-repeat; mix-blend-mode: multiply; transform: rotate(-8deg); opacity: .82; }
+.collection-page .banner::after { background-image: url('../../images/pink/lily.webp'); }
+.story-page .banner::after { background-image: url('../../images/pink/round-icons.webp'); }
 .contact-page .banner::after { background-image: url('../../images/art/music-notes.png'); }
 .secondary-page .banner-title { position: relative; z-index: 1; color: #FF5FA2; font-family: 'Yeseva One',Georgia,serif; font-size: clamp(3rem,8vw,5.7rem); font-weight: 400; letter-spacing: -3px; text-shadow: 2px 2px #fff,4px 4px rgba(255,95,162,.15); }
 .secondary-page .banner-subtitle { position: relative; z-index: 1; color: #96285F; font-size: 1.1rem; letter-spacing: 1px; }

@@ -1,3 +1,4 @@
+.px-goth-skull{display:none}
 /* pixel cat on music buttons */
 .has-px-cat{position:relative;overflow:visible!important}
 .px-cat{position:absolute;left:50%;bottom:calc(100% - 4px);width:56px;height:46px;margin-left:-28px;pointer-events:none;z-index:3;transform-origin:50% 100%;animation:pxSway 1.35s ease-in-out infinite;filter:drop-shadow(0 1px 0 #fff)}
@@ -138,3 +139,11 @@ html body .bag-overlay .pc-popup-body p.bag-note{background:#fff!important;borde
  .pp-card p{font-size:12px!important;letter-spacing:0}
  .ms-links .btn{font-size:12px!important;letter-spacing:.03em!important;padding-left:8px!important;padding-right:8px!important}
 }
+
+.px-g2-spark{display:none}
+.px-cat .px-mono{display:none}html[data-theme="goth3"] .px-cat .px-mono{display:block}html[data-theme="goth3"] .px-cat canvas:not(.px-mono){display:none}
+/* same phone layout in every mood: the newsletter title keeps pink's two-line height even when a mood's heading font is narrower */
+@media (max-width:768px){html[data-theme="blue"] .lotus-section .section-title,html[data-theme="red"] .lotus-section .section-title,html[data-theme="goth3"] .lotus-section .section-title{min-height:86.4px}}
+.px-cat .px-pal-blue,.px-cat .px-pal-red{display:none}
+html[data-theme="blue"] .px-cat canvas{display:none}html[data-theme="blue"] .px-cat .px-pal-blue{display:block}
+html[data-theme="red"] .px-cat canvas{display:none}html[data-theme="red"] .px-cat .px-pal-red{display:block}

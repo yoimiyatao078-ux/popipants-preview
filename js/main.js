@@ -92,9 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function animateSparkles() {
       ctx.clearRect(0, 0, sparkleCanvas.width, sparkleCanvas.height);
-      sparkles.forEach(s => {
+      // calm goth mood: only every third twinkle is drawn
+      const thin = document.documentElement.getAttribute('data-theme') === 'goth3';
+      sparkles.forEach((s, i) => {
         s.update();
-        s.draw();
+        if (!thin || i % 3 === 0) s.draw();
       });
       requestAnimationFrame(animateSparkles);
     }
@@ -132,17 +134,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===== THEME SWITCHER =====
-  // pink (default) · blue (tropical) · red (downtown) · goth — persisted in localStorage
+  // pink (default) · blue (tropical) · goth — persisted in localStorage
   function initThemeSwitcher() {
-    const THEMES = ['pink', 'blue', 'red', 'goth'];
+    const THEMES = ['pink', 'blue', 'goth', 'goth2', 'goth3', 'goth4'];
     const themeBtns = document.querySelectorAll('.theme-btn');
     let savedTheme = localStorage.getItem('popipants-theme') || 'pink';
     if (savedTheme === 'black') savedTheme = 'goth';
     if (!THEMES.includes(savedTheme)) savedTheme = 'pink';
 
+    // iOS Safari can keep a stale composited filter/drop-shadow (e.g. the old goth glow on the
+    // multiply-blended hero player) after the theme changes. Re-rasterise filtered art on switch.
+    const FX_SEL = '.hero-phone-sticker,.cd-sticker,.music-notes-sticker,.made-in-japan-sticker,.norway-sticker,.inspo-shelf img,.px-cat,.critter,.cd,.brand-logo,.px-cloud-divider .pxc';
+    const repaintFx = () => {
+      const els = document.querySelectorAll(FX_SEL);
+      els.forEach(e => { e.style.setProperty('filter', 'none', 'important'); e.style.willChange = 'filter'; });
+      void document.body.offsetHeight;
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        els.forEach(e => { e.style.removeProperty('filter'); e.style.removeProperty('will-change'); });
+      }));
+    };
     const apply = (theme) => {
       if (theme === 'pink') document.documentElement.removeAttribute('data-theme');
       else document.documentElement.setAttribute('data-theme', theme);
+      repaintFx();
       themeBtns.forEach(b => {
         const on = b.dataset.theme === theme;
         b.classList.toggle('active', on);
@@ -162,105 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initThemeSwitcher();
 
   // ===== HOME PAGE OLD-PC MOMENTS =====
-  const musicToggle = document.getElementById('music-toggle');
-  // background playlist: random track, switches to another random one every 60s (short crossfade) and when a track ends
-  const TRACKS = [
-    ['a day in the park', 'a day in the park_spotdown.org (1).mp3'],
-    ['honey lemon tea', 'honey lemon tea_spotdown.org (2).mp3'],
-    ['macarons for two', 'macarons for two_spotdown.org (1).mp3'],
-    ['ocean railway', 'ocean railway_spotdown.org (1).mp3'],
-    ['snow angels', 'snow angels_spotdown.org (1).mp3'],
-    ['sweet cafe', 'sweet cafe_spotdown.org (1).mp3']
-  ];
-  // Persistent shuffled playlist: state survives page changes via sessionStorage (track, time, queue, playing).
-  const VOL = 0.28, SWITCH_S = 60, FADE_MS = 1500, SKEY = 'popipants-music';
-  let cur = null, curIdx = -1, playing = false, wantResume = false;
-  let queue = [], pos = 0, seg = 0;
-  const statusEl = () => document.getElementById('music-status');
-  const say = t => { const s = statusEl(); if (s) s.textContent = t; };
-  const shuffle = avoid => { const q = TRACKS.map((_, i) => i); for (let i = q.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [q[i], q[j]] = [q[j], q[i]]; } if (q.length > 1 && q[0] === avoid) q.push(q.shift()); return q; };
-  function save() {
-    try { sessionStorage.setItem(SKEY, JSON.stringify({ queue, pos, t: cur ? cur.currentTime : 0, seg, playing: playing || wantResume })); } catch (e) {}
-  }
-  function fade(audio, from, to, ms, done) {
-    const start = performance.now();
-    (function tick(now) {
-      const p = Math.min(1, ((now || performance.now()) - start) / ms);
-      audio.volume = Math.max(0, Math.min(1, from + (to - from) * p));
-      if (p < 1) requestAnimationFrame(tick); else if (done) done();
-    })(start);
-  }
-  function makeTrack(i) {
-    const a = new Audio('music/' + encodeURIComponent(TRACKS[i][1]));
-    a.preload = 'auto';
-    a.addEventListener('ended', () => { if (playing && a === cur) nextTrack(); });
-    a.addEventListener('timeupdate', () => { if (playing && a === cur && a.currentTime - seg >= SWITCH_S) nextTrack(); });
-    return a;
-  }
-  function load(i, t) { cur = makeTrack(i); curIdx = i; seg = 0; if (t) { const set = () => { try { cur.currentTime = t; } catch (e) {} }; if (cur.readyState >= 1) set(); else cur.addEventListener('loadedmetadata', set, { once: true }); } }
-  let switching = false;
-  async function nextTrack() {
-    if (switching) return true; switching = true;
-    pos++; if (pos >= queue.length) { queue = shuffle(curIdx); pos = 0; }
-    const old = cur, i = queue[pos], a = makeTrack(i);
-    cur = a; curIdx = i; seg = 0; a.volume = 0;
-    try { await a.play(); } catch (e) { switching = false; return false; }
-    fade(a, 0, VOL, FADE_MS);
-    if (old) fade(old, old.volume, 0, FADE_MS, () => { old.pause(); old.src = ''; });
-    say('now playing: ' + TRACKS[i][0]); save(); switching = false;
-    return true;
-  }
-  const musicButtons = () => document.querySelectorAll('#music-toggle, .music-cd-toggle');
-  function syncMusicUI() {
-    musicButtons().forEach(btn => {
-      btn.classList.toggle('is-playing', playing);
-      btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-      btn.setAttribute('aria-label', playing ? 'Pause background music' : (cur ? 'Resume background music' : 'Play background music'));
-      const l = btn.querySelector('.mlabel'); if (l) l.textContent = playing ? 'playing ♪' : 'play ♪';
-    });
-  }
-  async function startCur() {
-    if (!cur) { queue = shuffle(-1); pos = 0; load(queue[0], 0); }
-    cur.volume = 0;
-    await cur.play();
-    fade(cur, 0, VOL, 400);
-    playing = true; wantResume = false; say('now playing: ' + TRACKS[curIdx][0]); syncMusicUI(); save();
-  }
-  let busy = false;
-  async function toggleMusic() {
-    if (busy) return; busy = true;
-    if (!playing) {
-      try { await startCur(); } catch (e) { playing = false; say('press play again — your browser blocked the first try'); }
-    } else {
-      playing = false; wantResume = false;
-      if (cur) cur.pause();
-      say('paused — ' + TRACKS[curIdx][0]); save();
-    }
-    syncMusicUI(); busy = false;
-  }
-  // restore from previous page
-  (function restore() {
-    let st = null; try { st = JSON.parse(sessionStorage.getItem(SKEY)); } catch (e) {}
-    if (!st || !Array.isArray(st.queue) || !st.queue.length) return;
-    queue = st.queue; pos = Math.min(st.pos || 0, queue.length - 1);
-    load(queue[pos], st.t || 0); seg = st.seg || 0;
-    if (!st.playing) { say('paused — ' + TRACKS[curIdx][0]); return; }
-    wantResume = true;
-    startCur().catch(() => {
-      // autoplay blocked: resume at the saved time on the first click/keypress anywhere
-      say('tap anywhere to keep listening ♪ ' + TRACKS[curIdx][0]);
-      const go = e => {
-        removeEventListener('pointerdown', go, true); removeEventListener('keydown', go, true);
-        if (e && e.target && e.target.closest && e.target.closest('#music-toggle, .music-cd-toggle')) { e.stopPropagation(); e.preventDefault(); if (e.type === 'pointerdown') { const b = e.target.closest('button'); b.addEventListener('click', ev => ev.stopImmediatePropagation(), { once: true, capture: true }); } }
-        startCur().catch(() => { wantResume = false; syncMusicUI(); });
-      };
-      addEventListener('pointerdown', go, true); addEventListener('keydown', go, true);
-    });
-  })();
-  setInterval(() => { if (playing) save(); }, 1000);
-  addEventListener('pagehide', save);
-  window.popipantsMusic = { toggle: toggleMusic, isPlaying: () => playing };
-  musicButtons().forEach(btn => btn.addEventListener('click', toggleMusic));
+  // music lives in js/music.js (one shared audio controller)
   document.querySelectorAll('.popup-trigger, [data-popup="signup"]').forEach(trigger => {
     trigger.addEventListener('click', () => {
       if (trigger.dataset.popup === 'playlist') {
@@ -335,6 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.querySelector('#secret-email').focus();
     overlay.querySelector('.signup-form').addEventListener('submit', e => {
       e.preventDefault();
+      const em = overlay.querySelector('#secret-email').value.trim();
+      if (window.popiSubscribe) window.popiSubscribe(em, 'secret-club').catch(() => {});
       overlay.querySelector('.pc-popup-body').innerHTML = '<p>♡ You are on the list! See you at the next drop.</p><button type="button" class="popup-btn">close</button>';
       overlay.querySelector('.popup-btn').addEventListener('click', close);
       overlay.querySelector('.popup-btn').focus();

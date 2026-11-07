@@ -179,11 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // First-visit nudge beside the gel hearts. One quiet note, then it stays gone.
+  // First-visit nudges. Hearts stay in the sidebar/drawer.
+  // On a phone the drawer is closed, so a tiny note points at the menu button.
   function initMoodHint(savedTheme) {
-    const hint = document.querySelector('.mood-psst');
-    const group = document.querySelector('.mood-cluster .theme-switcher');
-    if (!hint || !group) return function () {};
     const KEY = 'popipants-mood-hint';
     let state = null;
     try { state = localStorage.getItem(KEY); } catch (e) {}
@@ -192,20 +190,127 @@ document.addEventListener('DOMContentLoaded', () => {
       state = 'switched';
       try { localStorage.setItem(KEY, state); } catch (e) {}
     }
-    function remember(value) {
+
+    const hint = document.querySelector('.mood-psst');
+    const group = document.querySelector('.mood-cluster .theme-switcher');
+    const note = ensureMenuNote();
+    const mobileMq = window.matchMedia('(max-width:768px)');
+    // Hold the outside note until the welcome dialog has come and gone.
+    let sawWelcome = false;
+    let holdForWelcome = !sessionStorage.getItem('popipants-welcomed');
+
+    function persist(value) {
+      state = value;
       try { localStorage.setItem(KEY, value); } catch (e) {}
-      hint.hidden = true;
-      group.removeAttribute('aria-describedby');
+      syncInner();
+      syncNote();
     }
-    if (state === 'dismissed' || state === 'switched') {
-      hint.hidden = true;
-    } else {
-      hint.hidden = false;
-      group.setAttribute('aria-describedby', 'mood-psst-copy');
+    function syncInner() {
+      if (!hint || !group) return;
+      const hide = state === 'dismissed' || state === 'switched';
+      hint.hidden = hide;
+      if (hide) group.removeAttribute('aria-describedby');
+      else group.setAttribute('aria-describedby', 'mood-psst-copy');
     }
-    const dismiss = hint.querySelector('.mood-psst-x');
-    if (dismiss) dismiss.addEventListener('click', () => remember('dismissed'));
-    return function () { remember('switched'); };
+    function noteSettled() {
+      return state === 'dismissed' || state === 'switched' || state === 'discovered';
+    }
+    function syncNote() {
+      if (!note) return;
+      const welcome = !!document.querySelector('.ppw-overlay');
+      note.hidden = noteSettled() || !mobileMq.matches || document.body.classList.contains('drawer-open') || welcome || holdForWelcome;
+      if (!note.hidden) placeMenuNote(note);
+    }
+    function onDrawer() {
+      if (document.body.classList.contains('drawer-open') && !noteSettled()) persist('discovered');
+      else syncNote();
+    }
+
+    syncInner();
+    syncNote();
+
+    const dismissInner = hint && hint.querySelector('.mood-psst-x');
+    if (dismissInner) dismissInner.addEventListener('click', () => persist('dismissed'));
+    note.querySelector('.mood-menu-note-x').addEventListener('click', (e) => {
+      e.stopPropagation();
+      persist('dismissed');
+    });
+
+    new MutationObserver(() => {
+      const overlay = document.querySelector('.ppw-overlay');
+      if (overlay) {
+        sawWelcome = true;
+        holdForWelcome = true;
+      } else if (sawWelcome) {
+        holdForWelcome = false;
+      }
+      onDrawer();
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'], childList: true });
+
+    window.addEventListener('resize', syncNote);
+    window.addEventListener('scroll', () => { if (!note.hidden) placeMenuNote(note); }, { passive: true });
+    if (mobileMq.addEventListener) mobileMq.addEventListener('change', syncNote);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncNote);
+    // If the welcome dialog never appears, don't hold the note forever.
+    setTimeout(() => {
+      if (!document.querySelector('.ppw-overlay')) {
+        holdForWelcome = false;
+        syncNote();
+      }
+    }, 4000);
+
+    return function () { persist('switched'); };
+  }
+
+  function ensureMenuNote() {
+    let note = document.querySelector('.mood-menu-note');
+    if (note) return note;
+    note = document.createElement('p');
+    note.className = 'mood-menu-note';
+    note.id = 'mood-menu-note';
+    note.hidden = true;
+    note.setAttribute('role', 'note');
+    note.innerHTML = '<span class="mood-menu-note-copy">psst… this site has 3 moods ♡</span>' +
+      '<button type="button" class="mood-menu-note-x" aria-label="Dismiss mood note">×</button>';
+    document.body.appendChild(note);
+    return note;
+  }
+
+  // Sit just under the menu button. Nudge if that spot covers the menu, bag, logo, or hero text.
+  function placeMenuNote(note) {
+    const btn = document.querySelector('.combo-menu');
+    if (!btn) return;
+    const prevTop = note.style.top;
+    const prevLeft = note.style.left;
+    note.style.top = '0px';
+    note.style.left = '0px';
+    const r = btn.getBoundingClientRect();
+    const w = note.offsetWidth;
+    const h = note.offsetHeight;
+    note.style.top = prevTop;
+    note.style.left = prevLeft;
+    const gap = 10;
+    let left = Math.min(window.innerWidth - w - gap, Math.max(gap, r.right - w));
+    let top = Math.round(r.bottom + gap);
+    const blockers = '.combo-menu, .px-bagbtn, .combo-mlogo, .banner-title, .hero-kicker, .banner-subtitle, .hero-actions, .hero-phone-sticker, .pg-title';
+    function hits(t, l) {
+      const a = { left: l, top: t, right: l + w, bottom: t + h };
+      return [...document.querySelectorAll(blockers)].some(n => {
+        if (n.offsetParent === null && getComputedStyle(n).position !== 'fixed') return false;
+        const b = n.getBoundingClientRect();
+        if (b.width < 2 || b.height < 2) return false;
+        return !(a.right <= b.left + 2 || a.left >= b.right - 2 || a.bottom <= b.top + 2 || a.top >= b.bottom - 2);
+      });
+    }
+    const tries = [];
+    for (let dy = 0; dy <= 160; dy += 8) tries.push([top + dy, left]);
+    for (let dx = 12; dx <= 96; dx += 12) tries.push([top, Math.max(gap, left - dx)]);
+    const clear = tries.find(pos => pos[0] + h < window.innerHeight - gap && !hits(pos[0], pos[1]));
+    const placed = clear || [top, left];
+    note.style.top = placed[0] + 'px';
+    note.style.left = placed[1] + 'px';
+    const aim = (r.left + r.width / 2) - placed[1];
+    note.style.setProperty('--mood-note-x', Math.max(18, Math.min(w - 18, aim)) + 'px');
   }
   initThemeSwitcher();
 

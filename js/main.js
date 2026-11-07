@@ -164,14 +164,48 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
     apply(savedTheme);
+    const markMoodDiscovered = initMoodHint(savedTheme);
+    let currentTheme = savedTheme;
     themeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const theme = btn.dataset.theme;
         if (!THEMES.includes(theme)) return;
+        const changed = theme !== currentTheme;
+        currentTheme = theme;
         apply(theme);
         try { localStorage.setItem('popipants-theme', theme); } catch (e) {}
+        if (changed) markMoodDiscovered();
       });
     });
+  }
+
+  // First-visit nudge beside the gel hearts. One quiet note, then it stays gone.
+  function initMoodHint(savedTheme) {
+    const hint = document.querySelector('.mood-psst');
+    const group = document.querySelector('.mood-cluster .theme-switcher');
+    if (!hint || !group) return function () {};
+    const KEY = 'popipants-mood-hint';
+    let state = null;
+    try { state = localStorage.getItem(KEY); } catch (e) {}
+    // A saved non-pink mood means they already found the switcher.
+    if (!state && savedTheme && savedTheme !== 'pink') {
+      state = 'switched';
+      try { localStorage.setItem(KEY, state); } catch (e) {}
+    }
+    function remember(value) {
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+      hint.hidden = true;
+      group.removeAttribute('aria-describedby');
+    }
+    if (state === 'dismissed' || state === 'switched') {
+      hint.hidden = true;
+    } else {
+      hint.hidden = false;
+      group.setAttribute('aria-describedby', 'mood-psst-copy');
+    }
+    const dismiss = hint.querySelector('.mood-psst-x');
+    if (dismiss) dismiss.addEventListener('click', () => remember('dismissed'));
+    return function () { remember('switched'); };
   }
   initThemeSwitcher();
 

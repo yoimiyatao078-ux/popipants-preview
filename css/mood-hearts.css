@@ -1,0 +1,266 @@
+/* Preview-only mood switcher: gel hearts + a one-time hint.
+   Reskins the existing pink / blue / goth3 controls. Does not change page layout. */
+
+html body .theme-dock .mood-cluster {
+  padding: 2px 4px 8px;
+  text-align: center;
+}
+
+html body .theme-dock .mood-ask {
+  margin: 6px 4px 2px;
+  padding: 0;
+  font-family: Inconsolata, monospace;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: #96285F;
+}
+
+html body .theme-dock .theme-switcher-inline {
+  position: relative;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0 !important;
+  width: auto !important;
+  max-width: calc(100% - 8px) !important;
+  margin: 2px auto 0 !important;
+  padding: 3px 3px 28px !important;
+}
+
+/* Buddy stays with the hearts, tucked under them so the 44px targets fit the sidebar. */
+html body .theme-dock .theme-switcher-inline .critter-buddy {
+  position: absolute !important;
+  left: 50% !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: 0 !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+  z-index: 1;
+}
+
+html body .theme-switcher-inline .theme-btn.mood-heart {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+html body .theme-switcher-inline .theme-btn.mood-heart:hover {
+  transform: translateY(-1px) scale(1.04);
+}
+
+html body .theme-switcher-inline .theme-btn.mood-heart:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+html body .theme-switcher-inline .theme-btn.mood-heart.active {
+  outline: 2px dashed #FF5FA2 !important;
+  outline-offset: 2px;
+}
+
+html body .theme-switcher-inline .theme-btn.mood-heart:focus-visible {
+  outline: 2px solid #fff !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px #FF5FA2 !important;
+}
+
+html body .mood-heart .tooltip {
+  top: calc(100% + 2px) !important;
+  bottom: auto !important;
+  z-index: 6;
+}
+
+.mood-heart-svg {
+  width: 34px;
+  height: 31px;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.75)) drop-shadow(0 2px 3px rgba(150, 40, 95, 0.28));
+}
+
+.mood-spark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mood-spark i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  opacity: 0;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95));
+}
+
+.mood-heart.active .mood-spark i {
+  animation: mood-twinkle 1.8s ease-in-out infinite;
+}
+
+.mood-heart.active .mood-spark i:nth-child(1) { top: 3px; right: 5px; }
+.mood-heart.active .mood-spark i:nth-child(2) { top: 14px; left: 1px; animation-delay: 0.45s; }
+.mood-heart.active .mood-spark i:nth-child(3) { bottom: 6px; right: 3px; animation-delay: 0.9s; width: 5px; height: 5px; }
+
+.mood-heart[data-theme="goth3"] .mood-spark i {
+  background: #FFD6E8;
+  filter: drop-shadow(0 0 2px #FF5FA2);
+}
+
+@keyframes mood-twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.55); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+html body .mood-psst {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 10px 8px 0;
+  padding: 6px 4px 6px 10px;
+  text-align: left;
+  font-family: Inconsolata, monospace;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.25;
+  color: #96285F;
+  background: linear-gradient(180deg, #fff, #FFD6E8);
+  border: 2px solid #fff;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px #FF9EC7, 0 3px 8px rgba(255, 95, 162, 0.22);
+}
+
+html body .mood-psst[hidden] { display: none !important; }
+
+html body .mood-psst::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -7px;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: #FF9EC7;
+  border-top: 0;
+  animation: mood-point 2.6s ease-in-out infinite;
+}
+
+.mood-psst-copy { flex: 1; }
+
+.mood-psst-x {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #96285F;
+  font: 700 20px/1 Inconsolata, monospace;
+  cursor: pointer;
+}
+
+.mood-psst-x:hover { background: rgba(255, 255, 255, 0.55); }
+.mood-psst-x:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -4px;
+  box-shadow: inset 0 0 0 2px #FF5FA2;
+}
+
+@keyframes mood-point {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-2px); }
+}
+
+html[data-theme="blue"] .mood-heart-svg {
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.8)) drop-shadow(0 2px 3px rgba(1, 150, 146, 0.3));
+}
+
+html[data-theme="blue"] .theme-switcher-inline .theme-btn.mood-heart.active {
+  outline-color: #01BAB5 !important;
+}
+
+html[data-theme="blue"] body .mood-psst {
+  background: linear-gradient(180deg, #FFFFFA, #E7FBF6) !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 0 1px #55DECA, 0 3px 8px rgba(1, 150, 146, 0.18) !important;
+}
+
+html[data-theme="blue"] .mood-psst::before { border-bottom-color: #55DECA; }
+
+html[data-theme="goth3"] body .theme-dock .theme-switcher-inline {
+  background: linear-gradient(180deg, #3a3a44 0%, #16161a 46%, #050505 100%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 0 1px #8d8d9c !important;
+}
+
+html[data-theme="goth3"] .mood-heart-svg {
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.28)) drop-shadow(0 2px 3px rgba(0, 0, 0, 0.65));
+}
+
+html[data-theme="goth3"] body .mood-psst {
+  background: linear-gradient(180deg, #1a1a1e, #050505) !important;
+  border-color: #3a3a42 !important;
+  box-shadow: 0 0 0 1px #c9c9d4 !important;
+}
+
+html[data-theme="goth3"] .mood-psst::before { border-bottom-color: #c9c9d4; }
+html[data-theme="goth3"] .mood-psst-x:hover { background: rgba(255, 255, 255, 0.08); }
+
+@media (max-width: 768px) {
+  html body .theme-dock .mood-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 8px;
+    row-gap: 2px;
+    padding: 8px 6px 6px;
+  }
+  html body .theme-dock .mood-ask {
+    flex: 0 1 7.4em;
+    max-width: 7.6em;
+    margin: 0;
+    text-align: left;
+    line-height: 1.15;
+  }
+  html body .theme-dock .theme-switcher-inline {
+    flex: 0 0 auto;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  html body .mood-psst {
+    flex: 1 0 100%;
+    margin: 8px 4px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body .theme-switcher-inline .theme-btn.mood-heart,
+  html body .theme-switcher-inline .theme-btn.mood-heart:hover,
+  html body .theme-switcher-inline .theme-btn.mood-heart:active {
+    transform: none;
+    transition: none;
+  }
+  .mood-heart.active .mood-spark i,
+  html body .mood-psst::before {
+    animation: none !important;
+  }
+  .mood-heart.active .mood-spark i { opacity: 0.9; }
+}

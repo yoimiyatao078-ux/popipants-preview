@@ -61,11 +61,9 @@
 
   /* ---------- 5. drop alerts / newsletter ---------- */
   var EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  var SIGNUP_OK = 'You’re on the list. Check your inbox to confirm.';
-  var SIGNUP_ERR = 'The mailing list didn’t respond. Nothing was saved — try again.';
   function subscribe(email, source) {
     if (window.popiSubscribe) return window.popiSubscribe(email, source);
-    return Promise.resolve({ sent: false, unavailable: true });
+    return Promise.resolve({ redirecting: false, unavailable: true });
   }
   function alertForm(source, title) {
     var id = 'da-' + Math.random().toString(36).slice(2, 7);
@@ -83,12 +81,18 @@
     if (!EMAIL_OK.test(v)) { msg.textContent = 'that email looks a little off — try again?'; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
     inp.removeAttribute('aria-invalid');
     btn.disabled = true;
-    if (CFG.newsletter && CFG.newsletter.endpoint) msg.textContent = 'sending…';
     subscribe(v, f.dataset.source).then(function (r) {
+      if (r && r.redirecting) {
+        msg.textContent = window.popiSignupGo || 'Opening Buttondown to finish signup.';
+        setTimeout(function () { btn.disabled = false; }, 2000);
+        return;
+      }
       btn.disabled = false;
-      if (r && r.sent) { msg.textContent = SIGNUP_OK; inp.value = ''; }
-      else msg.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
-    }, function () { btn.disabled = false; msg.textContent = SIGNUP_ERR; });
+      msg.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
+    }, function () {
+      btn.disabled = false;
+      msg.textContent = 'The mailing list didn’t open. Nothing was saved — try again.';
+    });
   });
 
   /* ---------- 4. wishlist ---------- */

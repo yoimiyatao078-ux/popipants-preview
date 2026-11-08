@@ -410,21 +410,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       input.removeAttribute('aria-invalid');
       button.disabled = true;
-      const ready = window.POPI_CONFIG && POPI_CONFIG.newsletter && POPI_CONFIG.newsletter.endpoint;
-      if (ready) msg.textContent = 'sending…';
-      const send = window.popiSubscribe ? popiSubscribe(em, 'secret-club') : Promise.resolve({ sent: false, unavailable: true });
+      const send = window.popiSubscribe ? popiSubscribe(em, 'secret-club') : Promise.resolve({ redirecting: false, unavailable: true });
       send.then(result => {
-        button.disabled = false;
-        if (result && result.sent) {
-          overlay.querySelector('.pc-popup-body').innerHTML = '<p>You’re on the list. Check your inbox to confirm.</p><button type="button" class="popup-btn">close</button>';
-          overlay.querySelector('.popup-btn').addEventListener('click', close);
-          overlay.querySelector('.popup-btn').focus();
+        if (result && result.redirecting) {
+          msg.textContent = window.popiSignupGo || 'Opening Buttondown to finish signup.';
+          setTimeout(() => { button.disabled = false; }, 2000);
           return;
         }
+        button.disabled = false;
         msg.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
       }, () => {
         button.disabled = false;
-        msg.textContent = 'The mailing list didn’t respond. Nothing was saved — try again.';
+        msg.textContent = 'The mailing list didn’t open. Nothing was saved — try again.';
       });
     });
   }

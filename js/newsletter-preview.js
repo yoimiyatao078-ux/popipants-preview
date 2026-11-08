@@ -26,18 +26,16 @@
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){msg.textContent='that email looks a little off — try again?';input.setAttribute('aria-invalid','true');input.focus();return;}
       input.removeAttribute('aria-invalid');
       btn.disabled=true;
-      var ready=window.POPI_CONFIG&&POPI_CONFIG.newsletter&&POPI_CONFIG.newsletter.endpoint;
-      if(ready)msg.textContent='sending…';
-      var send=window.popiSubscribe?popiSubscribe(v,'palette'):Promise.resolve({sent:false,unavailable:true});
+      var send=window.popiSubscribe?popiSubscribe(v,'palette'):Promise.resolve({redirecting:false,unavailable:true});
       send.then(function(r){
-        btn.disabled=false;
-        if(r&&r.sent){
-          ov.querySelector('.pc-popup-body').innerHTML='<p>You’re on the list. Check your inbox to confirm.</p><button type="button" class="popup-btn">close</button>';
-          ov.querySelector('.popup-btn').addEventListener('click',close);ov.querySelector('.popup-btn').focus();
+        if(r&&r.redirecting){
+          msg.textContent=window.popiSignupGo||'Opening Buttondown to finish signup.';
+          setTimeout(function(){btn.disabled=false;},2000);
           return;
         }
+        btn.disabled=false;
         msg.textContent=window.popiSignupNote?popiSignupNote():'Signup isn\'t available yet. Your email is not saved.';
-      },function(){btn.disabled=false;msg.textContent='The mailing list didn’t respond. Nothing was saved — try again.';});
+      },function(){btn.disabled=false;msg.textContent='The mailing list didn’t open. Nothing was saved — try again.';});
     });
     setTimeout(function(){var i=ov.querySelector('#nl-email');if(i)i.focus();},50);
     return true;

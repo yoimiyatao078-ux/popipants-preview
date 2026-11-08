@@ -59,34 +59,40 @@
     if (!t) return; e.preventDefault(); sizeGuide();
   });
 
-  /* ---------- 5. drop alerts / newsletter (provider-ready) ---------- */
+  /* ---------- 5. drop alerts / newsletter ---------- */
+  var EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   function subscribe(email, source) {
-    var nl = CFG.newsletter || {};
-    if (nl.endpoint) {
-      var fd = new FormData(); fd.append(nl.field || 'email', email); if (source) fd.append('tag', source);
-      return fetch(nl.endpoint, { method: 'POST', body: fd, mode: 'cors' }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return { sent: true }; });
-    }
-    try { var l = JSON.parse(localStorage.getItem('popipants-newsletter')) || []; l.push({ email: email, source: source || '', at: new Date().toISOString() }); localStorage.setItem('popipants-newsletter', JSON.stringify(l)); } catch (e) {}
-    return Promise.resolve({ sent: false });
+    if (window.popiSubscribe) return window.popiSubscribe(email, source);
+    return Promise.resolve({ redirecting: false, unavailable: true });
   }
-  window.popiSubscribe = subscribe;
   function alertForm(source, title) {
     var id = 'da-' + Math.random().toString(36).slice(2, 7);
+    var note = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
     return '<form class="sx-alert" data-source="' + esc(source) + '" novalidate>' +
       '<p class="sx-alert-t">' + esc(title || 'get a drop alert') + '</p>' +
-      '<label for="' + id + '">your email</label><div class="sx-row"><input id="' + id + '" type="email" name="email" autocomplete="email" placeholder="angel@email.com" required>' +
+      '<p class="sx-note" id="' + id + '-note">' + esc(note) + '</p>' +
+      '<label for="' + id + '">your email</label><div class="sx-row"><input id="' + id + '" type="email" name="email" autocomplete="email" placeholder="angel@email.com" required aria-describedby="' + id + '-note ' + id + '-msg">' +
       '<button type="submit" class="btn btn-primary"><span>notify me ♡</span></button></div>' +
-      '<p class="sx-msg" role="status" aria-live="polite"></p></form>';
+      '<p class="sx-msg" id="' + id + '-msg" role="status" aria-live="polite"></p></form>';
   }
   document.addEventListener('submit', function (e) {
     var f = e.target.closest('.sx-alert'); if (!f) return; e.preventDefault();
-    var inp = $('input[type=email]', f), msg = $('.sx-msg', f), v = inp.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { msg.textContent = 'that email looks a little off — try again?'; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
-    inp.removeAttribute('aria-invalid'); msg.textContent = 'saving…';
+    var inp = $('input[type=email]', f), msg = $('.sx-msg', f), btn = $('button[type=submit]', f), v = inp.value.trim();
+    if (!EMAIL_OK.test(v)) { msg.textContent = 'that email looks a little off — try again?'; inp.setAttribute('aria-invalid', 'true'); inp.focus(); return; }
+    inp.removeAttribute('aria-invalid');
+    btn.disabled = true;
     subscribe(v, f.dataset.source).then(function (r) {
-      msg.textContent = r.sent ? 'you are on the list ♡ check your inbox to confirm.' : 'saved ♡ (preview: kept in this browser only, alerts start when the shop list goes live)';
-      inp.value = '';
-    }, function () { msg.textContent = 'could not reach the mailing list — please try again later.'; });
+      if (r && r.redirecting) {
+        msg.textContent = window.popiSignupGo || 'Opening Buttondown to finish signup.';
+        setTimeout(function () { btn.disabled = false; }, 2000);
+        return;
+      }
+      btn.disabled = false;
+      msg.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
+    }, function () {
+      btn.disabled = false;
+      msg.textContent = 'The mailing list didn’t open. Nothing was saved — try again.';
+    });
   });
 
   /* ---------- 4. wishlist ---------- */

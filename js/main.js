@@ -164,14 +164,153 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     };
     apply(savedTheme);
+    const markMoodDiscovered = initMoodHint(savedTheme);
+    let currentTheme = savedTheme;
     themeBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const theme = btn.dataset.theme;
         if (!THEMES.includes(theme)) return;
+        const changed = theme !== currentTheme;
+        currentTheme = theme;
         apply(theme);
         try { localStorage.setItem('popipants-theme', theme); } catch (e) {}
+        if (changed) markMoodDiscovered();
       });
     });
+  }
+
+  // First-visit nudges. Hearts stay in the sidebar/drawer.
+  // On a phone the drawer is closed, so a tiny note points at the menu button.
+  function initMoodHint(savedTheme) {
+    const KEY = 'popipants-mood-hint';
+    let state = null;
+    try { state = localStorage.getItem(KEY); } catch (e) {}
+    // A saved non-pink mood means they already found the switcher.
+    if (!state && savedTheme && savedTheme !== 'pink') {
+      state = 'switched';
+      try { localStorage.setItem(KEY, state); } catch (e) {}
+    }
+
+    const hint = document.querySelector('.mood-psst');
+    const group = document.querySelector('.mood-cluster .theme-switcher');
+    const note = ensureMenuNote();
+    const mobileMq = window.matchMedia('(max-width:768px)');
+    // Hold the outside note until the welcome dialog has come and gone.
+    let sawWelcome = false;
+    let holdForWelcome = !sessionStorage.getItem('popipants-welcomed');
+
+    function persist(value) {
+      state = value;
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+      syncInner();
+      syncNote();
+    }
+    function syncInner() {
+      if (!hint || !group) return;
+      const hide = state === 'dismissed' || state === 'switched';
+      hint.hidden = hide;
+      if (hide) group.removeAttribute('aria-describedby');
+      else group.setAttribute('aria-describedby', 'mood-psst-copy');
+    }
+    function noteSettled() {
+      return state === 'dismissed' || state === 'switched' || state === 'discovered';
+    }
+    function syncNote() {
+      if (!note) return;
+      const welcome = !!document.querySelector('.ppw-overlay');
+      note.hidden = noteSettled() || !mobileMq.matches || document.body.classList.contains('drawer-open') || welcome || holdForWelcome;
+      if (!note.hidden) placeMenuNote(note);
+    }
+    function onDrawer() {
+      if (document.body.classList.contains('drawer-open') && !noteSettled()) persist('discovered');
+      else syncNote();
+    }
+
+    syncInner();
+    syncNote();
+
+    const dismissInner = hint && hint.querySelector('.mood-psst-x');
+    if (dismissInner) dismissInner.addEventListener('click', () => persist('dismissed'));
+    note.querySelector('.mood-menu-note-x').addEventListener('click', (e) => {
+      e.stopPropagation();
+      persist('dismissed');
+    });
+
+    new MutationObserver(() => {
+      const overlay = document.querySelector('.ppw-overlay');
+      if (overlay) {
+        sawWelcome = true;
+        holdForWelcome = true;
+      } else if (sawWelcome) {
+        holdForWelcome = false;
+      }
+      onDrawer();
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'], childList: true });
+
+    window.addEventListener('resize', syncNote);
+    window.addEventListener('scroll', () => { if (!note.hidden) placeMenuNote(note); }, { passive: true });
+    if (mobileMq.addEventListener) mobileMq.addEventListener('change', syncNote);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncNote);
+    // If the welcome dialog never appears, don't hold the note forever.
+    setTimeout(() => {
+      if (!document.querySelector('.ppw-overlay')) {
+        holdForWelcome = false;
+        syncNote();
+      }
+    }, 4000);
+
+    return function () { persist('switched'); };
+  }
+
+  function ensureMenuNote() {
+    let note = document.querySelector('.mood-menu-note');
+    if (note) return note;
+    note = document.createElement('p');
+    note.className = 'mood-menu-note';
+    note.id = 'mood-menu-note';
+    note.hidden = true;
+    note.setAttribute('role', 'note');
+    note.innerHTML = '<span class="mood-menu-note-copy">psst… this site has 3 moods ♡</span>' +
+      '<button type="button" class="mood-menu-note-x" aria-label="Dismiss mood note">×</button>';
+    document.body.appendChild(note);
+    return note;
+  }
+
+  // Sit just under the menu button. Nudge if that spot covers the menu, bag, logo, or hero text.
+  function placeMenuNote(note) {
+    const btn = document.querySelector('.combo-menu');
+    if (!btn) return;
+    const prevTop = note.style.top;
+    const prevLeft = note.style.left;
+    note.style.top = '0px';
+    note.style.left = '0px';
+    const r = btn.getBoundingClientRect();
+    const w = note.offsetWidth;
+    const h = note.offsetHeight;
+    note.style.top = prevTop;
+    note.style.left = prevLeft;
+    const gap = 10;
+    let left = Math.min(window.innerWidth - w - gap, Math.max(gap, r.right - w));
+    let top = Math.round(r.bottom + gap);
+    const blockers = '.combo-menu, .px-bagbtn, .combo-mlogo, .banner-title, .hero-kicker, .banner-subtitle, .hero-actions, .hero-phone-sticker, .pg-title';
+    function hits(t, l) {
+      const a = { left: l, top: t, right: l + w, bottom: t + h };
+      return [...document.querySelectorAll(blockers)].some(n => {
+        if (n.offsetParent === null && getComputedStyle(n).position !== 'fixed') return false;
+        const b = n.getBoundingClientRect();
+        if (b.width < 2 || b.height < 2) return false;
+        return !(a.right <= b.left + 2 || a.left >= b.right - 2 || a.bottom <= b.top + 2 || a.top >= b.bottom - 2);
+      });
+    }
+    const tries = [];
+    for (let dy = 0; dy <= 160; dy += 8) tries.push([top + dy, left]);
+    for (let dx = 12; dx <= 96; dx += 12) tries.push([top, Math.max(gap, left - dx)]);
+    const clear = tries.find(pos => pos[0] + h < window.innerHeight - gap && !hits(pos[0], pos[1]));
+    const placed = clear || [top, left];
+    note.style.top = placed[0] + 'px';
+    note.style.left = placed[1] + 'px';
+    const aim = (r.left + r.width / 2) - placed[1];
+    note.style.setProperty('--mood-note-x', Math.max(18, Math.min(w - 18, aim)) + 'px');
   }
   initThemeSwitcher();
 
@@ -241,21 +380,49 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="pc-popup-titlebar"><span>secret-club-signup.exe</span><button type="button" class="close-btn" aria-label="Close">X</button></div>
         <div class="pc-popup-body">
           <p>✿ <b>you found the secret window!</b><br>Leave your email for new drops, restocks and little surprises.</p>
-          <form class="signup-form"><label for="secret-email">your email</label><input id="secret-email" type="email" placeholder="angel@email.com" required><button class="popup-btn" type="submit">join the club ♡</button></form>
+          <form class="signup-form">
+            <p class="signup-note" id="secret-note"></p>
+            <label for="secret-email">your email</label>
+            <input id="secret-email" type="email" placeholder="angel@email.com" required autocomplete="email" aria-describedby="secret-note secret-msg">
+            <button class="popup-btn" type="submit">join the club ♡</button>
+            <p class="sx-msg" id="secret-msg" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </div>`;
     document.body.appendChild(overlay);
     const close = closePopupHelper(overlay);
+    const note = overlay.querySelector('#secret-note');
+    note.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
     overlay.querySelector('.close-btn').addEventListener('click', close);
     overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-    overlay.querySelector('#secret-email').focus();
+    const input = overlay.querySelector('#secret-email');
+    const msg = overlay.querySelector('#secret-msg');
+    const button = overlay.querySelector('.popup-btn');
+    input.focus();
     overlay.querySelector('.signup-form').addEventListener('submit', e => {
       e.preventDefault();
-      const em = overlay.querySelector('#secret-email').value.trim();
-      if (window.popiSubscribe) window.popiSubscribe(em, 'secret-club').catch(() => {});
-      overlay.querySelector('.pc-popup-body').innerHTML = '<p>♡ You are on the list! See you at the next drop.</p><button type="button" class="popup-btn">close</button>';
-      overlay.querySelector('.popup-btn').addEventListener('click', close);
-      overlay.querySelector('.popup-btn').focus();
+      const em = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+        msg.textContent = 'that email looks a little off — try again?';
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+      button.disabled = true;
+      const send = window.popiSubscribe ? popiSubscribe(em, 'secret-club') : Promise.resolve({ redirecting: false, unavailable: true });
+      send.then(result => {
+        if (result && result.redirecting) {
+          msg.textContent = window.popiSignupGo || 'Opening Buttondown to finish signup.';
+          setTimeout(() => { button.disabled = false; }, 2000);
+          return;
+        }
+        button.disabled = false;
+        msg.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
+      }, () => {
+        button.disabled = false;
+        msg.textContent = 'The mailing list didn’t open. Nothing was saved — try again.';
+      });
     });
   }
 

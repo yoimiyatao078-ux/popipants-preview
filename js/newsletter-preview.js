@@ -1,26 +1,44 @@
-/* palette previews: neutral 10%-off newsletter popup (replaces "secret club" copy).
+/* palette previews: newsletter popup (replaces "secret club" copy on these pages).
    Opens from the click-me button, or once per session ~25s in / after scrolling 40%.
-   Demo only: no email backend exists; addresses are kept in this browser's localStorage ('popipants-newsletter'). */
+   Uses window.popiSubscribe. With no endpoint, nothing is saved and no list confirmation is shown. */
 (function(){
   var SEEN='popipants-nl-shown';
   function open(){
     if(document.querySelector('.pc-popup-overlay'))return false;
     try{sessionStorage.setItem(SEEN,'1');}catch(e){}
     var ret=document.activeElement,ov=document.createElement('div');ov.className='pc-popup-overlay nl-overlay';
-    ov.innerHTML='<div class="pc-popup signup-popup" role="dialog" aria-modal="true" aria-label="Newsletter sign-up, 10% off">'+
+    ov.innerHTML='<div class="pc-popup signup-popup" role="dialog" aria-modal="true" aria-label="Newsletter sign-up">'+
       '<div class="pc-popup-titlebar"><span>popi-newsletter.exe</span><button type="button" class="close-btn" aria-label="Close">X</button></div>'+
-      '<div class="pc-popup-body"><p>✿ <b>get 10% off your first order</b><br>Join the popipants list for new drops, restocks and little surprises.</p>'+
-      '<form class="signup-form"><label for="nl-email">your email</label><input id="nl-email" type="email" placeholder="angel@email.com" required autocomplete="email"><button class="popup-btn" type="submit">get my 10% ♡</button></form>'+
+      '<div class="pc-popup-body"><p>✿ <b>new drops and restocks</b><br>Leave your email when the shop list is connected.</p>'+
+      '<form class="signup-form"><p class="signup-note" id="nl-note"></p><label for="nl-email">your email</label><input id="nl-email" type="email" placeholder="angel@email.com" required autocomplete="email" aria-describedby="nl-note nl-msg"><button class="popup-btn" type="submit">join the list ♡</button>'+
+      '<p class="sx-msg" id="nl-msg" role="status" aria-live="polite"></p></form>'+
       '<button type="button" class="nl-nothanks">no thanks</button></div></div>';
     document.body.appendChild(ov);
     function close(){ov.remove();document.removeEventListener('keydown',key);if(ret&&ret.focus)ret.focus();}
     function key(e){if(e.key==='Escape')close();}
     document.addEventListener('keydown',key);
     ov.addEventListener('click',function(e){if(e.target===ov||e.target.closest('.close-btn,.nl-nothanks'))close();});
-    ov.querySelector('form').addEventListener('submit',function(e){e.preventDefault();var v=ov.querySelector('#nl-email').value;
-      try{var l=JSON.parse(localStorage.getItem('popipants-newsletter'))||[];l.push({email:v,at:new Date().toISOString()});localStorage.setItem('popipants-newsletter',JSON.stringify(l));}catch(err){}
-      ov.querySelector('.pc-popup-body').innerHTML='<p>♡ you are on the list! your 10% code will come with the first newsletter.</p><button type="button" class="popup-btn">close</button>';
-      ov.querySelector('.popup-btn').addEventListener('click',close);ov.querySelector('.popup-btn').focus();});
+    var note=ov.querySelector('#nl-note');
+    note.textContent=window.popiSignupNote?popiSignupNote():'Signup isn\'t available yet. Your email is not saved.';
+    ov.querySelector('form').addEventListener('submit',function(e){
+      e.preventDefault();
+      var input=ov.querySelector('#nl-email'),msg=ov.querySelector('#nl-msg'),btn=ov.querySelector('.popup-btn'),v=input.value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){msg.textContent='that email looks a little off — try again?';input.setAttribute('aria-invalid','true');input.focus();return;}
+      input.removeAttribute('aria-invalid');
+      btn.disabled=true;
+      var ready=window.POPI_CONFIG&&POPI_CONFIG.newsletter&&POPI_CONFIG.newsletter.endpoint;
+      if(ready)msg.textContent='sending…';
+      var send=window.popiSubscribe?popiSubscribe(v,'palette'):Promise.resolve({sent:false,unavailable:true});
+      send.then(function(r){
+        btn.disabled=false;
+        if(r&&r.sent){
+          ov.querySelector('.pc-popup-body').innerHTML='<p>You’re on the list. Check your inbox to confirm.</p><button type="button" class="popup-btn">close</button>';
+          ov.querySelector('.popup-btn').addEventListener('click',close);ov.querySelector('.popup-btn').focus();
+          return;
+        }
+        msg.textContent=window.popiSignupNote?popiSignupNote():'Signup isn\'t available yet. Your email is not saved.';
+      },function(){btn.disabled=false;msg.textContent='The mailing list didn’t respond. Nothing was saved — try again.';});
+    });
     setTimeout(function(){var i=ov.querySelector('#nl-email');if(i)i.focus();},50);
     return true;
   }

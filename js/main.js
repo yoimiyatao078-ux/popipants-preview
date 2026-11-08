@@ -380,21 +380,52 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="pc-popup-titlebar"><span>secret-club-signup.exe</span><button type="button" class="close-btn" aria-label="Close">X</button></div>
         <div class="pc-popup-body">
           <p>✿ <b>you found the secret window!</b><br>Leave your email for new drops, restocks and little surprises.</p>
-          <form class="signup-form"><label for="secret-email">your email</label><input id="secret-email" type="email" placeholder="angel@email.com" required><button class="popup-btn" type="submit">join the club ♡</button></form>
+          <form class="signup-form">
+            <p class="signup-note" id="secret-note"></p>
+            <label for="secret-email">your email</label>
+            <input id="secret-email" type="email" placeholder="angel@email.com" required autocomplete="email" aria-describedby="secret-note secret-msg">
+            <button class="popup-btn" type="submit">join the club ♡</button>
+            <p class="sx-msg" id="secret-msg" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </div>`;
     document.body.appendChild(overlay);
     const close = closePopupHelper(overlay);
+    const note = overlay.querySelector('#secret-note');
+    note.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
     overlay.querySelector('.close-btn').addEventListener('click', close);
     overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-    overlay.querySelector('#secret-email').focus();
+    const input = overlay.querySelector('#secret-email');
+    const msg = overlay.querySelector('#secret-msg');
+    const button = overlay.querySelector('.popup-btn');
+    input.focus();
     overlay.querySelector('.signup-form').addEventListener('submit', e => {
       e.preventDefault();
-      const em = overlay.querySelector('#secret-email').value.trim();
-      if (window.popiSubscribe) window.popiSubscribe(em, 'secret-club').catch(() => {});
-      overlay.querySelector('.pc-popup-body').innerHTML = '<p>♡ You are on the list! See you at the next drop.</p><button type="button" class="popup-btn">close</button>';
-      overlay.querySelector('.popup-btn').addEventListener('click', close);
-      overlay.querySelector('.popup-btn').focus();
+      const em = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) {
+        msg.textContent = 'that email looks a little off — try again?';
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+        return;
+      }
+      input.removeAttribute('aria-invalid');
+      button.disabled = true;
+      const ready = window.POPI_CONFIG && POPI_CONFIG.newsletter && POPI_CONFIG.newsletter.endpoint;
+      if (ready) msg.textContent = 'sending…';
+      const send = window.popiSubscribe ? popiSubscribe(em, 'secret-club') : Promise.resolve({ sent: false, unavailable: true });
+      send.then(result => {
+        button.disabled = false;
+        if (result && result.sent) {
+          overlay.querySelector('.pc-popup-body').innerHTML = '<p>You’re on the list. Check your inbox to confirm.</p><button type="button" class="popup-btn">close</button>';
+          overlay.querySelector('.popup-btn').addEventListener('click', close);
+          overlay.querySelector('.popup-btn').focus();
+          return;
+        }
+        msg.textContent = window.popiSignupNote ? popiSignupNote() : 'Signup isn\'t available yet. Your email is not saved.';
+      }, () => {
+        button.disabled = false;
+        msg.textContent = 'The mailing list didn’t respond. Nothing was saved — try again.';
+      });
     });
   }
 

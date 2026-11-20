@@ -70,11 +70,10 @@ html body .mars-overlay .mars-bar * {
   z-index: 10050;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  background: rgba(255, 214, 232, 0.72);
+  align-items: stretch;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(255, 246, 251, 0.96);
   font-family: 'Pixelify Sans', Inconsolata, monospace;
   color: #fff;
 }
@@ -82,31 +81,126 @@ html body .mars-overlay .mars-bar * {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: min(100%, 640px);
+  width: 100%;
   padding: 4px 8px;
   background: linear-gradient(#5aa0e6, #2f6fbe);
   box-shadow: inset -2px -2px 0 #1d4e89, inset 2px 2px 0 #d7ecff;
 }
-.mars-bar span { flex: 1; font-size: 20px; }
-.mars-bar button {
+.mars-bar span { flex: 1; font-size: 22px; }
+.mars-bar button,
+.mars-pads button,
+.mars-reset {
   min-height: 44px;
   padding: 6px 12px;
   border: 0;
   background: #FF5FA2;
   color: #fff;
   font-family: inherit;
-  font-size: 16px;
+  font-size: 18px;
   box-shadow: 3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff;
   cursor: pointer;
 }
+.mars-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: #2a1840;
+  overflow: hidden;
+}
 .mars-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.mars-overlay canvas {
-  width: min(100%, 640px);
-  height: auto;
-  background: #1a1028;
+.mars-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #2a1840;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   touch-action: none;
+}
+.mars-stage.is-select canvas {
+  filter: blur(1.5px) brightness(0.72) saturate(0.9);
+}
+.mars-chapters {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px;
+  overflow: auto;
+}
+.mars-chapters[hidden] { display: none !important; }
+.mars-stage.is-select .mars-chapters { display: flex; }
+.mars-card {
+  width: min(220px, 86vw);
+  min-height: 150px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  cursor: pointer;
+  background: #fff7fb;
+  color: #96285F;
+  font-family: inherit;
+  box-shadow: 4px 0 0 #fff, -4px 0 0 #fff, 0 4px 0 #fff, 0 -4px 0 #fff, 4px 4px 0 #FF5FA2;
+}
+.mars-card b { font-size: 14px; letter-spacing: 0.04em; }
+.mars-card .mars-mark { font-size: 42px; line-height: 1; }
+.mars-card em { font-style: normal; font-size: 18px; text-align: center; }
+.mars-card.is-locked { cursor: not-allowed; background: #f3e4ec; box-shadow: 4px 0 0 #fff, -4px 0 0 #fff, 0 4px 0 #fff, 0 -4px 0 #fff, 4px 4px 0 #c9a0b4; }
+.mars-card.is-clear { background: #FF5FA2; }
+.mars-reset { align-self: center; min-height: 36px; font-size: 14px; background: #fff; }
+.mars-talk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  min-height: 44px;
+  padding: 6px 8px 6px 10px;
+  background: #fff;
+  color: #96285F;
+  font-size: 16px;
+  box-shadow: inset 0 0 0 2px #FF5FA2;
+}
+.mars-talk .mars-line { flex: 1; }
+.mars-skip { min-height: 36px; flex: none; }
+.mars-talk[hidden] { display: none !important; }
+.mars-keys {
+  margin: 0;
+  text-align: center;
+  color: #96285F;
+  font-size: 14px;
+}
+.mars-pads {
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr 1.3fr;
+  gap: 8px;
+}
+.mars-pads[hidden] { display: none !important; }
+.mars-pads button { min-height: 64px; font-size: 28px; }
+html body .mars-overlay .mars-bar,
+html body .mars-overlay .mars-bar *,
+html body .mars-overlay .mars-pads button { color: #fff !important; }
+html body .mars-overlay .mars-talk,
+html body .mars-overlay .mars-talk .mars-line,
+html body .mars-overlay .mars-keys,
+html body .mars-overlay .mars-reset,
+html body .mars-overlay .mars-card,
+html body .mars-overlay .mars-card * { color: #96285F !important; }
+html body .mars-overlay .mars-skip { color: #fff !important; }
+html body .mars-overlay .mars-card.is-clear,
+html body .mars-overlay .mars-card.is-clear * { color: #fff !important; }
+@media (max-width: 900px) {
+  .mars-keys { display: none; }
+  .mars-pads { display: grid; }
+  .mars-overlay { padding: 6px; gap: 6px; }
 }
 
 @media (max-width: 768px) {

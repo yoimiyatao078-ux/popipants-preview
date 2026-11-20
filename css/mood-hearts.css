@@ -2,43 +2,66 @@
    Reskins the existing pink / blue / goth3 controls. Does not change page layout. */
 
 html body .theme-dock .mood-cluster {
-  padding: 2px 4px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 6px 6px;
   text-align: center;
 }
 
 html body .theme-dock .mood-ask {
-  margin: 6px 4px 2px;
+  position: static;
+  display: block;
+  width: 100%;
+  max-width: none;
+  flex: none;
+  margin: 0 0 8px;
   padding: 0;
+  text-align: center;
   font-family: Inconsolata, monospace;
   font-weight: 700;
   font-size: 13px;
   line-height: 1.2;
   letter-spacing: 0.01em;
   color: #96285F;
+  z-index: 2;
 }
 
+/* The old .theme-switcher rule is position:fixed with bottom/right.
+   Those offsets still apply when this pill is only position:relative,
+   so the capsule slides up over the heading. Clear them. */
 html body .theme-dock .theme-switcher-inline {
-  position: relative;
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  flex-direction: row !important;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: 0 !important;
   width: auto !important;
-  max-width: calc(100% - 8px) !important;
-  margin: 2px auto 0 !important;
-  padding: 3px 3px 28px !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 auto 8px !important;
+  padding: 4px 8px !important;
+  transform: none !important;
 }
 
-/* Buddy stays with the hearts, tucked under them so the 44px targets fit the sidebar. */
+/* Buddy sits on the lower edge of the slim pill, not in a tall empty band. */
 html body .theme-dock .theme-switcher-inline .critter-buddy {
   position: absolute !important;
   left: 50% !important;
   right: auto !important;
   top: auto !important;
-  bottom: 0 !important;
-  transform: translateX(-50%) !important;
+  bottom: -2px !important;
+  transform: translateX(-50%) scale(0.72) !important;
+  transform-origin: center bottom;
   margin: 0 !important;
-  z-index: 1;
+  z-index: 2;
+  pointer-events: none;
 }
 
 html body .theme-switcher-inline .theme-btn.mood-heart {
@@ -224,30 +247,16 @@ html[data-theme="goth3"] .mood-psst-x:hover { background: rgba(255, 255, 255, 0.
 
 @media (max-width: 768px) {
   html body .theme-dock .mood-cluster {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    column-gap: 8px;
-    row-gap: 2px;
-    padding: 8px 6px 6px;
+    padding: 8px 8px 6px;
   }
   html body .theme-dock .mood-ask {
-    flex: 0 1 7.4em;
-    max-width: 7.6em;
-    margin: 0;
-    text-align: left;
-    line-height: 1.15;
-  }
-  html body .theme-dock .theme-switcher-inline {
-    flex: 0 0 auto;
-    width: auto !important;
-    max-width: none !important;
-    margin: 0 !important;
+    margin: 0 0 8px;
+    text-align: center;
   }
   html body .mood-psst {
-    flex: 1 0 100%;
-    margin: 8px 4px 0;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 6px 0 0;
   }
 }
 

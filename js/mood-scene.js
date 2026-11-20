@@ -115,7 +115,18 @@
     overlay.innerHTML = '<div class="mars-bar"><span>secret minigame</span>' +
       '<button type="button" class="mars-mute" aria-pressed="true">sound off</button>' +
       '<button type="button" class="mars-exit">exit</button></div>' +
-      '<canvas width="320" height="180" aria-label="Malaz and the kitty on a trip to Mars"></canvas>' +
+      '<div class="mars-stage">' +
+        '<canvas width="480" height="270" aria-label="Malaz and the kitty on a trip to Mars"></canvas>' +
+        '<div class="mars-chapters"></div>' +
+      '</div>' +
+      '<p class="mars-talk" hidden><span class="mars-line"></span><button type="button" class="mars-skip">skip</button></p>' +
+      '<p class="mars-keys">arrows or wasd move · space or z shoots · enter talks</p>' +
+      '<div class="mars-pads">' +
+        '<button type="button" data-pad="left" aria-label="Move left">◀</button>' +
+        '<button type="button" data-pad="up" aria-label="Move up or jump">▲</button>' +
+        '<button type="button" data-pad="right" aria-label="Move right">▶</button>' +
+        '<button type="button" data-pad="action" aria-label="Shoot">✦</button>' +
+      '</div>' +
       '<p class="mars-live" role="status" aria-live="polite"></p>';
     document.body.appendChild(overlay);
     var canvas = overlay.querySelector('canvas');
@@ -132,14 +143,19 @@
       window.popiMars.start(canvas, {
         muteButton: overlay.querySelector('.mars-mute'),
         onExit: close,
+        stage: overlay.querySelector('.mars-stage'),
+        chapters: overlay.querySelector('.mars-chapters'),
+        talk: overlay.querySelector('.mars-talk'),
+        pads: overlay.querySelector('.mars-pads'),
         onLine: function (text) { overlay.querySelector('.mars-live').textContent = text; }
       });
-      overlay.querySelector('.mars-exit').focus();
+      canvas.tabIndex = 0;
+      try { canvas.focus(); } catch (err) {}
     }
     if (window.popiMars) begin();
     else {
       var script = document.createElement('script');
-      script.src = 'js/mars-game.js?v=1795142000';
+      script.src = 'js/mars-game.js?v=1795222000';
       script.onload = begin;
       script.onerror = function () { opening = false; overlay.remove(); };
       document.body.appendChild(script);

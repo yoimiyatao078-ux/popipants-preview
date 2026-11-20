@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ANGEL = ROOT / "images/scenes/angel.png"
 OUT = ROOT / "images/sprites"
 PREVIEW = OUT / "previews"
-PINK = (255, 214, 232, 255)
+PINK = (255, 246, 251, 255)
 INK = (150, 40, 95, 255)
 SCALE = 8
 FONT_PATH = ROOT / "fonts/pixelify-sans.ttf"
@@ -67,15 +67,47 @@ def extract_kitty(scene):
                 pts.add((x, y))
             elif c == WHITE:
                 n = sum((x + dx, y + dy) in pts for dx, dy in neigh)
-                if n >= 2:
+                if n >= 3:
                     pts.add((x, y))
-    return crop_pixels(scene, pts)
+    img = crop_pixels(scene, pts)
+    return drop_loose_white(img)
 
 
 def extract_malaz(scene):
     sp = scene.load()
     pts = {(x, y) for y in range(90, 111) for x in range(137, 157) if sp[x, y] in GIRL}
     return crop_pixels(scene, pts)
+
+
+def drop_loose_white(img):
+    """Scene clouds are white and only kiss the outline. Eyes sit inside the face."""
+    px = img.load()
+    w, h = img.size
+    kill = []
+    neigh = ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1))
+    for y in range(h):
+        for x in range(w):
+            c = px[x, y]
+            if c[3] == 0 or c[:3] != WHITE:
+                continue
+            n = 0
+            for dx, dy in neigh:
+                xx, yy = x + dx, y + dy
+                if 0 <= xx < w and 0 <= yy < h and px[xx, yy][3] and px[xx, yy][:3] != WHITE:
+                    n += 1
+            # Cloud white only kisses the outline. A highlight inside the face
+            # has no transparent neighbour.
+            touches_clear = False
+            for dx, dy in neigh[:4]:
+                xx, yy = x + dx, y + dy
+                if not (0 <= xx < w and 0 <= yy < h) or px[xx, yy][3] == 0:
+                    touches_clear = True
+            if touches_clear or n < 3:
+                kill.append((x, y))
+    for x, y in kill:
+        px[x, y] = (0, 0, 0, 0)
+    bbox = img.getbbox()
+    return img.crop(bbox) if bbox else img
 
 
 def pixels_of(img):
@@ -133,81 +165,28 @@ def cycle(seq):
     return [(dx, dy) for dx, dy in seq]
 
 
-def kpose(head, body, tail, legs=(0, 0)):
-    return {"head": head, "body": body, "tail": tail, "legL": legs, "legR": legs}
+def shift_all(dx, dy):
+    """Every part moves by the same amount, so nothing can split."""
+    return {"head": (dx, dy), "body": (dx, dy), "tail": (dx, dy),
+            "legL": (dx, dy), "legR": (dx, dy), "bow": (dx, dy), "arm": (dx, dy)}
 
+# One-pixel bobs of the whole sprite. Blink frames are flagged, not redrawn.
 KITTY_ACTIONS = {
-    "idle": [
-        kpose((0, 0), (0, 0), (0, 0)),
-        kpose((1, 0), (0, 0), (1, 0)),
-        kpose((1, 0), (0, 1), (2, 0), (0, 1)),
-        kpose((0, 0), (0, 1), (1, 1), (0, 1)),
-        kpose((-1, 0), (0, 0), (-1, 0)),
-        kpose((-1, 0), (0, 0), (-2, 0)),
-    ],
-    "walk": [
-        kpose((0, 0), (0, 0), (-1, 0), (0, 0)),
-        kpose((1, 0), (1, 0), (1, -1), (1, 0)),
-        kpose((1, 0), (2, 1), (2, 0), (2, 1)),
-        kpose((0, 0), (1, 0), (0, 1), (1, 0)),
-        kpose((-1, 0), (0, 1), (-2, 0), (0, 1)),
-        kpose((0, 0), (0, 0), (0, -1), (0, 0)),
-    ],
-    "throw": [
-        kpose((0, 0), (0, 0), (0, 0)),
-        kpose((-1, 0), (0, 1), (1, 0), (0, 1)),
-        kpose((-2, 0), (-1, 0), (2, 0)),
-        kpose((2, 0), (1, 0), (-1, -1)),
-        kpose((2, 0), (1, 0), (-1, 0)),
-        kpose((1, 0), (0, 0), (0, 0)),
-    ],
-    "hit": [
-        kpose((0, 0), (0, 0), (0, 0)),
-        kpose((-2, 0), (-2, 0), (-1, 0)),
-        kpose((-3, 0), (-3, 1), (0, 1), (-3, 1)),
-        kpose((-2, 0), (-2, 1), (0, 0), (-2, 1)),
-        kpose((-1, 0), (-1, 0), (-1, 0)),
-        kpose((0, 0), (0, 0), (0, 0)),
-    ],
+    "idle": [shift_all(0, 0), shift_all(0, 0), shift_all(0, -1), shift_all(0, -1), shift_all(0, 0), shift_all(0, 1)],
+    "walk": [shift_all(0, 0), shift_all(1, 0), shift_all(1, -1), shift_all(0, 0), shift_all(-1, 0), shift_all(0, 1)],
+    "throw": [shift_all(0, 0), shift_all(0, 1), shift_all(-1, 0), shift_all(1, -1), shift_all(1, 0), shift_all(0, 0)],
+    "hit": [shift_all(0, 0), shift_all(-1, 0), shift_all(-1, 1), shift_all(0, 1), shift_all(0, 0), shift_all(0, 0)],
 }
-
-def mpose(head, body, arm, bow=None):
-    return {"head": head, "bow": bow or head, "body": body, "arm": arm}
-
 MALAZ_ACTIONS = {
-    "idle": [
-        mpose((0, 0), (0, 0), (0, 0)),
-        mpose((0, 0), (0, 0), (0, 0)),
-        mpose((1, 0), (0, 1), (0, 1)),
-        mpose((0, 0), (0, 1), (0, 1)),
-        mpose((-1, 0), (0, 0), (0, 0)),
-        mpose((0, 0), (0, 0), (0, 0)),
-    ],
-    "walk": [
-        mpose((0, 0), (0, 0), (0, 0)),
-        mpose((1, 0), (1, 0), (0, 0)),
-        mpose((1, 0), (2, 1), (2, 1)),
-        mpose((0, 0), (1, 0), (1, 0)),
-        mpose((-1, 0), (0, 1), (0, 1)),
-        mpose((0, 0), (0, 0), (-1, 0)),
-    ],
-    "throw": [
-        mpose((0, 0), (0, 0), (0, 0)),
-        mpose((-1, 0), (0, 0), (-1, 0)),
-        mpose((-1, 0), (0, 1), (-2, 1)),
-        mpose((1, 0), (0, 0), (3, -2)),
-        mpose((1, 0), (0, 0), (4, -1)),
-        mpose((0, 0), (0, 0), (1, 0)),
-    ],
-    "hit": [
-        mpose((0, 0), (0, 0), (0, 0)),
-        mpose((-2, 0), (-2, 0), (-1, 0)),
-        mpose((-3, 0), (-2, 1), (-2, 1)),
-        mpose((-2, 0), (-1, 1), (-1, 0)),
-        mpose((-1, 0), (-1, 0), (0, 0)),
-        mpose((0, 0), (0, 0), (0, 0)),
-    ],
+    "idle": [shift_all(0, 0), shift_all(0, 0), shift_all(0, -1), shift_all(0, 0), shift_all(0, 1), shift_all(0, 0)],
+    "walk": [shift_all(0, 0), shift_all(1, 0), shift_all(1, -1), shift_all(0, 0), shift_all(-1, 0), shift_all(0, 1)],
+    "throw": [shift_all(0, 0), shift_all(0, 1), shift_all(-1, 0), shift_all(1, -1), shift_all(0, 0), shift_all(0, 0)],
+    "hit": [shift_all(0, 0), shift_all(-1, 0), shift_all(-1, 1), shift_all(0, 1), shift_all(0, 0), shift_all(0, 0)],
 }
+# Close the eight eye pixels on these frames. The rest of her stays identical.
+MALAZ_BLINK = {"idle": {3}, "walk": {4}, "throw": set(), "hit": {2, 3}}
+MALAZ_EYES = [(5, 9), (6, 9), (14, 9), (15, 9), (5, 10), (6, 10), (14, 10), (15, 10)]
+MALAZ_SKIN = (255, 226, 207, 255)
 
 
 def ellipse(cx, cy, rx, ry):
@@ -220,18 +199,22 @@ def ellipse(cx, cy, rx, ry):
 
 
 def santa_frame(step, action):
-    """Round beer belly. Colours are from the scene sprites and #FFD6E8."""
-    dark = (46, 26, 16, 255)
-    suit = (217, 68, 127, 255)
-    mid = (255, 158, 199, 255)
-    light = (255, 214, 232, 255)
-    skin = (255, 226, 207, 255)
-    buckle = (226, 188, 140, 255)
+    """First-version Santafoto, drawn as one figure every frame.
+
+    Hat, beard, pink face, black belt, gold buckle and boots are the
+    original blocks. The belly is that same red, round and shaded.
+    Hop and jiggle move the whole figure, so the hat never leaves the head.
+    """
+    red = (226, 59, 74, 255)       # #E23B4A
+    red_lt = (255, 120, 132, 255)
+    red_dk = (160, 32, 48, 255)
+    skin = (243, 199, 161, 255)    # #F3C7A1
     white = (255, 255, 255, 255)
+    eye = (34, 34, 34, 255)        # #222
+    gold = (255, 224, 138, 255)    # #FFE08A
     jiggle = [0, 1, 2, 1, 0, -1][step % 6]
     hop = 0
-    squash = 0
-    hat = 0
+    squash = jiggle
     if action == "walk":
         hop = [0, -1, 0, 1, 0, -1][step % 6]
     elif action == "attack":
@@ -239,157 +222,124 @@ def santa_frame(step, action):
         squash = [0, -1, -2, 1, 3, 1][step % 6]
     elif action == "defeat":
         squash = [2, 4, 5, 4, 3, 2][step % 6]
-        hat = [0, 2, 3, 3, 2, 1][step % 6]
         hop = [0, 1, 2, 2, 1, 1][step % 6]
-    elif action == "idle":
-        squash = jiggle
-    rx = 11 + squash
-    ry = 8 - squash // 2
-    cx, cy = 18, 16 - hop
-    img = Image.new("RGBA", (40, 36), (0, 0, 0, 0))
+    img = Image.new("RGBA", (84, 78), (0, 0, 0, 0))
     px = img.load()
 
     def dot(x, y, c):
-        if 0 <= x < 40 and 0 <= y < 36:
+        if 0 <= x < img.size[0] and 0 <= y < img.size[1]:
             px[x, y] = c
 
+    def rect(x, y, w, h, c):
+        for yy in range(h):
+            for xx in range(w):
+                dot(x + xx, y + yy, c)
+
+    ox, oy = 18, 4 + hop
+    # Round shaded belly first, so the beard and face sit on top of it.
+    cx, cy = ox + 24, oy + 32
+    rx = max(16, 22 + squash)
+    ry = max(12, 18 - max(-2, squash // 2))
     for x, y in ellipse(cx, cy, rx, ry):
-        dx, dy = x - (cx - 3), y - (cy - 4)
+        dx, dy = (x - cx + 4), (y - cy + 4)
         dist = (dx * dx + dy * dy) ** 0.5
-        if dist < 3:
-            col = light
-        elif dist < 6:
-            col = mid
-        else:
-            col = suit
-        dot(x, y, col)
+        dot(x, y, red_lt if dist < 6 else (red if dist < 14 else red_dk))
     for x, y in ellipse(cx, cy, rx + 1, ry + 1):
         if px[x, y][3] == 0:
-            dot(x, y, dark)
-    # belt
-    for x in range(cx - rx + 1, cx + rx):
-        dot(x, cy + 1, dark)
-        if abs(x - cx) <= 1:
-            dot(x, cy, buckle)
-            dot(x, cy + 1, buckle)
-    # head
-    hy = cy - ry - 4 + hat
-    for x, y in ellipse(cx, hy, 4, 3):
-        dot(x, y, skin)
-    for x, y in ellipse(cx, hy - 2, 5, 2):
-        dot(x, y, white)
-    for x in range(cx - 3, cx + 4):
-        dot(x, hy - 4, suit)
-        dot(x, hy - 5, suit)
-    dot(cx + 5, hy - 4, white)
-    dot(cx - 1, hy, dark)
-    dot(cx + 2, hy, dark)
-    # boots, alternating on walk
-    shift = [0, 1, 0, -1, 0, 1][step % 6] if action == "walk" else 0
-    for bx in (cx - 6, cx + 3):
-        extra = shift if bx < cx else -shift
-        for x, y in ellipse(bx + extra, cy + ry + 2, 2, 1):
-            dot(x, y, dark)
+            # Only the pixels that touch the belly, so the outline stays closed.
+            if any(px[x + dx, y + dy][3] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                   if 0 <= x + dx < img.size[0] and 0 <= y + dy < img.size[1]):
+                dot(x, y, eye)
+    # Original blocks, overlapping the belly so the neck never gaps.
+    rect(ox + 14, oy, 24, 8, red)             # hat
+    rect(ox + 34, oy + 1, 8, 6, white)        # pom
+    rect(ox + 10, oy + 8, 30, 12, white)      # beard
+    rect(ox + 16, oy + 10, 16, 8, skin)       # face
+    rect(ox + 19, oy + 12, 3, 3, eye)
+    rect(ox + 26, oy + 12, 3, 3, eye)
+    # Belt and buckle across the belly.
+    for x in range(cx - rx + 2, cx + rx - 1):
+        dot(x, cy, eye)
+        dot(x, cy + 1, eye)
+    rect(cx - 6, cy - 3, 12, 8, gold)
+    rect(ox + 16, oy + 28, 6, 6, white)       # buttons
+    rect(ox + 26, oy + 34, 6, 6, white)
+    # Boots touch the bottom of the belly.
+    boot_y = cy + ry - 2
+    rect(cx - 16, boot_y, 10, 6, eye)
+    rect(cx + 6, boot_y, 10, 6, eye)
     return img
 
 
-def unicorn_base(happy=False):
-    mane = (143, 211, 214, 255) if happy else (255, 158, 199, 255)
-    horn = (231, 128, 175, 255)
+def unicorn_frame(step, action):
+    """First-version unicorn: white blocks, pink horn, pink or cyan mane.
+
+    The whole animal moves together. Legs only change length from the
+    belly downward, so they stay attached. Rainbows are separate pixels.
+    """
+    pink = (255, 158, 199, 255)      # #FF9EC7
+    horn_c = (255, 95, 162, 255)     # #FF5FA2
+    cyan = (127, 214, 255, 255)      # #7FD6FF
     white = (255, 255, 255, 255)
-    dark = (46, 26, 16, 255)
-    # groups of pixels in a rest pose, local coords
-    parts = {k: [] for k in ("body", "head", "mane", "horn", "legL", "legR", "tail")}
-    def add(name, x, y, c):
-        parts[name].append((x, y, c))
-    # body
-    for y in range(10, 18):
-        for x in range(4, 20):
-            add("body", x, y, white)
-    for x in range(4, 20):
-        add("body", x, 10, dark)
-        add("body", x, 17, dark)
-    for y in range(10, 18):
-        add("body", 4, y, dark)
-        add("body", 19, y, dark)
-    # head
-    for y in range(4, 12):
-        for x in range(16, 24):
-            add("head", x, y, white)
-    for x in range(16, 24):
-        add("head", x, 4, dark)
-        add("head", x, 11, dark)
-    add("head", 20, 7, dark)
-    add("head", 21, 7, dark)
-    # mane
-    for y, x0 in ((5, 14), (6, 13), (8, 13), (10, 14)):
-        for x in range(x0, x0 + 3):
-            add("mane", x, y, mane)
-    # horn
-    add("horn", 22, 1, horn)
-    add("horn", 23, 2, horn)
-    add("horn", 22, 2, horn)
-    add("horn", 23, 3, horn)
-    add("horn", 24, 3, white)
-    # legs
-    for x in (6, 8):
-        for y in range(18, 23):
-            add("legL", x, y, dark if y == 22 else white)
-    for x in (14, 16):
-        for y in range(18, 23):
-            add("legR", x, y, dark if y == 22 else white)
-    # tail
-    for x, y in ((2, 11), (1, 12), (1, 13), (2, 14), (3, 13)):
-        add("tail", x, y, mane)
-    return parts
-
-
-def paint_named(parts, pose, w, h, margin=4):
-    img = blank(w + margin * 2, h + margin * 2)
+    eye = (34, 34, 34, 255)
+    blush = (255, 214, 232, 255)     # #FFD6E8
+    mint = (184, 242, 200, 255)      # #B8F2C8
+    happy = action == "happy"
+    mane = cyan if happy else pink
+    tail_c = mint if happy else blush
+    bob = [0, 0, -1, -1, 0, 1][step % 6]
+    hop, dx = 0, 0
+    if action == "gallop":
+        hop = [0, -2, -3, -1, 0, 1][step % 6]
+        dx = [0, 1, 1, 0, -1, 0][step % 6]
+    elif action == "hit":
+        dx = [0, -1, -1, 0, 0, 0][step % 6]
+        bob = [0, 1, 1, 0, 0, 0][step % 6]
+    elif action == "happy":
+        hop = [0, -2, -4, -3, -1, 0][step % 6]
+    img = Image.new("RGBA", (96, 52), (0, 0, 0, 0))
     px = img.load()
-    for name, dots in parts.items():
-        dx, dy = pose.get(name, (0, 0))
-        for x, y, c in dots:
-            xx, yy = x + dx + margin, y + dy + margin
-            if 0 <= xx < img.size[0] and 0 <= yy < img.size[1]:
-                px[xx, yy] = c
+
+    def dot(x, y, c):
+        if 0 <= x < img.size[0] and 0 <= y < img.size[1]:
+            px[x, y] = c
+
+    def rect(x, y, w, h, c):
+        for yy in range(h):
+            for xx in range(w):
+                dot(x + xx, y + yy, c)
+
+    x, y = 36 + dx, 4 + bob + hop
+    rect(x, y + 16, 28, 14, white)          # body
+    rect(x + 20, y + 6, 12, 14, white)      # head, overlaps the body
+    rect(x + 28, y, 3, 8, horn_c)
+    rect(x + 30, y + 2, 3, 4, horn_c)
+    wave = step % 2
+    rect(x + 16, y + 8 + wave, 6, 12, mane)  # still overlaps the head
+    rect(x + 12, y + 14, 5, 6, mane)
+    rect(x + 26, y + 10, 2, 2, eye)
+    # Legs start on the body's bottom row.
+    if action == "gallop":
+        left, right = (7, 4) if step % 2 == 0 else (4, 7)
+    else:
+        left = right = 6
+    rect(x + 4, y + 29, 4, left, white)
+    rect(x + 14, y + 29, 4, right, white)
+    rect(x - 4, y + 16 + wave, 6, 3, tail_c)  # overlaps the body by 2px
+    bands = [
+        (255, 95, 162, 255), (255, 224, 138, 255), (127, 214, 255, 255),
+        (184, 242, 200, 255), (255, 158, 199, 255),
+    ]
+    if action == "mouth":
+        length = 6 + step * 3
+        for i, col in enumerate(bands):
+            rect(x + 32, y + 10 + i, length, 1, col)
+    if action == "butt":
+        length = 6 + step * 3
+        for i, col in enumerate(bands):
+            # Starts inside the rump so the streak reads as coming out of him.
+            rect(x - length + 4, y + 18 + i, length, 1, col)
     return img
-
-
-UNI_POSES = {
-    "idle": [
-        {"body": (0, 0), "head": (0, 0), "mane": (0, 0), "horn": (0, 0), "legL": (0, 0), "legR": (0, 0), "tail": (0, 0)},
-        {"body": (0, 0), "head": (0, -1), "mane": (1, -1), "horn": (0, -1), "legL": (0, 0), "legR": (0, 0), "tail": (0, 1)},
-        {"body": (0, 1), "head": (0, 0), "mane": (0, 1), "horn": (0, 0), "legL": (0, 1), "legR": (0, 1), "tail": (-1, 0)},
-        {"body": (0, 1), "head": (1, 0), "mane": (-1, 0), "horn": (1, 0), "legL": (0, 1), "legR": (0, 1), "tail": (0, -1)},
-        {"body": (0, 0), "head": (0, -1), "mane": (0, -1), "horn": (0, -1), "legL": (0, 0), "legR": (0, 0), "tail": (1, 0)},
-        {"body": (0, 0), "head": (0, 0), "mane": (1, 0), "horn": (0, 0), "legL": (0, 0), "legR": (0, 0), "tail": (0, 0)},
-    ],
-    "gallop": [
-        {"body": (0, 0), "head": (1, -1), "mane": (0, -1), "horn": (1, -1), "legL": (1, 0), "legR": (-1, 1), "tail": (-1, 0)},
-        {"body": (1, -1), "head": (2, -2), "mane": (1, -2), "horn": (2, -2), "legL": (0, 1), "legR": (1, 0), "tail": (-2, 1)},
-        {"body": (2, 0), "head": (2, -1), "mane": (2, 0), "horn": (2, -1), "legL": (-1, 0), "legR": (1, 1), "tail": (0, 1)},
-        {"body": (1, 1), "head": (1, 0), "mane": (1, 1), "horn": (1, 0), "legL": (1, 1), "legR": (0, 0), "tail": (1, 0)},
-        {"body": (0, 0), "head": (0, -1), "mane": (-1, -1), "horn": (0, -1), "legL": (0, 0), "legR": (-1, 1), "tail": (-1, -1)},
-        {"body": (0, 1), "head": (1, 0), "mane": (0, 0), "horn": (1, 0), "legL": (-1, 1), "legR": (1, 0), "tail": (0, 1)},
-    ],
-    "hit": [
-        {"body": (0, 0), "head": (0, 0), "mane": (0, 0), "horn": (0, 0), "legL": (0, 0), "legR": (0, 0), "tail": (0, 0)},
-        {"body": (-2, 0), "head": (-2, -1), "mane": (-1, -1), "horn": (-2, -2), "legL": (-1, 1), "legR": (-1, 0), "tail": (1, 1)},
-        {"body": (-3, 1), "head": (-4, -1), "mane": (-2, 0), "horn": (-4, -1), "legL": (-2, 1), "legR": (-2, 1), "tail": (2, 0)},
-        {"body": (-2, 1), "head": (-2, 0), "mane": (-1, 1), "horn": (-2, 0), "legL": (-1, 1), "legR": (-1, 1), "tail": (1, 0)},
-        {"body": (-1, 0), "head": (-1, -1), "mane": (0, -1), "horn": (-1, -1), "legL": (0, 0), "legR": (0, 0), "tail": (0, 1)},
-        {"body": (0, 0), "head": (0, 0), "mane": (0, 0), "horn": (0, 0), "legL": (0, 0), "legR": (0, 0), "tail": (0, 0)},
-    ],
-    "happy": [
-        {"body": (0, -1), "head": (0, -2), "mane": (1, -2), "horn": (0, -2), "legL": (0, 0), "legR": (0, 0), "tail": (-1, -1)},
-        {"body": (0, -3), "head": (0, -4), "mane": (0, -4), "horn": (0, -4), "legL": (0, -1), "legR": (0, -1), "tail": (1, -2)},
-        {"body": (0, -4), "head": (1, -5), "mane": (-1, -5), "horn": (1, -5), "legL": (0, -1), "legR": (0, -1), "tail": (0, -3)},
-        {"body": (0, -2), "head": (0, -3), "mane": (1, -3), "horn": (0, -3), "legL": (0, 0), "legR": (0, 0), "tail": (-1, -1)},
-        {"body": (0, 0), "head": (0, -1), "mane": (0, -1), "horn": (0, -1), "legL": (0, 1), "legR": (0, 1), "tail": (1, 0)},
-        {"body": (0, -1), "head": (0, -2), "mane": (-1, -2), "horn": (0, -2), "legL": (0, 0), "legR": (0, 0), "tail": (0, -1)},
-    ],
-}
 
 
 def font(size):
@@ -446,6 +396,116 @@ def render_posed(parts, actions, w, h):
     return out
 
 
+def blink_malaz(frames):
+    for action, idxs in MALAZ_BLINK.items():
+        for i in idxs:
+            px = frames[action][i].load()
+            for x, y in MALAZ_EYES:
+                px[x + 4, y + 4] = MALAZ_SKIN
+    return frames
+
+
+def paste(dst, src, xy):
+    dst.alpha_composite(src, xy)
+
+
+def outfit_overlay(base, kind, step):
+    """Extra pixels around the real sprite. The sprite itself is not redrawn."""
+    pad = 8
+    img = Image.new("RGBA", (base.size[0] + 4, base.size[1] + pad), (0, 0, 0, 0))
+    img.paste(base, (2, pad))
+    px = img.load()
+    w, h = img.size
+
+    def dot(x, y, c):
+        if 0 <= x < w and 0 <= y < h:
+            px[x, y] = c
+
+    stripes = [(255, 95, 162, 255), (255, 224, 138, 255), (127, 214, 255, 255), (184, 242, 200, 255)]
+    if kind == "malaz":
+        for i in range(8):
+            dot(4 + i, pad - 2 - (i % 3), stripes[i % 4])
+            dot(4 + i, pad - 1, stripes[(i + 1) % 4])
+        for x in range(2, 20):
+            dot(x, pad + 15, (255, 122, 207, 255))
+            dot(x, pad + 16, (255, 214, 232, 255))
+        dot(4, pad + 19, (127, 214, 255, 255))
+        dot(5, pad + 19, (127, 214, 255, 255))
+        dot(14, pad + 19, (255, 224, 138, 255))
+        dot(15, pad + 19, (255, 224, 138, 255))
+        # puffy sleeves beside the dress, not instead of it
+        for y in range(pad + 12, pad + 17):
+            dot(0, y, (255, 255, 255, 255))
+            dot(1, y, (255, 182, 217, 255))
+            dot(w - 2, y, (255, 255, 255, 255))
+            dot(w - 1, y, (255, 182, 217, 255))
+    else:
+        for x in range(6, 22):
+            dot(x, pad - 2, (255, 95, 162, 255))
+            dot(x, pad - 1, (255, 224, 138, 255))
+        dot(8, pad - 4, (255, 95, 162, 255))
+        dot(14, pad - 4, (127, 214, 255, 255))
+        for x in range(4, base.size[0]):
+            dot(x, pad + 15, (255, 255, 255, 255))
+            dot(x, pad + 16, (255, 214, 232, 255))
+    return img
+
+
+def mars_frame(step):
+    """Hand-placed Mars ground. Hills, stars and dust scroll at different speeds."""
+    w, h = 160, 96
+    sky = (255, 214, 232)
+    blush = (255, 182, 217)
+    hill = (255, 158, 199)
+    dust = (227, 122, 74)
+    soil = (196, 90, 50)
+    dark = (150, 40, 95)
+    cream = (255, 224, 138)
+    white = (255, 255, 255)
+    img = Image.new("RGB", (w, h), sky)
+    px = img.load()
+    for y in range(38, 52):
+        for x in range(w):
+            px[x, y] = blush
+    for i, (sx, sy) in enumerate(((6, 8), (24, 14), (48, 6), (70, 18), (96, 10), (120, 16), (142, 7), (154, 20))):
+        x = (sx + step // 2) % w
+        if (step + i) % 3:
+            px[x, sy] = white
+            if x + 1 < w:
+                px[x + 1, sy] = cream
+    # distant pink hills
+    for x in range(w):
+        peak = 46 + ((x + step) // 8 % 3) - ((x + step) // 14 % 2)
+        for y in range(peak, 58):
+            px[x % w, y] = hill
+    # near orange hills
+    for x in range(w):
+        peak = 58 + ((x + step * 2) // 6 % 4)
+        for y in range(peak, 70):
+            px[x, y] = dust if (x + y + step) % 5 else soil
+    for y in range(70, h):
+        for x in range(w):
+            px[x, y] = soil if (x + y) % 2 == 0 else dust
+    # craters and rocks, stuck to the ground scroll
+    def crater(cx, cy, r):
+        for y in range(cy - r, cy + r + 1):
+            for x in range(cx - r, cx + r + 1):
+                if (x - cx) ** 2 + (y - cy) ** 2 <= r * r:
+                    xx = (x + step * 3) % w
+                    if 70 <= y < h:
+                        px[xx, y] = dark if (x - cx) ** 2 + (y - cy) ** 2 > (r - 1) ** 2 else (255, 182, 193)
+    crater(20, 80, 5)
+    crater(78, 86, 4)
+    crater(130, 78, 6)
+    for rx, ry in ((40, 74), (100, 82), (150, 88)):
+        xx = (rx + step * 3) % w
+        for dy in range(3):
+            for dx in range(4):
+                if 0 <= xx + dx < w and 0 <= ry + dy < h:
+                    px[xx + dx, ry + dy] = dark if dy == 0 or dx == 0 else soil
+    return img
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     PREVIEW.mkdir(parents=True, exist_ok=True)
@@ -467,7 +527,12 @@ def main():
         raise SystemExit(f"kitty idle frame is not the source sprite ({diff} pixels)")
 
     kframes = render_posed(kparts, KITTY_ACTIONS, *kitty.size)
-    mframes = render_posed(mparts, MALAZ_ACTIONS, *malaz.size)
+    mframes = blink_malaz(render_posed(mparts, MALAZ_ACTIONS, *malaz.size))
+    # Rest pose is the untouched sprite, including every Malaz pixel.
+    rest = paint(mparts, MALAZ_ACTIONS["idle"][0], malaz.size[0], malaz.size[1], margin=0)
+    if list(rest.getdata()) != list(malaz.getdata()):
+        diff = sum(a != b for a, b in zip(rest.getdata(), malaz.getdata()))
+        raise SystemExit("malaz rest frame is not the scene sprite (%s pixels)" % diff)
     sheet_and_gif("kitty", kframes, {
         "idle": "idle / vibe", "walk": "walk / fly", "throw": "throw", "hit": "hit",
     })
@@ -475,17 +540,13 @@ def main():
         "idle": "idle", "walk": "walk", "throw": "throw clothes", "hit": "hit",
     })
 
-    uni = unicorn_base(False)
-    uni_happy = unicorn_base(True)
-    uw, uh = 28, 26
     uframes = {
-        "idle": [paint_named(uni, p, uw, uh) for p in UNI_POSES["idle"]],
-        "gallop": [paint_named(uni, p, uw, uh) for p in UNI_POSES["gallop"]],
-        "hit": [paint_named(uni, p, uw, uh) for p in UNI_POSES["hit"]],
-        "happy": [paint_named(uni_happy, p, uw, uh) for p in UNI_POSES["happy"]],
+        action: [unicorn_frame(i, action) for i in range(6)]
+        for action in ("idle", "gallop", "hit", "happy", "mouth", "butt")
     }
     sheet_and_gif("unicorn", uframes, {
-        "idle": "idle", "gallop": "gallop", "hit": "hit", "happy": "joins, happy",
+        "idle": "idle", "gallop": "gallop", "hit": "hit", "happy": "joins",
+        "mouth": "mouth beam", "butt": "butt beam",
     })
     sframes = {
         "idle": [santa_frame(i, "idle") for i in range(6)],
@@ -510,6 +571,36 @@ def main():
     board.paste(left, (gap, label_h), left)
     board.paste(right, (left.size[0] + gap * 2, label_h), right)
     board.save(PREVIEW / "kitty-vs-website.png")
+
+    # Malaz rest pose next to the same pixels cropped from the scene.
+    ml, mr = scale(malaz), scale(malaz)
+    mboard = Image.new("RGB", (ml.size[0] + mr.size[0] + gap * 3, ml.size[1] + label_h + 16), PINK[:3])
+    md = ImageDraw.Draw(mboard)
+    md.text((12, 8), "game malaz", fill=INK[:3], font=fnt)
+    md.text((ml.size[0] + gap * 2, 8), "scene malaz", fill=INK[:3], font=fnt)
+    mboard.paste(ml, (gap, label_h), ml)
+    mboard.paste(mr, (ml.size[0] + gap * 2, label_h), mr)
+    mboard.save(PREVIEW / "malaz-vs-website.png")
+
+    # Silly-outfit cutscene. The base pixels stay; hair and clothes are added on top.
+    cut = []
+    for i in range(6):
+        canvas = Image.new("RGBA", (150, 60), (0, 0, 0, 0))
+        uni = unicorn_frame(i, "mouth" if i < 3 else "butt")
+        girl = outfit_overlay(malaz, "malaz", i) if 2 <= i <= 4 else malaz
+        cat = outfit_overlay(kitty, "kitty", i) if 2 <= i <= 4 else kitty
+        canvas.alpha_composite(uni, (0, 4))
+        canvas.alpha_composite(girl, (100, 10))
+        canvas.alpha_composite(cat, (124, 16))
+        cut.append(canvas)
+    sheet_and_gif("cutscene", {"hit": cut[:3], "outfits": cut[2:5], "reset": [cut[5], cut[5], cut[5]]}, {
+        "hit": "love beam", "outfits": "silly outfits", "reset": "reset",
+    })
+    mframes_gif = {
+        "scroll": [mars_frame(i) for i in range(8)],
+    }
+    # mars_frame is RGB; sheet_and_gif expects RGBA-able images via scale()
+    sheet_and_gif("mars", {k: [im.convert("RGBA") for im in v] for k, v in mframes_gif.items()}, {"scroll": "mars ground"})
 
     data = {
         "source": "images/scenes/angel.png native 5px grid",

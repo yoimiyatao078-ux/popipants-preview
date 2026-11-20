@@ -28,7 +28,7 @@
   <!-- /seo -->
   <title>Popipants — Handmade streetwear from Trondheim</title>
   <meta name="description" content="Handmade y2k character streetwear from Trondheim, Norway. One-of-one pieces, cute pixel kitty, new drops on tise.">
-  <link rel="stylesheet" href="css/bundle.css?v=1793503300">
+  <link rel="stylesheet" href="css/bundle.css?v=1795303200">
   <script src="js/theme-boot.js?v=1793503300"></script>
   <script src="js/tropical-deco.js?v=1793503300"></script>
   <link rel="stylesheet" href="css/pixel-fx.css?v=1793503300">
@@ -37,18 +37,20 @@
   <link rel="stylesheet" href="css/goth3.css?v=1793503300">
   <link rel="stylesheet" data-mood="goth4" data-href="css/goth4.css?v=1793503300">
   <script>window.popiMoodCss&&popiMoodCss()</script>
-  <link rel="stylesheet" href="css/blue2.css?v=1793503300">
+  <link rel="stylesheet" href="css/blue2.css?v=1795303200">
   <link rel="stylesheet" href="css/shop.css?v=1793503300">
+  <link rel="stylesheet" href="css/mood-hearts.css?v=1795222000">
+  <link rel="stylesheet" href="css/mood-scene.css?v=1795306800">
 </head>
 <body class="home-page">
   <canvas id="sparkle-canvas"></canvas>
 
   <div class="page-wrapper">
     <div class="page-layout">
-      <script src="js/layout.js?v=1793503300" data-part="sidebar"></script>
+      <script src="js/layout.js?v=1794059200" data-part="sidebar"></script>
 
       <main class="main-content" id="main">
-        <script src="js/layout.js?v=1793503300" data-part="topnav"></script>
+        <script src="js/layout.js?v=1794059200" data-part="topnav"></script>
 
         <section class="banner pink-hero">
           <div class="banner-stars" aria-hidden="true">
@@ -74,7 +76,10 @@
         </section>
 
         <section class="content-section cd-section">
-          <img loading="lazy" decoding="async" class="cd-sticker" src="images/art/cd.png" alt="">
+          <div class="cd-trap">
+            <img loading="lazy" decoding="async" class="cd-sticker" src="images/art/cd.png" alt="">
+            <canvas class="cd-trap-girl" width="104" height="105" aria-hidden="true"></canvas>
+          </div>
           <img loading="lazy" decoding="async" class="music-notes-sticker" src="images/art/music-notes.png" alt="" aria-hidden="true">
           <div class="section-header section-header-left">
             <span class="section-tag">02 / POPIPANTS FM</span>
@@ -96,7 +101,31 @@
           </div>
         </section>
 
-        <script src="js/layout.js?v=1793503300" data-part="footer" data-footer="home"></script>
+        <section class="mood-scene is-still" aria-label="Mood scene">
+          <div class="combo-win mood-scene-win">
+            <div class="combo-tb"><i></i><i></i><i></i><span class="mood-scene-title">angel_window.exe</span></div>
+            <div class="combo-wb mood-scene-wb">
+              <div class="mood-scene-stage" tabindex="0" role="button" aria-label="secret minigame">
+                <video class="mood-scene-vid" muted loop playsinline preload="none" poster="images/scenes/angel.png" disablepictureinpicture></video>
+                <img class="mood-scene-still" src="images/scenes/angel.png" alt="Pixel scene of a girl and a cat on a cloud in a pink sky." width="644" height="432" decoding="async" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <button type="button" class="mood-game-btn">secret minigame</button>
+        </section>
+        <script>
+          (function () {
+            var t = document.documentElement.getAttribute('data-theme') || 'pink';
+            var key = t.indexOf('goth') === 0 ? 'afterdark' : (t === 'blue' ? 'lagoon' : 'angel');
+            var file = 'images/scenes/' + key + '.png';
+            var still = document.querySelector('.mood-scene-still');
+            var video = document.querySelector('.mood-scene-vid');
+            if (still) still.src = file;
+            if (video) video.poster = file;
+          })();
+        </script>
+
+        <script src="js/layout.js?v=1794059200" data-part="footer" data-footer="home"></script>
       </main>
     </div>
   </div>
@@ -104,12 +133,15 @@
 <script src="js/config.js?v=1793503300"></script>
   <script src="js/products.js?v=1793503300"></script>
   <script src="js/music.js?v=1793503300"></script>
-<script src="js/main.js?v=1793503300"></script>
+<script src="js/main.js?v=1794059200"></script>
   <script src="js/pixel-fx.js?v=1793503300"></script>
   <script src="js/critter-shapes.js?v=1793503300"></script>
   <script src="js/critters.js?v=1793503300"></script>
   <script src="js/shop-and-extras.js?v=1793503300"></script>
   <script src="js/combo.js?v=1793503300"></script>
   <script src="js/shop.js?v=1793503300"></script>
+  <script src="js/mood-scene.js?v=1795306800"></script>
+  <script src="js/cd-trap-sprite.js?v=1795303200"></script>
+  <script src="js/cd-trap.js?v=1795303200"></script>
 </body>
 </html>

@@ -54,6 +54,7 @@ html[data-theme="goth3"]{--sx-ink:#FF5FA2;--sx-strong:#FF8FBF;--sx-line:#2a2a30;
 .sx-row{display:flex;gap:10px;flex-wrap:wrap}
 .sx-row input{flex:1 1 180px;min-height:40px;padding:8px 14px;border:1.5px solid var(--sx-line);border-radius:999px;background:var(--sx-panel);color:var(--sx-ink);font:15px Inconsolata,monospace}
 .sx-msg{min-height:1.2em;margin:8px 0 0;font:13px/1.5 Inconsolata,monospace;color:var(--sx-ink)}
+.sx-note,.signup-note{margin:0 0 8px;font:12px/1.4 Inconsolata,monospace;color:var(--sx-ink,#96285F)}
 .sx-msg a{color:inherit}
 [aria-invalid="true"]{border-color:var(--sx-strong)!important;border-style:dashed!important}
 .sx-alertbox{margin-top:8px}

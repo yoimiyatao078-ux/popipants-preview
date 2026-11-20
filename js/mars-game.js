@@ -40,6 +40,11 @@
       { name: 'Kitty', text: 'and the bow. say you love the bow.' },
       { name: 'Unicorn', text: 'ok the bow is camp. the platforms too. keep going.' }
     ],
+    c2fit: [
+      { name: 'Unicorn', text: 'outfit override. you are dressed now.' },
+      { name: 'Malaz', text: 'the mohawk was not in the notes.' },
+      { name: 'Kitty', text: 'mrrp. the wig is a choice. i am keeping the bow.' }
+    ],
     c2after: [
       { name: 'Unicorn', text: 'i yield. the wardrobe won. i am joining.' },
       { name: 'Malaz', text: 'yay. you are our mars guide now.' },
@@ -71,9 +76,9 @@
     ]
   };
 
-  var canvas, ctx, opts, stage, chaptersEl, talkEl, padsEl;
+  var canvas, ctx, opts, stage, chaptersEl, talkEl, padsEl, dressEl;
   var W = 320, H = 180, GROUND = 150;
-  var keys = {}, hold = { left: false, right: false, up: false, action: false };
+  var keys = {}, hold = { left: false, right: false, up: false, down: false, action: false };
   var muted = true, audio, raf, running, lastT = 0, acc = 0;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var mode = 'select';
@@ -86,8 +91,12 @@
   var phase, stroll, clothI, kittyI;
   var talkQ, talkI, talkDone, winPose;
   var hpShown = 1, hpTarget = 1, bossShown = 1, bossTarget = 1, hpFlash = 0, bossFlash = 0;
+  var silly = false, auraT = 0, loveFlash = 0, cardPick = 0;
   var malazImg = new Image();
   malazImg.src = 'images/scenes/sprite-malaz.png';
+  var portraits = { Malaz: new Image(), Kitty: new Image() };
+  portraits.Malaz.src = 'images/sprites/malaz.png';
+  portraits.Kitty.src = 'images/sprites/kitty.png';
 
   function loadProg() {
     try {
@@ -124,11 +133,55 @@
     } catch (e) {}
   }
 
-  function lineEl() { return talkEl && talkEl.querySelector('.mars-line'); }
+  function paintFace(name) {
+    if (!talkEl) return;
+    var face = talkEl.querySelector('.mars-face');
+    if (!face) return;
+    var g = face.getContext('2d');
+    g.imageSmoothingEnabled = false;
+    g.fillStyle = '#fff6fb';
+    g.fillRect(0, 0, 40, 40);
+    var img = portraits[name];
+    if (img && img.complete && img.naturalWidth) {
+      var w = img.naturalWidth, h = img.naturalHeight;
+      g.drawImage(img, Math.round((40 - w) / 2), Math.round((40 - h) / 2));
+      return;
+    }
+    if (name === 'Unicorn') {
+      g.fillStyle = '#fff';
+      g.fillRect(8, 16, 22, 12);
+      g.fillRect(22, 8, 10, 12);
+      g.fillStyle = '#FF5FA2';
+      g.fillRect(28, 4, 3, 8);
+      g.fillStyle = '#7FD6FF';
+      g.fillRect(16, 12, 6, 8);
+      g.fillStyle = '#222';
+      g.fillRect(26, 12, 2, 2);
+      return;
+    }
+    if (name === 'Santafoto') {
+      g.fillStyle = '#E23B4A';
+      g.fillRect(12, 6, 16, 6);
+      g.fillStyle = '#fff';
+      g.fillRect(24, 6, 6, 4);
+      g.fillRect(10, 12, 20, 8);
+      g.fillStyle = '#F3C7A1';
+      g.fillRect(14, 13, 12, 6);
+      g.fillStyle = '#222';
+      g.fillRect(17, 15, 2, 2);
+      g.fillRect(22, 15, 2, 2);
+      g.fillStyle = '#E23B4A';
+      g.fillRect(8, 22, 24, 12);
+    }
+  }
   function showTalk(line) {
     if (!talkEl) return;
     talkEl.hidden = false;
-    if (lineEl()) lineEl().textContent = line.name + ': ' + line.text;
+    var name = talkEl.querySelector('.mars-name');
+    var text = talkEl.querySelector('.mars-line');
+    if (name) name.textContent = line.name;
+    if (text) text.textContent = line.text;
+    paintFace(line.name);
     if (opts.onLine) opts.onLine(line.name + ': ' + line.text);
   }
   function hideTalk() {
@@ -178,16 +231,37 @@
 
   function renderCards() {
     if (!chaptersEl) return;
-    var html = CHAPTERS.map(function (ch) {
+    var cards = CHAPTERS.map(function (ch) {
       var open = unlocked(ch.id);
       var done = beaten(ch.id);
       var label = !open ? ch.locked : (done ? ch.title : ch.tease);
       var mark = !open ? ch.locked : (done ? '★' : '?');
       return '<button type="button" class="mars-card' + (open ? '' : ' is-locked') + (done ? ' is-clear' : '') +
         '" data-ch="' + ch.id + '"' + (open ? '' : ' disabled') + '>' +
+        '<i class="mars-berry" aria-hidden="true"></i>' +
+        '<i class="mars-spark s1" aria-hidden="true"></i><i class="mars-spark s2" aria-hidden="true"></i>' +
         '<b>chapter ' + ch.id + '</b><span class="mars-mark">' + mark + '</span><em>' + label + '</em></button>';
     }).join('');
-    chaptersEl.innerHTML = html + '<button type="button" class="mars-reset">reset</button>';
+    var wing = '<svg class="mars-wing" viewBox="0 0 34 16" width="68" height="32" aria-hidden="true" shape-rendering="crispEdges">' +
+      '<rect x="1" y="7" width="7" height="2" fill="#fff"/>' +
+      '<rect x="2" y="5" width="6" height="2" fill="#FFD6E8"/>' +
+      '<rect x="3" y="3" width="4" height="2" fill="#fff"/>' +
+      '<rect x="26" y="7" width="7" height="2" fill="#fff"/>' +
+      '<rect x="26" y="5" width="6" height="2" fill="#FFD6E8"/>' +
+      '<rect x="27" y="3" width="4" height="2" fill="#fff"/>' +
+      '<rect x="13" y="2" width="2" height="2" fill="#db329f"/>' +
+      '<rect x="19" y="2" width="2" height="2" fill="#db329f"/>' +
+      '<rect x="12" y="4" width="10" height="3" fill="#ff7acf"/>' +
+      '<rect x="14" y="7" width="6" height="2" fill="#db329f"/>' +
+      '<rect x="16" y="9" width="2" height="2" fill="#db329f"/>' +
+      '</svg>';
+    chaptersEl.innerHTML = '<button type="button" class="mars-arrow mars-prev" aria-label="Previous chapter">◀</button>' +
+      '<div class="mars-card-row">' + wing + '<div class="mars-card-line">' + cards + '</div></div>' +
+      '<button type="button" class="mars-arrow mars-nextch" aria-label="Next chapter">▶</button>' +
+      '<button type="button" class="mars-reset">reset</button>';
+    var buttons = chaptersEl.querySelectorAll('.mars-card');
+    if (cardPick >= buttons.length) cardPick = 0;
+    if (buttons[cardPick]) buttons[cardPick].classList.add('is-pick');
   }
 
   function fit() {
@@ -227,6 +301,9 @@
     foeShots = [];
     sparks = [];
     lives = 3;
+    silly = false;
+    auraT = 0;
+    loveFlash = 0;
     starsGot = 0;
     needStars = 6;
     rockTimer = 70;
@@ -237,6 +314,25 @@
     foe = null;
     winPose = false;
     time = 0;
+    hideDress();
+  }
+
+  function hideDress() {
+    silly = false;
+    auraT = 0;
+    if (!dressEl) return;
+    dressEl.hidden = true;
+    dressEl.classList.remove('is-clear');
+    var btn = dressEl.querySelector('.mars-dress-reset');
+    if (btn) btn.disabled = true;
+  }
+
+  function showDress(ready) {
+    if (!dressEl) return;
+    dressEl.hidden = false;
+    dressEl.classList.toggle('is-clear', !!ready);
+    var btn = dressEl.querySelector('.mars-dress-reset');
+    if (btn) btn.disabled = !ready;
   }
 
   function beginChapter(id) {
@@ -276,6 +372,7 @@
     say(lines, function () {
       winPose = false;
       mode = 'select';
+      hideDress();
       renderCards();
       syncChrome();
     });
@@ -289,6 +386,23 @@
         vy: (Math.random() - 0.5) * 2.2,
         life: 14,
         color: color
+      });
+    }
+  }
+
+  function loveBurst(x, y) {
+    var cols = ['#ff2f86', '#ff7acf', '#fff', '#ff5fa2', '#ffe08a'];
+    for (var i = 0; i < 18; i++) {
+      var a = (i / 18) * Math.PI * 2;
+      var jag = i % 2 ? 1.8 : 1.1;
+      sparks.push({
+        x: x + Math.cos(a) * 6,
+        y: y + Math.sin(a) * 5,
+        vx: Math.cos(a) * jag,
+        vy: Math.sin(a) * jag - 0.2,
+        life: 20,
+        color: cols[i % cols.length],
+        heart: i % 3 === 0
       });
     }
   }
@@ -357,6 +471,10 @@
       foe.phase = 'join';
       foe.join = 0;
       mode = 'join';
+      if (silly) {
+        silly = false;
+        showDress(true);
+      }
       syncChrome();
     } else {
       clearChapter(3, LINES.c3after);
@@ -367,7 +485,7 @@
     var left = keys.ArrowLeft || keys.KeyA || hold.left;
     var right = keys.ArrowRight || keys.KeyD || hold.right;
     var up = keys.ArrowUp || keys.KeyW || hold.up;
-    var down = keys.ArrowDown || keys.KeyS;
+    var down = keys.ArrowDown || keys.KeyS || hold.down;
     var action = keys.Space || keys.KeyZ || hold.action;
     if (player.cool > 0) player.cool -= 1;
     if (player.inv > 0) player.inv -= 1;
@@ -480,8 +598,9 @@
       if (foe.hit > 0) foe.hit -= 1;
       foe.cool -= 1;
       if (foe.cool <= 0) {
-        foe.cool = 56;
-        foeShots.push({ x: foe.x, y: foe.y + 12, vx: -1.5, vy: Math.sin(time / 9) * 0.35, w: 6, h: 6 });
+        foe.cool = 72;
+        foeShots.push({ beam: 'mouth', x: foe.x - 8, y: foe.y + 6, vx: -2.1, vy: 0, w: 28, h: 10 });
+        foeShots.push({ beam: 'butt', x: foe.x + 22, y: foe.y + 20, vx: -1.7, vy: 0.15, w: 22, h: 8 });
       }
     }
     if (foe && foe.kind === 'santa') {
@@ -503,7 +622,8 @@
         else foeShots.push({ x: foe.x, y: foe.y + 20, vx: -1.8, vy: -1.2, w: 6, h: 6, coal: true });
       }
       if (foe.ally && phase === 'fight' && time % 54 === 0) {
-        shots.push({ who: 'uni', kind: 'rainbow', x: foe.ally.x + 20, y: foe.ally.y + 10, vx: 2.6, vy: 0, w: 8, h: 6 });
+        shots.push({ who: 'uni', kind: 'rainbow', beam: 'mouth', x: foe.ally.x + 30, y: foe.ally.y + 6, vx: 2.4, vy: 0, w: 28, h: 10 });
+        shots.push({ who: 'uni', kind: 'rainbow', beam: 'butt', x: foe.ally.x - 10, y: foe.ally.y + 20, vx: 2.0, vy: 0.12, w: 20, h: 8 });
       }
       if (foe.ally) {
         foe.ally.x += (player.x + 48 - foe.ally.x) * 0.1;
@@ -519,10 +639,19 @@
     var crew = { x: player.x + 8, y: player.y + 6, w: 28, h: 30 };
     foeShots = foeShots.filter(function (s) {
       if (s.x < crew.x + crew.w && s.x + s.w > crew.x && s.y < crew.y + crew.h && s.y + s.h > crew.y) {
+        var armed = player.inv <= 0;
         hurt();
+        if (armed && s.beam && chapter === 2 && !silly && lives > 0) {
+          silly = true;
+          auraT = 40;
+          loveFlash = 10;
+          loveBurst(player.x + 24, player.y + 16);
+          showDress(false);
+          say(LINES.c2fit, function () { mode = 'play'; syncChrome(); });
+        }
         return false;
       }
-      return s.x > -10 && s.y < H;
+      return s.x > -40 && s.y < H + 8;
     });
     if (foe && foe.kind === 'santa' && foe.belly === 10 && player.y > GROUND - 48) hurt();
 
@@ -579,6 +708,18 @@
     ctx.fillRect(x + 19, y + 4 + bob, 2, 2);
     ctx.fillStyle = '#FF5FA2';
     ctx.fillRect(x + 20 + paw, y + 8, 5, 3);
+    if (silly) {
+      ctx.fillStyle = '#FF5FA2';
+      ctx.fillRect(x + 8, y - 5 + bob, 14, 4);
+      ctx.fillStyle = '#FFE08A';
+      ctx.fillRect(x + 12, y - 8 + bob, 5, 3);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x + 10, y - 3 + bob, 3, 2);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x - 2, y + 16, 22, 2);
+      ctx.fillStyle = '#FFD6E8';
+      ctx.fillRect(x, y + 18, 18, 2);
+    }
   }
 
   function drawMalaz(x, y, throwing) {
@@ -604,6 +745,24 @@
       ctx.fillStyle = '#F3C7A1';
       ctx.fillRect(x + 16, y + 12, 6, 3);
     }
+    if (silly) {
+      var stripe = ['#FF5FA2', '#FFE08A', '#7FD6FF', '#B8F2C8'];
+      for (var i = 0; i < 8; i++) {
+        ctx.fillStyle = stripe[i % 4];
+        ctx.fillRect(x + 3 + (i % 5) * 2, y - 8 - (i % 3) * 2, 2, 4);
+      }
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x - 3, y + 12, 6, 6);
+      ctx.fillRect(x + 16, y + 12, 6, 6);
+      ctx.fillStyle = '#FF7ACF';
+      ctx.fillRect(x - 1, y + 22, 20, 3);
+      ctx.fillStyle = '#FFD6E8';
+      ctx.fillRect(x + 1, y + 20, 16, 2);
+      ctx.fillStyle = '#7FD6FF';
+      ctx.fillRect(x + 4, y + 30, 3, 4);
+      ctx.fillStyle = '#FFE08A';
+      ctx.fillRect(x + 11, y + 30, 3, 4);
+    }
   }
 
   function drawCrew(x, y) {
@@ -618,6 +777,13 @@
     var hop = joining ? Math.abs(Math.sin(time / 4)) * 8 : 0;
     x += hit ? 5 : 0;
     y += bob - hop;
+    var faceLeft = !friend;
+    if (faceLeft) {
+      ctx.save();
+      ctx.translate(Math.round(x + 36), 0);
+      ctx.scale(-1, 1);
+      x = 0;
+    }
     var mane = friend ? '#7FD6FF' : '#FF9EC7';
     ctx.fillStyle = '#fff';
     ctx.fillRect(x, y + 16, 28, 14);
@@ -636,6 +802,7 @@
     ctx.fillRect(x + 14, y + 30, 4, leg ? 4 : 7);
     ctx.fillStyle = friend ? '#B8F2C8' : '#FFD6E8';
     ctx.fillRect(x - 5, y + 16 + (wave ? 1 : -1), 6, 3);
+    if (faceLeft) ctx.restore();
   }
 
   function drawSanta(x, y, belly, hit) {
@@ -668,6 +835,40 @@
     ctx.fillRect(x + 58, y + 20 + bh, 8, 5);
   }
 
+  function drawBeam(s) {
+    var bands = ['#ff7acf', '#ffe08a', '#7fd6ff', '#b8f2c8', '#ff5fa2'];
+    var bh = Math.max(1, Math.floor(s.h / bands.length));
+    for (var i = 0; i < bands.length; i++) {
+      ctx.fillStyle = bands[i];
+      var jag = (i % 2 ? 2 : 0);
+      ctx.fillRect(s.x - jag, s.y + i * bh, s.w + jag, bh);
+    }
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(s.x + s.w - 3, s.y + 1, 2, 2);
+    ctx.fillRect(s.x, s.y + bh, 2, 2);
+    if (((time + (s.x | 0)) % 5) < 2) drawHudHeart(s.x + 6, s.y - 5, 1);
+  }
+
+  function drawHudHeart(x, y, fill) {
+    var rows = ['.hh.hh.', 'hhhhhhh', 'hhhhhhh', '.hhhhh.', '..hhh..', '...h...'];
+    rows.forEach(function (row, j) {
+      for (var i = 0; i < row.length; i++) {
+        if (row[i] !== 'h') continue;
+        var on = fill >= 1 || (fill >= 0.5 && i < 4);
+        ctx.fillStyle = on ? (fill >= 1 ? '#db329f' : '#ff7acf') : '#ffd0ea';
+        ctx.fillRect(x + i, y + j, 1, 1);
+      }
+    });
+  }
+
+  function drawStarIcon(x, y) {
+    ctx.fillStyle = '#FFE08A';
+    ctx.fillRect(x + 3, y, 2, 8);
+    ctx.fillRect(x, y + 3, 8, 2);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x + 3, y + 3, 2, 2);
+  }
+
   function drawCloth(s) {
     var x = s.x, y = s.y;
     if (s.kind === 'heart') {
@@ -679,9 +880,8 @@
       ctx.fillRect(x + 2, y + 5, 3, 1);
       return;
     }
-    if (s.kind === 'rainbow') {
-      ctx.fillStyle = ['#FF5FA2', '#FFE08A', '#7FD6FF', '#B8F2C8'][time % 4];
-      ctx.fillRect(x, y, 8, 4);
+    if (s.kind === 'rainbow' || s.beam) {
+      drawBeam(s);
       return;
     }
     if (s.kind === 'flares') {
@@ -744,48 +944,35 @@
   }
 
   function drawBars() {
-    var bw = Math.max(48, Math.min(96, Math.floor(W * 0.26)));
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(2, 3, 10, 10);
-    ctx.fillStyle = '#6B3A2A';
-    ctx.fillRect(3, 4, 8, 4);
-    ctx.fillStyle = '#FF8DC0';
-    ctx.fillRect(3, 8, 8, 4);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(14, 3, 10, 10);
-    ctx.fillStyle = '#FF5FA2';
-    ctx.fillRect(15, 4, 8, 8);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(18, 6, 2, 2);
-    var x = 26;
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(x - 1, 4, bw + 2, 8);
-    ctx.fillStyle = '#3a1028';
-    ctx.fillRect(x, 5, bw, 6);
-    ctx.fillStyle = hpFlash > 0 ? '#fff' : '#FF5FA2';
-    ctx.fillRect(x, 5, Math.max(0, Math.round(hpShown * bw)), 6);
-    if (chapter === 1 && mode !== 'select') {
-      ctx.font = '11px "Pixelify Sans", monospace';
-      var label = starsGot + '/' + needStars;
-      var lx = x + bw + 8;
-      ctx.fillStyle = '#241432';
-      ctx.fillRect(lx - 2, 3, ctx.measureText(label).width + 4, 10);
-      ctx.fillStyle = '#FFE08A';
-      ctx.fillText(label, lx, 12);
+    ctx.fillStyle = '#fff6fb';
+    ctx.fillRect(0, 0, W, 20);
+    var hearts = Math.max(0, Math.min(3, hpShown * 3));
+    var flashOn = hpFlash > 0 && (time % 4) < 2;
+    for (var i = 0; i < 3; i++) {
+      var amt = hearts - i;
+      drawHudHeart(3 + i * 10, 4, flashOn ? 0 : (amt >= 1 ? 1 : (amt >= 0.4 ? 0.5 : 0)));
     }
-    if (foe && !foe.friend && (mode === 'play' || mode === 'talk' || mode === 'join') && chapter > 1) {
+    drawStarIcon(36, 6);
+    ctx.font = '11px "Pixelify Sans", monospace';
+    ctx.fillStyle = '#96285F';
+    if (chapter === 1) ctx.fillText(starsGot + '/' + needStars, 46, 14);
+    if (chapter > 1) {
+      drawCloth({ kind: MALAZ_KIT[clothI % MALAZ_KIT.length], x: 40, y: 4 });
+      drawCloth({ kind: KITTY_KIT[kittyI % KITTY_KIT.length], x: 58, y: 4 });
+    }
+    if (foe && !foe.friend && chapter > 1 && (mode === 'play' || mode === 'talk' || mode === 'join')) {
       var label = foe.kind === 'uni' ? 'unicorn' : 'santafoto';
-      ctx.font = '11px "Pixelify Sans", monospace';
-      ctx.fillStyle = '#fff';
+      var bw = Math.max(40, Math.min(72, Math.floor(W * 0.22)));
+      var rx = W - bw - 6;
+      ctx.fillStyle = '#96285F';
       var tw = ctx.measureText(label).width;
-      var rx = W - bw - 8;
-      if (rx - tw - 8 > x + bw + 8) ctx.fillText(label, rx - tw - 6, 12);
+      if (rx - tw - 4 > 78) ctx.fillText(label, rx - tw - 4, 15);
+      ctx.fillStyle = '#ffd0ea';
+      ctx.fillRect(rx, 8, bw, 8);
+      ctx.fillStyle = bossFlash > 0 ? '#fff' : '#db329f';
+      ctx.fillRect(rx, 8, Math.max(0, Math.round(bossShown * bw)), 8);
       ctx.fillStyle = '#fff';
-      ctx.fillRect(rx - 1, 4, bw + 2, 8);
-      ctx.fillStyle = '#3a1028';
-      ctx.fillRect(rx, 5, bw, 6);
-      ctx.fillStyle = bossFlash > 0 ? '#fff' : (foe.kind === 'uni' ? '#E7D6FF' : '#E23B4A');
-      ctx.fillRect(rx, 5, Math.max(0, Math.round(bossShown * bw)), 6);
+      ctx.fillRect(rx, 8, Math.max(0, Math.round(bossShown * bw)), 2);
     }
   }
 
@@ -855,18 +1042,39 @@
     }
     shots.forEach(drawCloth);
     foeShots.forEach(function (s) {
-      ctx.fillStyle = s.coal ? '#222' : ['#ff4d6d', '#ffd166', '#7ae582', '#64d2ff'][Math.abs(s.x | 0) % 4];
+      if (s.beam) { drawBeam(s); return; }
+      ctx.fillStyle = s.coal ? '#222' : '#ff7acf';
       ctx.fillRect(s.x, s.y, s.w, s.h);
     });
     sparks.forEach(function (s) {
-      ctx.fillStyle = s.color;
-      ctx.fillRect(s.x, s.y, 2, 2);
+      if (s.heart) drawHudHeart(s.x, s.y, 1);
+      else {
+        ctx.fillStyle = s.color;
+        ctx.fillRect(s.x, s.y, 2, 2);
+      }
     });
+    if (auraT > 0 && player) {
+      var ax = player.x + 22, ay = player.y + 14;
+      for (var n = 0; n < 10; n++) {
+        var ang = (n / 10) * Math.PI * 2 + time * 0.3;
+        var rad = n % 2 ? 18 : 11;
+        ctx.fillStyle = n % 2 ? '#ff2f86' : '#ff7acf';
+        ctx.fillRect(ax + Math.round(Math.cos(ang) * rad), ay + Math.round(Math.sin(ang) * rad), 3, 3);
+      }
+    }
+    if (loveFlash > 0) {
+      ctx.globalAlpha = Math.min(0.45, loveFlash / 18);
+      ctx.fillStyle = '#ff7acf';
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalAlpha = 1;
+    }
     drawBars();
   }
 
   function update() {
     time += 1;
+    if (auraT > 0) auraT -= 1;
+    if (loveFlash > 0) loveFlash -= 1;
     if (mode === 'play') updatePlay();
     else if (mode === 'stroll') updatePlay();
     else if (mode === 'join') updateJoin();
@@ -901,6 +1109,15 @@
       advance();
       return;
     }
+    if (mode === 'select' && (e.code === 'Enter' || e.code === 'Space')) {
+      var picked = chaptersEl && chaptersEl.querySelectorAll('.mars-card')[cardPick];
+      if (picked && !picked.disabled) beginChapter(+picked.getAttribute('data-ch'));
+      return;
+    }
+    if (mode === 'select' && (e.code === 'ArrowLeft' || e.code === 'ArrowRight')) {
+      moveCard(e.code === 'ArrowRight' ? 1 : -1);
+      return;
+    }
     if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') e.preventDefault();
   }
   function keyDown(e) { onKey(e, true); }
@@ -926,14 +1143,33 @@
     if (!talkEl || talkEl._bound) return;
     talkEl._bound = true;
     talkEl.addEventListener('click', function (e) {
-      if (e.target.closest('.mars-skip')) { skipTalk(); return; }
+      if (e.target.closest('.mars-next')) { advance(); return; }
       advance();
+    });
+  }
+  function moveCard(dir) {
+    if (!chaptersEl) return;
+    var buttons = chaptersEl.querySelectorAll('.mars-card');
+    if (!buttons.length) return;
+    cardPick = (cardPick + dir + buttons.length) % buttons.length;
+    buttons.forEach(function (b, i) { b.classList.toggle('is-pick', i === cardPick); });
+  }
+  function bindDress() {
+    if (!dressEl || dressEl._bound) return;
+    dressEl._bound = true;
+    var btn = dressEl.querySelector('.mars-dress-reset');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      hideDress();
     });
   }
   function bindChapters() {
     if (!chaptersEl || chaptersEl._bound) return;
     chaptersEl._bound = true;
     chaptersEl.addEventListener('click', function (e) {
+      if (e.target.closest('.mars-prev')) { moveCard(-1); return; }
+      if (e.target.closest('.mars-nextch')) { moveCard(1); return; }
       if (e.target.closest('.mars-reset')) {
         prog = { beaten: [] };
         saveProg();
@@ -967,6 +1203,7 @@
       stage = opts.stage || canvas.parentElement;
       chaptersEl = opts.chapters;
       talkEl = opts.talk;
+      dressEl = opts.dress;
       padsEl = opts.pads;
       running = true;
       muted = true;
@@ -981,7 +1218,9 @@
       hideTalk();
       syncChrome();
       bindPads(padsEl);
+      bindPads(opts.chin);
       bindTalk();
+      bindDress();
       bindChapters();
       bindMute(opts.muteButton);
       window.addEventListener('keydown', keyDown);
@@ -1008,7 +1247,7 @@
     stop: function () {
       running = false;
       if (raf) cancelAnimationFrame(raf);
-      hold.left = hold.right = hold.up = hold.action = false;
+      hold.left = hold.right = hold.up = hold.down = hold.action = false;
       window.removeEventListener('keydown', keyDown);
       window.removeEventListener('keyup', keyUp);
       window.removeEventListener('resize', onResize);

@@ -71,40 +71,143 @@ html body .mars-overlay .mars-bar * {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
-  padding: 8px;
-  background: rgba(255, 246, 251, 0.96);
+  gap: 0;
+  padding: 0;
+  background: #ffd0ea;
   font-family: 'Pixelify Sans', Inconsolata, monospace;
   color: #fff;
 }
+.mars-shell {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px;
+  padding: 8px 10px 8px;
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 18%),
+    linear-gradient(165deg, #ffb3e0 0%, #ff7acf 32%, #db329f 72%, #c41d86 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.85), inset 0 -4px 0 rgba(120, 10, 70, 0.22), 0 0 0 2px #fff;
+}
+.mars-screen {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: inset 0 0 0 2px #9a1468;
+}
+.mars-bar .mars-speakers {
+  flex: none;
+  width: 34px;
+  height: 8px;
+  background: radial-gradient(circle, #9a1468 1.4px, transparent 1.7px) 0 50% / 8px 8px repeat-x;
+}
+.mars-chin {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 72px;
+  padding: 0 6px;
+}
+.mars-dpad {
+  display: grid;
+  grid-template-columns: 22px 22px 22px;
+  grid-template-rows: 22px 22px 22px;
+  gap: 2px;
+  flex: none;
+}
+.mars-dpad .pad-up { grid-column: 2; grid-row: 1; }
+.mars-dpad .pad-left { grid-column: 1; grid-row: 2; }
+.mars-dpad .pad-right { grid-column: 3; grid-row: 2; }
+.mars-dpad .pad-down { grid-column: 2; grid-row: 3; }
+.mars-dpad .pad-nub {
+  grid-column: 2;
+  grid-row: 2;
+  border-radius: 4px;
+  background: #9a1468;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.mars-chin button {
+  min-height: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1;
+}
+.mars-hearts { display: flex; align-items: center; gap: 8px; flex: none; }
+.mars-chin .mars-heart {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+.mars-chin .mars-heart-sm { width: 26px; height: 26px; }
+.px-heart {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  transform: rotate(45deg);
+}
+.px-heart::before,
+.px-heart::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+}
+.px-heart::before { left: -4px; top: 0; }
+.px-heart::after { left: 0; top: -4px; }
+.mars-heart-sm .px-heart { transform: rotate(45deg) scale(0.72); }
+.mars-chin .mars-keys { flex: 1; color: #fff !important; font-size: 13px; text-shadow: 0 1px 0 rgba(154, 20, 104, 0.45); }
 .mars-bar {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 4px 8px;
-  background: linear-gradient(#5aa0e6, #2f6fbe);
-  box-shadow: inset -2px -2px 0 #1d4e89, inset 2px 2px 0 #d7ecff;
+  padding: 6px 8px;
+  background: #fff6fb;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 2px #ffd0ea;
 }
-.mars-bar span { flex: 1; font-size: 22px; }
+.mars-bar span { flex: 1; font-size: 22px; color: #96285F; }
 .mars-bar button,
 .mars-pads button,
-.mars-reset {
+.mars-reset,
+.mars-next,
+.mars-arrow,
+.mars-dress-reset {
   min-height: 44px;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border: 0;
-  background: #FF5FA2;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ff7acf 0%, #db329f 100%);
   color: #fff;
   font-family: inherit;
   font-size: 18px;
-  box-shadow: 3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.75), 0 3px 0 #9a1468;
   cursor: pointer;
 }
+.mars-dress-reset:disabled { opacity: 0.45; cursor: default; }
 .mars-stage {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
+  border-radius: 10px;
   background: #2a1840;
   overflow: hidden;
 }
@@ -129,49 +232,123 @@ html body .mars-overlay .mars-bar * {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 12px;
   padding: 16px;
   overflow: auto;
 }
 .mars-chapters[hidden] { display: none !important; }
 .mars-stage.is-select .mars-chapters { display: flex; }
+.mars-card-row { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.mars-card-line { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.mars-wing { display: block; image-rendering: pixelated; }
 .mars-card {
-  width: min(220px, 86vw);
-  min-height: 150px;
-  padding: 12px 10px;
+  position: relative;
+  width: min(200px, 70vw);
+  min-height: 156px;
+  padding: 16px 12px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
   border: 0;
+  border-radius: 18px;
   cursor: pointer;
   background: #fff7fb;
   color: #96285F;
   font-family: inherit;
-  box-shadow: 4px 0 0 #fff, -4px 0 0 #fff, 0 4px 0 #fff, 0 -4px 0 #fff, 4px 4px 0 #FF5FA2;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #ff7acf, 0 0 0 8px #fff, 0 0 0 11px #db329f;
 }
 .mars-card b { font-size: 14px; letter-spacing: 0.04em; }
 .mars-card .mars-mark { font-size: 42px; line-height: 1; }
 .mars-card em { font-style: normal; font-size: 18px; text-align: center; }
-.mars-card.is-locked { cursor: not-allowed; background: #f3e4ec; box-shadow: 4px 0 0 #fff, -4px 0 0 #fff, 0 4px 0 #fff, 0 -4px 0 #fff, 4px 4px 0 #c9a0b4; }
-.mars-card.is-clear { background: #FF5FA2; }
-.mars-reset { align-self: center; min-height: 36px; font-size: 14px; background: #fff; }
+.mars-card.is-locked { cursor: not-allowed; background: #f7e7ef; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #e7c3d4, 0 0 0 8px #fff, 0 0 0 11px #c9a0b4; }
+.mars-card.is-clear { background: linear-gradient(180deg, #ffd0ea, #ff7acf); }
+.mars-card.is-pick { transform: translateY(-3px); }
+.mars-berry {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 2px;
+  height: 2px;
+  background: #db329f;
+  box-shadow:
+    2px 0 #db329f, 4px 0 #db329f,
+    -2px 2px #db329f, 0 2px #ff7acf, 2px 2px #fff, 4px 2px #db329f, 6px 2px #db329f,
+    -2px 4px #db329f, 0 4px #ff7acf, 2px 4px #db329f, 4px 4px #fff, 6px 4px #db329f,
+    0 6px #db329f, 2px 6px #db329f, 4px 6px #db329f,
+    2px 8px #3f9a4a, 4px 8px #3f9a4a;
+}
+.mars-spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #ff7acf;
+}
+.mars-spark.s1 { top: 18px; left: 12px; }
+.mars-spark.s2 { bottom: 16px; right: 18px; background: #ffe08a; }
+.mars-arrow { width: 52px; min-height: 72px; font-size: 28px; flex: none; }
+.mars-reset { align-self: center; min-height: 36px; font-size: 14px; }
 .mars-talk {
+  position: absolute;
+  z-index: 5;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   margin: 0;
-  min-height: 44px;
-  padding: 6px 8px 6px 10px;
-  background: #fff;
-  color: #96285F;
-  font-size: 16px;
-  box-shadow: inset 0 0 0 2px #FF5FA2;
+  min-height: 64px;
+  padding: 8px 10px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffd6ee 0%, #ff8ec4 100%);
+  color: #5a1240;
+  font-size: 18px;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.8), 0 4px 0 #db329f;
 }
-.mars-talk .mars-line { flex: 1; }
-.mars-skip { min-height: 36px; flex: none; }
+.mars-face {
+  width: 52px;
+  height: 52px;
+  flex: none;
+  background: #fff6fb;
+  border-radius: 10px;
+  image-rendering: pixelated;
+  box-shadow: inset 0 0 0 2px #fff;
+}
+.mars-talk-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.mars-name {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 8px;
+  background: #fff;
+  color: #db329f;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.mars-talk .mars-line { font-size: 20px; line-height: 1.15; font-weight: 700; }
+.mars-next { align-self: flex-end; min-height: 36px; flex: none; font-size: 16px; }
 .mars-talk[hidden] { display: none !important; }
+.mars-dress {
+  position: absolute;
+  z-index: 3;
+  left: 10px;
+  bottom: 10px;
+  width: min(250px, 72%);
+  margin: 0;
+  padding: 8px 10px 10px;
+  border-radius: 14px;
+  background: #fff7fb;
+  color: #96285F;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #ff7acf;
+}
+.mars-dress[hidden] { display: none !important; }
+.mars-dress-kicker { margin: 0; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #db329f; }
+.mars-dress-title { margin: 2px 0 6px; font-size: 16px; }
+.mars-dress ul { margin: 0 0 8px; padding-left: 16px; font-size: 13px; }
+.mars-dress li { margin: 0 0 4px; }
+.mars-dress.is-clear .mars-dress-reset { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.75), 0 0 0 3px #ffe08a; }
 .mars-keys {
   margin: 0;
   text-align: center;
@@ -182,25 +359,46 @@ html body .mars-overlay .mars-bar * {
   display: none;
   grid-template-columns: 1fr 1fr 1fr 1.3fr;
   gap: 8px;
+  padding: 8px;
+  border-radius: 16px;
+  background: #fff6fb;
 }
 .mars-pads[hidden] { display: none !important; }
 .mars-pads button { min-height: 64px; font-size: 28px; }
-html body .mars-overlay .mars-bar,
-html body .mars-overlay .mars-bar *,
-html body .mars-overlay .mars-pads button { color: #fff !important; }
+html body .mars-overlay .mars-bar span { color: #96285F !important; }
+html body .mars-overlay .mars-bar button,
+html body .mars-overlay .mars-pads button,
+html body .mars-overlay .mars-chin button,
+html body .mars-overlay .mars-next,
+html body .mars-overlay .mars-arrow,
+html body .mars-overlay .mars-reset,
+html body .mars-overlay .mars-dress-reset { color: #fff !important; }
 html body .mars-overlay .mars-talk,
 html body .mars-overlay .mars-talk .mars-line,
 html body .mars-overlay .mars-keys,
-html body .mars-overlay .mars-reset,
 html body .mars-overlay .mars-card,
-html body .mars-overlay .mars-card * { color: #96285F !important; }
-html body .mars-overlay .mars-skip { color: #fff !important; }
+html body .mars-overlay .mars-card *,
+html body .mars-overlay .mars-dress,
+html body .mars-overlay .mars-dress li { color: #96285F !important; }
+html body .mars-overlay .mars-name { color: #db329f !important; }
 html body .mars-overlay .mars-card.is-clear,
-html body .mars-overlay .mars-card.is-clear * { color: #fff !important; }
-@media (max-width: 900px) {
+html body .mars-overlay .mars-card.is-clear * { color: #5a1240 !important; }
+@media (max-width: 720px), (max-height: 500px) and (pointer: coarse) {
+  .mars-overlay { gap: 6px; padding: 6px; background: rgba(255, 246, 251, 0.96); }
+  .mars-shell {
+    margin: 0;
+    padding: 0;
+    gap: 6px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .mars-screen { padding: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  .mars-stage { border-radius: 0; }
+  .mars-chin, .mars-speakers { display: none; }
   .mars-keys { display: none; }
   .mars-pads { display: grid; }
-  .mars-overlay { padding: 6px; gap: 6px; }
+  .mars-pads button { min-height: 76px; font-size: 32px; }
 }
 
 @media (max-width: 768px) {
@@ -213,4 +411,5 @@ html body .mars-overlay .mars-card.is-clear * { color: #fff !important; }
 @media (prefers-reduced-motion: reduce) {
   .mood-scene-vid { display: none !important; }
   .mood-scene-still { display: block !important; }
+  .mars-card.is-pick { transform: none; }
 }

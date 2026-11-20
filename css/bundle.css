@@ -1242,6 +1242,10 @@ img {
 
 .cd-section { min-height: 280px; padding-right: 320px !important; background: linear-gradient(90deg, #FFFFFF, rgba(255,255,255,.92)), url('../images/cd-section-background.webp') center/cover; }
 .cd-sticker { position: absolute; right: 13px; top: -22px; width: 296px; mix-blend-mode: multiply; animation: spin 17s linear infinite; filter: contrast(1.06); }
+/* Malaz sits in the disc hole. The sticker spins; she does not. */
+.cd-trap { position: absolute; right: 13px; top: -22px; width: 296px; aspect-ratio: 104 / 105; pointer-events: none; }
+.cd-trap .cd-sticker { position: absolute; inset: 0; width: 100%; height: 100%; right: auto; top: auto; object-fit: fill; }
+.cd-trap-girl { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
 .lotus-section { background: linear-gradient(rgba(255,255,255,.56), rgba(255,255,255,.78)), url('../images/cd-section-background.webp') center/cover; }
 .home-page .footer { background: #FFFFFF; border-top: 1px solid #FF9EC7; }
 .home-page .social-link { background: white; border-color: #FF9EC7; color: #FF5FA2; }
@@ -1253,6 +1257,7 @@ img {
   .quick-actions { grid-template-columns: 1fr; }
   .cd-section { padding-right: 190px !important; }
   .cd-sticker { width: 205px; right: -45px; top: 25px; }
+  .cd-trap { width: 205px; right: -45px; top: 25px; }
 }
 
 /* music-notes doodle behind the "listen while you browse" box */
@@ -1261,7 +1266,7 @@ img {
 @media (max-width: 768px) { .music-notes-sticker { width: 230px; } }
 
 /* round 3: pixel-art remakes — keep the pixel grid crisp */
-.hero-phone-sticker, .cd-sticker, .music-notes-sticker, .made-in-japan-sticker { image-rendering: pixelated; }
+.hero-phone-sticker, .cd-sticker, .cd-trap-girl, .music-notes-sticker, .made-in-japan-sticker { image-rendering: pixelated; }
 .home-page, .hero, .secondary-page .main-content, .contact-page .banner::after { image-rendering: pixelated; }
 
 

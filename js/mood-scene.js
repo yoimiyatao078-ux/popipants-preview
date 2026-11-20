@@ -112,24 +112,54 @@
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('aria-label', 'secret minigame');
-    overlay.innerHTML = '<div class="mars-bar"><span>secret minigame</span>' +
-      '<button type="button" class="mars-mute" aria-pressed="true">sound off</button>' +
-      '<button type="button" class="mars-exit">exit</button></div>' +
-      '<div class="mars-stage">' +
-        '<canvas width="480" height="270" aria-label="Malaz and the kitty on a trip to Mars"></canvas>' +
-        '<div class="mars-chapters"></div>' +
+    overlay.innerHTML = '<div class="mars-shell">' +
+      '<div class="mars-bar"><span class="mars-speakers" aria-hidden="true"></span><span>secret minigame</span>' +
+        '<button type="button" class="mars-mute" aria-pressed="true">sound off</button>' +
+        '<button type="button" class="mars-exit">exit</button></div>' +
+      '<div class="mars-screen">' +
+        '<div class="mars-stage">' +
+          '<canvas width="480" height="270" aria-label="Malaz and the kitty on a trip to Mars"></canvas>' +
+          '<div class="mars-chapters"></div>' +
+          '<div class="mars-dress" hidden>' +
+            '<p class="mars-dress-kicker">dress-up shop</p>' +
+            '<p class="mars-dress-title">he picked your outfit</p>' +
+            '<ul>' +
+              '<li><b>malaz</b> rainbow mohawk, tutu, puffy sleeves, mismatched socks</li>' +
+              '<li><b>kitty</b> frill wig and a party dress</li>' +
+            '</ul>' +
+            '<button type="button" class="mars-dress-reset" disabled>reset</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="mars-talk" hidden>' +
+          '<canvas class="mars-face" width="40" height="40" aria-hidden="true"></canvas>' +
+          '<div class="mars-talk-copy"><span class="mars-name"></span><span class="mars-line"></span></div>' +
+          '<button type="button" class="mars-next">next</button>' +
+        '</div>' +
       '</div>' +
-      '<p class="mars-talk" hidden><span class="mars-line"></span><button type="button" class="mars-skip">skip</button></p>' +
-      '<p class="mars-keys">arrows or wasd move · space or z shoots · enter talks</p>' +
-      '<div class="mars-pads">' +
-        '<button type="button" data-pad="left" aria-label="Move left">◀</button>' +
-        '<button type="button" data-pad="up" aria-label="Move up or jump">▲</button>' +
-        '<button type="button" data-pad="right" aria-label="Move right">▶</button>' +
-        '<button type="button" data-pad="action" aria-label="Shoot">✦</button>' +
+      '<div class="mars-chin">' +
+        '<div class="mars-dpad">' +
+          '<button type="button" class="pad-up" data-pad="up" aria-label="Move up or jump">▲</button>' +
+          '<button type="button" class="pad-left" data-pad="left" aria-label="Move left">◀</button>' +
+          '<span class="pad-nub" aria-hidden="true"></span>' +
+          '<button type="button" class="pad-right" data-pad="right" aria-label="Move right">▶</button>' +
+          '<button type="button" class="pad-down" data-pad="down" aria-label="Move down">▼</button>' +
+        '</div>' +
+        '<p class="mars-keys">arrows or wasd move · space or z shoots · enter talks</p>' +
+        '<div class="mars-hearts">' +
+          '<button type="button" class="mars-heart" data-pad="action" aria-label="Shoot"><i class="px-heart" aria-hidden="true"></i></button>' +
+          '<button type="button" class="mars-heart mars-heart-sm" data-pad="action" aria-label="Shoot"><i class="px-heart" aria-hidden="true"></i></button>' +
+        '</div>' +
       '</div>' +
-      '<p class="mars-live" role="status" aria-live="polite"></p>';
+    '</div>' +
+    '<div class="mars-pads">' +
+      '<button type="button" data-pad="left" aria-label="Move left">◀</button>' +
+      '<button type="button" data-pad="up" aria-label="Move up or jump">▲</button>' +
+      '<button type="button" data-pad="right" aria-label="Move right">▶</button>' +
+      '<button type="button" data-pad="action" aria-label="Shoot">✦</button>' +
+    '</div>' +
+    '<p class="mars-live" role="status" aria-live="polite"></p>';
     document.body.appendChild(overlay);
-    var canvas = overlay.querySelector('canvas');
+    var canvas = overlay.querySelector('.mars-stage canvas');
     var back = document.activeElement;
     function close() {
       if (window.popiMars && window.popiMars.stop) window.popiMars.stop();
@@ -146,7 +176,9 @@
         stage: overlay.querySelector('.mars-stage'),
         chapters: overlay.querySelector('.mars-chapters'),
         talk: overlay.querySelector('.mars-talk'),
+        dress: overlay.querySelector('.mars-dress'),
         pads: overlay.querySelector('.mars-pads'),
+        chin: overlay.querySelector('.mars-chin'),
         onLine: function (text) { overlay.querySelector('.mars-live').textContent = text; }
       });
       canvas.tabIndex = 0;
@@ -155,7 +187,7 @@
     if (window.popiMars) begin();
     else {
       var script = document.createElement('script');
-      script.src = 'js/mars-game.js?v=1795222000';
+      script.src = 'js/mars-game.js?v=1795306800';
       script.onload = begin;
       script.onerror = function () { opening = false; overlay.remove(); };
       document.body.appendChild(script);

@@ -102,4 +102,54 @@
   new MutationObserver(apply).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   if (reduce.addEventListener) reduce.addEventListener('change', apply);
   apply();
+
+  var opening = false;
+  function openGame() {
+    if (document.querySelector('.mars-overlay') || opening) return;
+    opening = true;
+    var overlay = document.createElement('div');
+    overlay.className = 'mars-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'secret minigame');
+    overlay.innerHTML = '<div class="mars-bar"><span>secret minigame</span>' +
+      '<button type="button" class="mars-mute" aria-pressed="true">sound off</button>' +
+      '<button type="button" class="mars-exit">exit</button></div>' +
+      '<canvas width="320" height="180" aria-label="Malaz and the kitty on a trip to Mars"></canvas>' +
+      '<p class="mars-live" role="status" aria-live="polite"></p>';
+    document.body.appendChild(overlay);
+    var canvas = overlay.querySelector('canvas');
+    var back = document.activeElement;
+    function close() {
+      if (window.popiMars && window.popiMars.stop) window.popiMars.stop();
+      overlay.remove();
+      opening = false;
+      if (back && back.focus) back.focus();
+    }
+    overlay.querySelector('.mars-exit').addEventListener('click', close);
+    overlay.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    function begin() {
+      window.popiMars.start(canvas, {
+        muteButton: overlay.querySelector('.mars-mute'),
+        onExit: close,
+        onLine: function (text) { overlay.querySelector('.mars-live').textContent = text; }
+      });
+      overlay.querySelector('.mars-exit').focus();
+    }
+    if (window.popiMars) begin();
+    else {
+      var script = document.createElement('script');
+      script.src = 'js/mars-game.js?v=1795142000';
+      script.onload = begin;
+      script.onerror = function () { opening = false; overlay.remove(); };
+      document.body.appendChild(script);
+    }
+  }
+  root.addEventListener('click', function (e) {
+    if (e.target.closest('.mood-game-btn') || e.target.closest('.mood-scene-stage') || e.target.closest('.mood-scene-win')) openGame();
+  });
+  var stage = root.querySelector('.mood-scene-stage');
+  if (stage) stage.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGame(); }
+  });
 })();

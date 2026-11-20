@@ -1,5 +1,12 @@
-/* Mood scene window under the hero. One looping picture per mood. */
-.mood-scene { position: relative; z-index: 2; margin: 0; padding: 18px 28px 6px; }
+/* Mood scene window at the end of the page. One looping picture per mood. */
+@font-face {
+  font-family: 'Pixelify Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/pixelify-sans.ttf') format('truetype');
+}
+.mood-scene { position: relative; z-index: 2; margin: 0; padding: 22px 28px 28px; }
 .mood-scene-win { max-width: 560px; margin-top: 0; }
 .mood-scene-wb { padding: 8px; }
 .mood-scene-stage {
@@ -31,11 +38,82 @@ html[data-theme^="goth"] .mood-scene video {
   mix-blend-mode: normal !important;
 }
 
+.mood-game-btn {
+  display: block;
+  margin: 10px 0 0;
+  min-height: 48px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: 'Pixelify Sans', Inconsolata, monospace;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: #fff;
+  background: #FF5FA2;
+  box-shadow: 4px 0 0 #fff, -4px 0 0 #fff, 0 4px 0 #fff, 0 -4px 0 #fff, 4px 4px 0 #96285F;
+}
+html body .mood-scene .mood-game-btn,
+html body .mars-overlay .mars-bar,
+html body .mars-overlay .mars-bar * {
+  color: #fff !important;
+}
+.mood-game-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.mood-scene-stage { cursor: pointer; }
+.mood-scene-stage:focus-visible { outline: 3px dashed #FF5FA2; outline-offset: 3px; }
+
+.mars-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 214, 232, 0.72);
+  font-family: 'Pixelify Sans', Inconsolata, monospace;
+  color: #fff;
+}
+.mars-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(100%, 640px);
+  padding: 4px 8px;
+  background: linear-gradient(#5aa0e6, #2f6fbe);
+  box-shadow: inset -2px -2px 0 #1d4e89, inset 2px 2px 0 #d7ecff;
+}
+.mars-bar span { flex: 1; font-size: 20px; }
+.mars-bar button {
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 0;
+  background: #FF5FA2;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  box-shadow: 3px 0 0 #fff, -3px 0 0 #fff, 0 3px 0 #fff, 0 -3px 0 #fff;
+  cursor: pointer;
+}
+.mars-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.mars-overlay canvas {
+  width: min(100%, 640px);
+  height: auto;
+  background: #1a1028;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  touch-action: none;
+}
+
 @media (max-width: 768px) {
-  .home-page .main-content > .mood-scene { order: 0; }
-  .mood-scene { padding: 16px 12px 2px; }
+  .mood-scene { padding: 18px 12px 26px; }
   .mood-scene-win { max-width: none; }
   .mood-scene-wb { padding: 6px; }
+  .mood-game-btn { width: 100%; font-size: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

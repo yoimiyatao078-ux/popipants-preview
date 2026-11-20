@@ -1,0 +1,44 @@
+/* Mood scene window under the hero. One looping picture per mood. */
+.mood-scene { position: relative; z-index: 2; margin: 0; padding: 18px 28px 6px; }
+.mood-scene-win { max-width: 560px; margin-top: 0; }
+.mood-scene-wb { padding: 8px; }
+.mood-scene-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ffe6f1;
+  aspect-ratio: 644 / 432;
+}
+.mood-scene-vid,
+.mood-scene-still {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.mood-scene.is-motion .mood-scene-still { display: none; }
+.mood-scene.is-still .mood-scene-vid { display: none; }
+
+html[data-theme="blue"] .mood-scene img,
+html[data-theme="blue"] .mood-scene video,
+html[data-theme="goth3"] .mood-scene img,
+html[data-theme="goth3"] .mood-scene video,
+html[data-theme^="goth"] .mood-scene img,
+html[data-theme^="goth"] .mood-scene video {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+@media (max-width: 768px) {
+  .home-page .main-content > .mood-scene { order: 0; }
+  .mood-scene { padding: 16px 12px 2px; }
+  .mood-scene-win { max-width: none; }
+  .mood-scene-wb { padding: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mood-scene-vid { display: none !important; }
+  .mood-scene-still { display: block !important; }
+}

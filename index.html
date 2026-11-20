@@ -40,6 +40,7 @@
   <link rel="stylesheet" href="css/blue2.css?v=1793503300">
   <link rel="stylesheet" href="css/shop.css?v=1793503300">
   <link rel="stylesheet" href="css/mood-hearts.css?v=1794059200">
+  <link rel="stylesheet" href="css/mood-scene.css?v=1795140000">
 </head>
 <body class="home-page">
   <canvas id="sparkle-canvas"></canvas>
@@ -63,6 +64,29 @@
           </div>
           <img class="hero-phone-sticker" src="images/art/music-player.png" alt="" fetchpriority="high" decoding="async">
         </section>
+
+        <section class="mood-scene is-still" aria-label="Mood scene">
+          <div class="combo-win mood-scene-win">
+            <div class="combo-tb"><i></i><i></i><i></i><span class="mood-scene-title">angel_window.exe</span></div>
+            <div class="combo-wb mood-scene-wb">
+              <div class="mood-scene-stage">
+                <video class="mood-scene-vid" muted loop playsinline preload="none" poster="images/scenes/angel.png" disablepictureinpicture></video>
+                <img class="mood-scene-still" src="images/scenes/angel.png" alt="Pixel scene of a girl and a cat on a cloud in a pink sky." width="644" height="432" decoding="async" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </section>
+        <script>
+          (function () {
+            var t = document.documentElement.getAttribute('data-theme') || 'pink';
+            var key = t.indexOf('goth') === 0 ? 'afterdark' : (t === 'blue' ? 'lagoon' : 'angel');
+            var file = 'images/scenes/' + key + '.png';
+            var still = document.querySelector('.mood-scene-still');
+            var video = document.querySelector('.mood-scene-vid');
+            if (still) still.src = file;
+            if (video) video.poster = file;
+          })();
+        </script>
 
         <section class="content-section drop-section monster-bg">
           <div class="section-header section-header-left">
@@ -112,5 +136,6 @@
   <script src="js/shop-and-extras.js?v=1793503300"></script>
   <script src="js/combo.js?v=1793503300"></script>
   <script src="js/shop.js?v=1793503300"></script>
+  <script src="js/mood-scene.js?v=1795140000"></script>
 </body>
 </html>
